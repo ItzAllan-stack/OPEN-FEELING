@@ -12,7 +12,8 @@
     "lint:eslint": "eslint .",
     "test:rules": "firebase emulators:exec --only firestore --project demo-open-feeling \"npm run test:rules:node\"",
     "test:rules:node": "tsx --test tests/firestore.rules.test.ts",
-    "backfill:counters": "node scripts/recount-counters.mjs"
+    "backfill:counters": "node scripts/recount-counters.mjs",
+    "grant-admin": "node scripts/grant-admin.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

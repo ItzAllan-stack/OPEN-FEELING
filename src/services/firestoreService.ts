@@ -42,6 +42,16 @@ function toDate(value: unknown): Date {
   return new Date();
 }
 
+export async function checkIsAdmin(uid: string): Promise<boolean> {
+  try {
+    const snap = await getDoc(doc(db, 'admins', uid));
+    return snap.exists();
+  } catch {
+    // Registry unreadable or denied - never fail open.
+    return false;
+  }
+}
+
 export function makeId(prefix = ''): string {
   const rand =
     typeof crypto !== 'undefined' && crypto.randomUUID

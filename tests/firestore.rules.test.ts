@@ -216,11 +216,25 @@ describe('security_spec.md adversarial cases', () => {
     await assertFails(setDoc(doc(db, 'posts', longId), post(longId, 'alice')));
   });
 
-  it('8. denies admin access via unverified bootstrap email', async () => {
+  it('8. denies admin access via email claim, even verified (admins registry required)', async () => {
     await seed(async (db) => setDoc(doc(db, 'reports', 'r1'), report('r1')));
-    const db = as('evil', { email: 'mroy4957@gmail.com', email_verified: false });
+    const db = as('evil', { email: 'admin@example.com', email_verified: true });
     await assertFails(updateDoc(doc(db, 'reports', 'r1'), {
       status: 'dismissed', moderatorNote: '', updatedAt: serverTimestamp(),
+    }));
+  });
+
+  it('8b. grants admin access when the admins registry lists the uid', async () => {
+    await seed(async (db) => {
+      await setDoc(doc(db, 'reports', 'r1'), report('r1'));
+      await setDoc(doc(db, 'admins', 'root'), {
+        grantedAt: serverTimestamp(),
+        grantedBy: 'test',
+      });
+    });
+    const db = as('root', { email: 'root@example.com', email_verified: true });
+    await assertSucceeds(updateDoc(doc(db, 'reports', 'r1'), {
+      status: 'dismissed', moderatorNote: 'handled', updatedAt: serverTimestamp(),
     }));
   });
 

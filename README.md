@@ -81,6 +81,25 @@ automatically. Dependency audits live in `.github/workflows/audit.yml`, which
 runs weekly (and on demand) so a fresh high-severity advisory does not block
 unrelated changes; run `npm audit --audit-level=high` locally before releases.
 
+## Admin access
+
+Admin rights derive exclusively from the `admins/{uid}` registry in Firestore
+(mirroring `firestore.rules`); email claims carry no privileges. To grant
+admin to an account (use a verified-email account, or `isAdmin()` will still
+fail the rules' `email_verified` check):
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccount.json
+npm run grant-admin -- user@example.com
+```
+
+To revoke, delete the `admins/{uid}` document in the Firebase console.
+
+> Before deploying a `firestore.rules` build that removes any legacy
+> bootstrap admin path, make sure at least one `admins/{uid}` document exists
+> and you can sign in with that account - otherwise you will lock every admin
+> out of the moderation UI.
+
 ## Data maintenance
 
 Aggregate counters (`reactionCounts`, `commentsCount`, `followersCount`,

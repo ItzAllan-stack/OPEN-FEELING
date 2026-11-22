@@ -15,7 +15,7 @@
 5. **Private Journal Snooping**: Listing `/private_journals` without `where('userUid', '==', auth.uid)` -> DENIED.
 6. **Cross-User Post Edit**: Updating `content` on another user's post -> DENIED.
 7. **ID Poisoning**: Creating `/posts/<1500-char-string>` -> DENIED (`isValidId` <= 128 chars).
-8. **Email Spoofing**: Admin access with `email == "mroy4957@gmail.com"` when `email_verified == false` -> DENIED.
+8. **Email Spoofing**: Admin access asserted through an email claim (or any former bootstrap address) instead of the admins registry -> DENIED (even with `email_verified == true`).
 9. **Blanket User PII Read**: Calling `get(/users_private/otherUid)` as non-owner -> DENIED.
 10. **Reaction Impersonation**: Creating `/posts/p1/reactions/victim_love` with `userUid: "victim"` -> DENIED.
 11. **Report Tampering**: Non-admin updating `reports/r1` status to `"dismissed"` -> DENIED.

@@ -10,11 +10,12 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import { ADMIN_EMAIL, CURATED_AVATARS } from '../constants/emotions.ts';
+import { CURATED_AVATARS } from '../constants/emotions.ts';
 import { STARTER_COMMUNITIES, STARTER_POSTS } from '../data/starterData.ts';
 import { auth, googleAuthProvider } from '../lib/firebase.ts';
 import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
 import {
+  checkIsAdmin,
   createUserProfile,
   deleteUserAccountData,
   getPrivateUser,
@@ -89,6 +90,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [publicUser, setPublicUser] = useState<PublicUser | null>(null);
   const [privateUser, setPrivateUser] = useState<PrivateUser | null>(null);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [isAdminRegistry, setIsAdminRegistry] = useState(false);
 
   const [currentPath, setCurrentPath] = useState<string>(() => {
     return window.location.pathname || '/';
@@ -136,12 +138,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const loadProfiles = useCallback(async (user: User) => {
-    const [pub, priv] = await Promise.all([
+    const [pub, priv, registryAdmin] = await Promise.all([
       getPublicUser(user.uid),
       getPrivateUser(user.uid),
+      checkIsAdmin(user.uid),
     ]);
     setPublicUser(pub);
     setPrivateUser(priv);
+    setIsAdminRegistry(registryAdmin);
     setNeedsOnboarding(!pub);
     if (pub) {
       seedStarterCommunitiesIfNeeded(user.uid);
@@ -165,6 +169,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } else {
         setPublicUser(null);
         setPrivateUser(null);
+        setIsAdminRegistry(false);
         setNeedsOnboarding(false);
         setUserPrivatePosts([]);
         setOwnedAnonymousIds([]);
@@ -240,11 +245,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = useMemo(() => {
     if (!firebaseUser) return false;
-    return (
-      (firebaseUser.email === ADMIN_EMAIL && firebaseUser.emailVerified) ||
-      privateUser?.role === 'admin'
-    );
-  }, [firebaseUser, privateUser]);
+    // The admins registry (admins/{uid}) is the single source of admin
+    // rights - mirroring the security rules. Verified email is required to
+    // match isAdmin() in firestore.rules.
+    return Boolean(firebaseUser.emailVerified) && isAdminRegistry;
+  }, [firebaseUser, isAdminRegistry]);
 
   const sakuraEnabled = privateUser ? privateUser.sakuraEnabled : sakuraLocalOverride;
 
