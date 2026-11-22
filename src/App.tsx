@@ -24,6 +24,23 @@ const ProfilePage = React.lazy(() => import('./pages/ProfilePage.tsx').then((m) 
 const SavedPostsPage = React.lazy(() => import('./pages/SavedPostsPage.tsx').then((m) => ({ default: m.SavedPostsPage })));
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage.tsx').then((m) => ({ default: m.SettingsPage })));
 
+function NotFoundPage() {
+  const { navigate } = useApp();
+  return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 p-6 text-center">
+      <p className="font-display text-5xl text-[#E9A9B8]">404</p>
+      <p className="text-sm text-[#77727A]">We couldn't find that page. Let's get you back to a quieter place.</p>
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="rounded-full bg-[#9F4E65] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#8A4358] cursor-pointer"
+      >
+        Back home
+      </button>
+    </div>
+  );
+}
+
 function AppRouter() {
   const { currentPath, authLoading, firebaseUser, needsOnboarding } = useApp();
 
@@ -67,7 +84,7 @@ function AppRouter() {
     if (currentPath === '/guidelines') return <GuidelinesPage />;
     if (currentPath === '/moderation') return <ModerationPage />;
 
-    return <LandingPage />;
+    return <NotFoundPage />;
   };
 
   return (

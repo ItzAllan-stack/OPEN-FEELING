@@ -143,10 +143,10 @@ export const DAILY_REFLECTIONS: string[] = [
 ];
 
 export const CURATED_AVATARS: string[] = [
-  '/src/assets/images/avatar_community_1_1795329057107.webp',
-  '/src/assets/images/avatar_community_2_1795329056950.webp',
-  '/src/assets/images/story_journal_calm_1795329057247.webp',
-  '/src/assets/images/story_community_warmth_1795329056419.webp',
+  '/assets/images/avatar_community_1_1795329057107.webp',
+  '/assets/images/avatar_community_2_1795329056950.webp',
+  '/assets/images/story_journal_calm_1795329057247.webp',
+  '/assets/images/story_community_warmth_1795329056419.webp',
 ];
 
 export const ADMIN_EMAIL = 'mroy4957@gmail.com';
