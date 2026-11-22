@@ -1,4 +1,4 @@
-# OPEN FELLING — Firestore Security Specification
+# OPEN FEELING — Firestore Security Specification
 
 ## 1. Data Invariants
 1. **Anonymous Post Identity Isolation**: An anonymous post (`visibility == 'anonymous'`) must NEVER store the real `authorUid` or `authorUsername` on `/posts/{postId}`. Ownership is isolated in `/post_ownership/{postId}` readable only by the true owner (`ownerUid == request.auth.uid`) or verified admin (`isAdmin()`).
