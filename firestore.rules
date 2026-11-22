@@ -19,10 +19,16 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // TODO(security): drop this bootstrap email once an admins/{uid} document exists
+    // for the account. The admins registry should be the only source of admin rights.
+    function isBootstrapAdmin() {
+      return isVerified() && request.auth.token.email == 'mroy4957@gmail.com';
+    }
+
     function isAdmin() {
       return isVerified() && (
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
-        request.auth.token.email == 'mroy4957@gmail.com'
+        isBootstrapAdmin()
       );
     }
 
@@ -250,6 +256,146 @@ service cloud.firestore {
       );
     }
 
+    // 2b. Counter integrity helpers
+    // Aggregate counters may only move by one and, where the supporting document
+    // has a deterministic ID, only in the batch that creates/deletes that document.
+
+    function reactionRef(postId, type) {
+      let reactionId = request.auth.uid + '_' + type;
+      return /databases/$(database)/documents/posts/$(postId)/reactions/$(reactionId);
+    }
+
+    function reactionAdded(postId, type) {
+      let ref = reactionRef(postId, type);
+      return !exists(ref) && existsAfter(ref)
+        && getAfter(ref).data.userUid == request.auth.uid
+        && getAfter(ref).data.type == type;
+    }
+
+    function reactionRemoved(postId, type) {
+      let ref = reactionRef(postId, type);
+      return exists(ref) && !existsAfter(ref)
+        && get(ref).data.userUid == request.auth.uid
+        && get(ref).data.type == type;
+    }
+
+    function isValidReactionDelta(postId, type) {
+      let before = existing().reactionCounts[type];
+      let after = incoming().reactionCounts[type];
+      return (reactionAdded(postId, type) && after == before + 1) ||
+        (reactionRemoved(postId, type) && after == before - 1);
+    }
+
+    function isReactionCounterUpdate(postId) {
+      // isValidPost() guarantees the map has exactly the five numeric keys, so
+      // a single changed key is enough to prove the other four were untouched.
+      let changed = incoming().reactionCounts.diff(existing().reactionCounts).affectedKeys();
+      return isSignedIn()
+        && incoming().diff(existing()).affectedKeys().hasOnly(['reactionCounts', 'updatedAt'])
+        && incoming().updatedAt == request.time
+        && changed.size() == 1
+        && (
+          (changed.hasOnly(['understand']) && isValidReactionDelta(postId, 'understand')) ||
+          (changed.hasOnly(['love']) && isValidReactionDelta(postId, 'love')) ||
+          (changed.hasOnly(['not_alone']) && isValidReactionDelta(postId, 'not_alone')) ||
+          (changed.hasOnly(['stay_strong']) && isValidReactionDelta(postId, 'stay_strong')) ||
+          (changed.hasOnly(['thank_you']) && isValidReactionDelta(postId, 'thank_you'))
+        );
+    }
+
+    // Comment IDs are random, so the rules cannot point at the comment being
+    // written. Bound the delta to +/-1 to stop arbitrary counter inflation.
+    function isCommentCounterUpdate() {
+      return isSignedIn()
+        && incoming().diff(existing()).affectedKeys().hasOnly(['commentsCount', 'updatedAt'])
+        && incoming().updatedAt == request.time
+        && (
+          incoming().commentsCount == existing().commentsCount + 1 ||
+          (existing().commentsCount > 0 && incoming().commentsCount == existing().commentsCount - 1) ||
+          (existing().commentsCount == 0 && incoming().commentsCount == 0)
+        );
+    }
+
+    function followRef(actorUid, targetUid) {
+      let followId = actorUid + '_' + targetUid;
+      return /databases/$(database)/documents/follows/$(followId);
+    }
+
+    function followAdded(actorUid, targetUid) {
+      let ref = followRef(actorUid, targetUid);
+      return !exists(ref) && existsAfter(ref)
+        && getAfter(ref).data.followerUid == actorUid
+        && getAfter(ref).data.followingUid == targetUid;
+    }
+
+    function followRemoved(actorUid, targetUid) {
+      let ref = followRef(actorUid, targetUid);
+      return exists(ref) && !existsAfter(ref)
+        && get(ref).data.followerUid == actorUid
+        && get(ref).data.followingUid == targetUid;
+    }
+
+    function isFollowersCountUpdate(targetUid) {
+      let before = existing().followersCount;
+      let after = incoming().followersCount;
+      return isSignedIn()
+        && incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'updatedAt'])
+        && incoming().updatedAt == request.time
+        && (
+          (followAdded(request.auth.uid, targetUid) && after == before + 1) ||
+          (followRemoved(request.auth.uid, targetUid) && (
+            (before > 0 && after == before - 1) || (before == 0 && after == 0)
+          ))
+        );
+    }
+
+    // The target UID is not part of the actor's own profile document, so only
+    // bound the self-service delta; the target's followersCount is strictly checked.
+    function isFollowingCountUpdate(uid) {
+      let before = existing().followingCount;
+      let after = incoming().followingCount;
+      return isOwner(uid)
+        && incoming().diff(existing()).affectedKeys().hasOnly(['followingCount', 'updatedAt'])
+        && incoming().updatedAt == request.time
+        && (
+          after == before + 1 ||
+          (before > 0 && after == before - 1) ||
+          (before == 0 && after == 0)
+        );
+    }
+
+    function membershipRef(communityId, uid) {
+      let memberId = communityId + '_' + uid;
+      return /databases/$(database)/documents/community_members/$(memberId);
+    }
+
+    function membershipAdded(communityId) {
+      let ref = membershipRef(communityId, request.auth.uid);
+      return !exists(ref) && existsAfter(ref)
+        && getAfter(ref).data.userUid == request.auth.uid
+        && getAfter(ref).data.communityId == communityId;
+    }
+
+    function membershipRemoved(communityId) {
+      let ref = membershipRef(communityId, request.auth.uid);
+      return exists(ref) && !existsAfter(ref)
+        && get(ref).data.userUid == request.auth.uid
+        && get(ref).data.communityId == communityId;
+    }
+
+    function isMemberCountUpdate(communityId) {
+      let before = existing().memberCount;
+      let after = incoming().memberCount;
+      return isSignedIn()
+        && incoming().diff(existing()).affectedKeys().hasOnly(['memberCount'])
+        && (
+          (membershipAdded(communityId) && after == before + 1) ||
+          (membershipRemoved(communityId) && (
+            (before > 0 && after == before - 1) || (before == 0 && after == 0)
+          ))
+        );
+    }
+
     // 3. Collection Rules
 
     // Connection test doc
@@ -284,9 +430,8 @@ service cloud.firestore {
           (isOwner(uid) && incoming().diff(existing()).affectedKeys().hasOnly([
             'displayName', 'username', 'bio', 'avatarUrl', 'isPrivateProfile', 'updatedAt'
           ])) ||
-          (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly([
-            'followersCount', 'followingCount', 'updatedAt'
-          ])) ||
+          isFollowingCountUpdate(uid) ||
+          isFollowersCountUpdate(uid) ||
           isAdmin()
         );
       allow delete: if isValidId(uid) && (isOwner(uid) || isAdmin());
@@ -379,8 +524,8 @@ service cloud.firestore {
           (isPostOwner(postId) && incoming().diff(existing()).affectedKeys().hasOnly([
             'title', 'content', 'emotion', 'tags', 'imageUrl', 'updatedAt'
           ])) ||
-          incoming().diff(existing()).affectedKeys().hasOnly(['reactionCounts', 'updatedAt']) ||
-          incoming().diff(existing()).affectedKeys().hasOnly(['commentsCount', 'updatedAt']) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['reactionCounts', 'updatedAt']) && isReactionCounterUpdate(postId)) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['commentsCount', 'updatedAt']) && isCommentCounterUpdate()) ||
           isAdmin()
         );
       allow delete: if isValidId(postId) && (isPostOwner(postId) || isAdmin());
@@ -480,7 +625,7 @@ service cloud.firestore {
         && incoming().createdByUid == existing().createdByUid
         && incoming().createdAt == existing().createdAt
         && (
-          incoming().diff(existing()).affectedKeys().hasOnly(['memberCount']) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['memberCount']) && isMemberCountUpdate(communityId)) ||
           isAdmin()
         );
       allow delete: if isValidId(communityId) && isAdmin();
