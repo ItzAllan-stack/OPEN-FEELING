@@ -132,6 +132,9 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
               src={post.authorAvatar}
               alt={post.authorName}
               referrerPolicy="no-referrer"
+              loading="lazy"
+              width="40"
+              height="40"
               className="w-10 h-10 rounded-full object-cover bg-[#EEE8E1] shrink-0"
             />
           ) : (

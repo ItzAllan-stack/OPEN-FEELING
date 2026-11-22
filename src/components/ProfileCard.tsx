@@ -17,6 +17,9 @@ export function ProfileCard({ user, actionSlot }: ProfileCardProps) {
               src={user.avatarUrl}
               alt={user.displayName}
               referrerPolicy="no-referrer"
+              loading="lazy"
+              width="64"
+              height="64"
               className="w-16 h-16 rounded-full object-cover bg-[#EEE8E1] border border-[#EAE4DD] shrink-0"
             />
           ) : (

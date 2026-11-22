@@ -4,6 +4,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   onSnapshot,
   query,
   serverTimestamp,
@@ -580,7 +581,7 @@ export async function togglePostReaction(params: {
     }
 
     batch.update(postRef, {
-      reactionCounts: nextCounts,
+      [`reactionCounts.${type}`]: currentlyActive ? increment(-1) : increment(1),
       updatedAt: serverTimestamp(),
     });
 
@@ -652,7 +653,7 @@ export async function addComment(params: {
     });
 
     batch.update(doc(db, 'posts', params.post.id), {
-      commentsCount: (params.post.commentsCount ?? 0) + 1,
+      commentsCount: increment(1),
       updatedAt: serverTimestamp(),
     });
 
@@ -696,7 +697,7 @@ export async function deleteComment(post: Post, commentId: string): Promise<void
     const batch = writeBatch(db);
     batch.delete(doc(db, 'posts', post.id, 'comments', commentId));
     batch.update(doc(db, 'posts', post.id), {
-      commentsCount: Math.max(0, (post.commentsCount ?? 1) - 1),
+      commentsCount: increment(-1),
       updatedAt: serverTimestamp(),
     });
     await batch.commit();
@@ -820,7 +821,7 @@ export async function toggleCommunityMembership(
     const batch = writeBatch(db);
     if (isMember) {
       batch.delete(doc(db, 'community_members', memberDocId));
-      batch.update(cRef, { memberCount: Math.max(0, community.memberCount - 1) });
+      batch.update(cRef, { memberCount: increment(-1) });
     } else {
       batch.set(doc(db, 'community_members', memberDocId), {
         id: memberDocId,
@@ -828,7 +829,7 @@ export async function toggleCommunityMembership(
         userUid: uid,
         joinedAt: serverTimestamp(),
       });
-      batch.update(cRef, { memberCount: community.memberCount + 1 });
+      batch.update(cRef, { memberCount: increment(1) });
     }
     await batch.commit();
   } catch (error) {
@@ -892,11 +893,11 @@ export async function toggleFollowUser(params: {
     if (isFollowing) {
       batch.delete(doc(db, 'follows', followId));
       batch.update(doc(db, 'users_public', actor.uid), {
-        followingCount: Math.max(0, actor.followingCount - 1),
+        followingCount: increment(-1),
         updatedAt: serverTimestamp(),
       });
       batch.update(doc(db, 'users_public', targetUser.uid), {
-        followersCount: Math.max(0, targetUser.followersCount - 1),
+        followersCount: increment(-1),
         updatedAt: serverTimestamp(),
       });
     } else {
@@ -907,11 +908,11 @@ export async function toggleFollowUser(params: {
         createdAt: serverTimestamp(),
       });
       batch.update(doc(db, 'users_public', actor.uid), {
-        followingCount: actor.followingCount + 1,
+        followingCount: increment(1),
         updatedAt: serverTimestamp(),
       });
       batch.update(doc(db, 'users_public', targetUser.uid), {
-        followersCount: targetUser.followersCount + 1,
+        followersCount: increment(1),
         updatedAt: serverTimestamp(),
       });
       const notifId = makeId('notif');

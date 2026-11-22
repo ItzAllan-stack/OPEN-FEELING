@@ -20,6 +20,8 @@ export function BrandLogo({ onClick, size = 'md' }: BrandLogoProps) {
         src="/src/assets/images/open_felling_icon_1795332091293.webp"
         alt=""
         referrerPolicy="no-referrer"
+        width="32"
+        height="32"
         className={`${iconSize} object-cover border border-[#EAE4DD] bg-[#F8F6F3] shrink-0`}
       />
       <span className={`font-display font-medium tracking-tight text-[#29272B] ${textSize}`}>
