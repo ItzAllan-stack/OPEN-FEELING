@@ -1,9 +1,10 @@
 import React from 'react';
-import { EyeOff, HeartHandshake, Lock, MessageSquareHeart, ShieldCheck, Sparkles } from 'lucide-react';
+import { HeartHandshake, MessageSquareHeart, ShieldCheck } from 'lucide-react';
 import { BrandLogo } from '../components/BrandLogo.tsx';
 import { PostCard } from '../components/PostCard.tsx';
 import { SakuraPetals } from '../components/SakuraPetals.tsx';
 import { useApp } from '../context/AppContext.tsx';
+import { updatePrivatePreferences } from '../services/firestoreService.ts';
 
 export function LandingPage() {
   const {
@@ -12,10 +13,26 @@ export function LandingPage() {
     posts,
     sakuraEnabled,
     setSakuraLocal,
+    refreshUserProfile,
+    showToast,
     navigate,
   } = useApp();
 
   const featuredPosts = posts.filter((p) => p.visibility !== 'private').slice(0, 2);
+
+  const toggleSakura = async () => {
+    const enabled = !sakuraEnabled;
+    if (firebaseUser && publicUser) {
+      try {
+        await updatePrivatePreferences(publicUser.uid, { sakuraEnabled: enabled });
+        await refreshUserProfile();
+      } catch {
+        showToast('Could not update the petal setting.', 'error');
+      }
+      return;
+    }
+    setSakuraLocal(enabled);
+  };
 
   return (
     <div className="bg-[#FCFBFA] text-[#29272B]">
@@ -67,7 +84,7 @@ export function LandingPage() {
                 <span aria-hidden="true">·</span>
                 <button
                   type="button"
-                  onClick={() => setSakuraLocal(!sakuraEnabled)}
+                  onClick={toggleSakura}
                   className="underline underline-offset-4 hover:text-[#29272B] cursor-pointer"
                 >
                   {sakuraEnabled ? 'Pause drifting petals' : 'Show gentle petals'}
@@ -295,7 +312,3 @@ export function LandingPage() {
   );
 }
 
-// Keep unused icon imports cleanly omitted — notice EyeOff, Lock, Sparkles aren't needed here; let's keep imports minimal!
-void EyeOff;
-void Lock;
-void Sparkles;
