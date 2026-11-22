@@ -376,3 +376,34 @@ describe('aggregate counter integrity', () => {
     await assertSucceeds(batch.commit());
   });
 });
+
+describe('additional collection ownership', () => {
+  it('lets an author list their own private posts but not another user\'s', async () => {
+    await seed(async (db) => setDoc(doc(db, 'posts', 'p1'), post('p1', 'alice', { visibility: 'private' })));
+    await assertSucceeds(getDocs(query(collection(as('alice'), 'posts'), where('authorUid', '==', 'alice'))));
+    await assertFails(getDocs(query(collection(as('bob'), 'posts'), where('authorUid', '==', 'alice'))));
+  });
+
+  it('denies reading another user\'s notification', async () => {
+    await seed(async (db) => setDoc(doc(db, 'notifications', 'n1'), {
+      id: 'n1', recipientUid: 'alice', actorUid: 'bob', actorName: 'Bob',
+      type: 'comment', postId: 'p1', message: 'hello', isRead: false, createdAt: now(),
+    }));
+    await assertFails(getDoc(doc(as('bob'), 'notifications', 'n1')));
+    await assertSucceeds(getDoc(doc(as('alice'), 'notifications', 'n1')));
+  });
+
+  it('denies listing another user\'s saved posts', async () => {
+    await seed(async (db) => setDoc(doc(db, 'saved_posts', 'alice_p1'), {
+      id: 'alice_p1', userUid: 'alice', postId: 'p1', createdAt: now(),
+    }));
+    await assertFails(getDocs(query(collection(as('bob'), 'saved_posts'), where('userUid', '==', 'alice'))));
+  });
+
+  it('denies creating a block on behalf of another user', async () => {
+    const db = as('bob');
+    await assertFails(setDoc(doc(db, 'blocked_users', 'alice_bob_block'), {
+      id: 'alice_bob_block', blockerUid: 'alice', blockedUid: 'bob', mode: 'block', createdAt: serverTimestamp(),
+    }));
+  });
+});

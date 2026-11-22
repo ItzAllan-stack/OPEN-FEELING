@@ -28,7 +28,7 @@ export function getTodayIsoDate(): string {
 
 export function isSafeImageUrl(url: string): boolean {
   if (!url) return false;
-  if (url.startsWith('/src/assets/')) return true;
+  if (url.startsWith('/assets/') || url.startsWith('/src/assets/')) return true;
   try {
     const parsed = new URL(url);
     return parsed.protocol === 'https:' || parsed.protocol === 'http:';
