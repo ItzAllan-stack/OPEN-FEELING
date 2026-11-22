@@ -13,8 +13,10 @@ React 19 + Vite 8, TypeScript, Tailwind CSS v4, Firebase (Auth + Firestore), Fra
 - `npm ci`
 - `npm run dev` — starts the app at http://localhost:3000
 
-Firebase configuration lives in `firebase-applet-config.json`. Copy `.env.example`
-to `.env` if your local setup needs environment variables.
+Firebase configuration lives in `firebase-applet-config.json` (the web API key
+is a client identifier, not a secret; access control lives in `firestore.rules`).
+Copy `.env.example` to `.env.local` only if you need local overrides such as
+`VITE_RECAPTCHA_SITE_KEY` for App Check. No secret is required to run the app.
 
 ## Scripts
 
