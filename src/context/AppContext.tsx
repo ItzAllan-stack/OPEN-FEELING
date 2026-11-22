@@ -312,10 +312,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const completeOnboarding = useCallback(
     async (displayName: string, username: string) => {
       if (!firebaseUser) throw new Error('Not signed in.');
-      const avatar =
-        firebaseUser.photoURL && firebaseUser.photoURL.startsWith('https://')
-          ? CURATED_AVATARS[0]
-          : CURATED_AVATARS[0];
+      const avatar = CURATED_AVATARS[0];
       const { publicUser: pub, privateUser: priv } = await createUserProfile({
         uid: firebaseUser.uid,
         email: firebaseUser.email || '',
