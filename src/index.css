@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  --of-bg-canvas: #FCFBFA;
+  --of-bg-surface: #F8F6F3;
+  --of-bg-beige: #EEE8E1;
+  --of-accent-blush: #E9A9B8;
+  --of-accent-rose: #F4DCE3;
+  --of-accent-rose-deep: #9F4E65;
+  --of-secondary-lavender: #E9E5F2;
+  --of-secondary-sage: #DCE8DD;
+  --of-text-primary: #29272B;
+  --of-text-secondary: #77727A;
+  --of-border-hairline: #EAE4DD;
+}
+
+@layer base {
+  html {
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: var(--of-bg-canvas);
+    color: var(--of-text-primary);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, .font-display {
+    font-family: "Fraunces", Georgia, serif;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Subtle, optional cherry blossom falling-petal animation */
+@keyframes sakura-drift {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(var(--drift-x, 28px), 48vh, 0) rotate(135deg);
+    opacity: 0.65;
+  }
+  88% {
+    opacity: 0.48;
+  }
+  100% {
+    transform: translate3d(calc(var(--drift-x, 28px) * -0.4), 104vh, 0) rotate(280deg);
+    opacity: 0;
+  }
+}
+
+.sakura-petal {
+  position: absolute;
+  top: -8vh;
+  will-change: transform, opacity;
+  animation-name: sakura-drift;
+  animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .sakura-petal {
+    animation: none !important;
+    display: none !important;
+  }
+}

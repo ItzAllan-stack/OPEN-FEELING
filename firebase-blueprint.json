@@ -1,0 +1,303 @@
+{
+  "entities": {
+    "PublicUser": {
+      "title": "PublicUser",
+      "description": "Publicly visible user profile without PII.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "username": { "type": "string", "minLength": 3, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "bio": { "type": "string", "maxLength": 400 },
+        "avatarUrl": { "type": "string", "maxLength": 60000 },
+        "isPrivateProfile": { "type": "boolean" },
+        "followersCount": { "type": "integer" },
+        "followingCount": { "type": "integer" },
+        "ageConfirmed": { "type": "boolean" },
+        "acceptedGuidelines": { "type": "boolean" },
+        "joinedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "username", "bio", "avatarUrl", "isPrivateProfile", "followersCount", "followingCount", "ageConfirmed", "acceptedGuidelines", "joinedAt", "updatedAt"]
+    },
+    "PrivateUser": {
+      "title": "PrivateUser",
+      "description": "Strictly private user account metadata, preferences, and PII.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "role": { "type": "string", "enum": ["member", "moderator", "admin"] },
+        "isSuspended": { "type": "boolean" },
+        "defaultVisibility": { "type": "string", "enum": ["public", "anonymous", "private"] },
+        "sakuraEnabled": { "type": "boolean" },
+        "notifyReactions": { "type": "boolean" },
+        "notifyComments": { "type": "boolean" },
+        "notifyFollows": { "type": "boolean" },
+        "notifyCommunity": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "isSuspended", "defaultVisibility", "sakuraEnabled", "notifyReactions", "notifyComments", "notifyFollows", "notifyCommunity", "updatedAt"]
+    },
+    "UsernameRegistry": {
+      "title": "UsernameRegistry",
+      "description": "Unique username reservation document.",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "minLength": 3, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["username", "uid", "createdAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "A feelings-sharing post. Anonymous posts sanitize authorUid/authorName to 'anonymous' on this document.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 140 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "emotion": { "type": "string", "enum": ["", "happy", "sad", "lonely", "anxious", "grateful", "hopeful", "excited", "confused", "motivated", "nostalgic", "in_love", "peaceful"] },
+        "tags": { "type": "array" },
+        "visibility": { "type": "string", "enum": ["public", "anonymous", "private"] },
+        "authorUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "authorUsername": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "authorAvatar": { "type": "string", "maxLength": 60000 },
+        "communityId": { "type": "string", "maxLength": 128 },
+        "communityName": { "type": "string", "maxLength": 80 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "reactionCounts": { "type": "object" },
+        "commentsCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "content", "emotion", "tags", "visibility", "authorUid", "authorName", "authorUsername", "authorAvatar", "communityId", "communityName", "imageUrl", "reactionCounts", "commentsCount", "createdAt", "updatedAt"]
+    },
+    "PostOwnership": {
+      "title": "PostOwnership",
+      "description": "Protected ownership record for posts, isolating real author UID for anonymous posts.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "ownerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "ownerUid", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A supportive comment or reply on a post.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "postVisibility": { "type": "string", "enum": ["public", "anonymous", "private"] },
+        "postAuthorUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "parentCommentId": { "type": "string", "maxLength": 128 },
+        "authorUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "authorUsername": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "authorAvatar": { "type": "string", "maxLength": 60000 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 1500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "postId", "postVisibility", "postAuthorUid", "parentCommentId", "authorUid", "authorName", "authorUsername", "authorAvatar", "content", "createdAt", "updatedAt"]
+    },
+    "Reaction": {
+      "title": "Reaction",
+      "description": "Meaningful emotional support reaction on a post.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "userUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "type": { "type": "string", "enum": ["understand", "love", "not_alone", "stay_strong", "thank_you"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "postId", "userUid", "type", "createdAt"]
+    },
+    "Community": {
+      "title": "Community",
+      "description": "Topic-based emotional support community space.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "slug": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "rules": { "type": "array" },
+        "accentTone": { "type": "string", "maxLength": 32 },
+        "memberCount": { "type": "integer" },
+        "createdByUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "slug", "name", "description", "rules", "accentTone", "memberCount", "createdByUid", "createdAt"]
+    },
+    "CommunityMember": {
+      "title": "CommunityMember",
+      "description": "Community membership record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260 },
+        "communityId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "userUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "joinedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "communityId", "userUid", "joinedAt"]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "User follow relationship.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260 },
+        "followerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "followingUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "followerUid", "followingUid", "createdAt"]
+    },
+    "SavedPost": {
+      "title": "SavedPost",
+      "description": "User bookmark for a post.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260 },
+        "userUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userUid", "postId", "createdAt"]
+    },
+    "PrivateJournal": {
+      "title": "PrivateJournal",
+      "description": "Strictly private personal journal entry ('My Personal Space').",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "userUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 140 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 8000 },
+        "emotion": { "type": "string", "maxLength": 32 },
+        "entryDate": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userUid", "title", "content", "emotion", "entryDate", "createdAt", "updatedAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "recipientUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "actorUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "actorName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "type": { "type": "string", "enum": ["reaction", "comment", "reply", "follow", "community", "safety"] },
+        "postId": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "recipientUid", "actorUid", "actorName", "type", "postId", "message", "isRead", "createdAt"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Moderation report for posts, comments, or users.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "reporterUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "targetType": { "type": "string", "enum": ["post", "comment", "user"] },
+        "targetId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "postId": { "type": "string", "maxLength": 128 },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "details": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["pending", "reviewed", "resolved", "dismissed"] },
+        "moderatorNote": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "reporterUid", "targetType", "targetId", "postId", "reason", "details", "status", "moderatorNote", "createdAt", "updatedAt"]
+    },
+    "BlockedUser": {
+      "title": "BlockedUser",
+      "description": "User block or mute record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260 },
+        "blockerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "blockedUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "mode": { "type": "string", "enum": ["block", "mute"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "blockerUid", "blockedUid", "mode", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users_public/{uid}": {
+      "schema": { "$ref": "#/entities/PublicUser" },
+      "description": "Public profile directory."
+    },
+    "/users_private/{uid}": {
+      "schema": { "$ref": "#/entities/PrivateUser" },
+      "description": "Private user account data and preferences."
+    },
+    "/usernames/{username}": {
+      "schema": { "$ref": "#/entities/UsernameRegistry" },
+      "description": "Unique username lookup registry."
+    },
+    "/posts/{postId}": {
+      "schema": { "$ref": "#/entities/Post" },
+      "description": "Community posts (public, anonymous, and private)."
+    },
+    "/post_ownership/{postId}": {
+      "schema": { "$ref": "#/entities/PostOwnership" },
+      "description": "Private ownership links protecting anonymous post authors."
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Post comments and replies."
+    },
+    "/posts/{postId}/reactions/{reactionId}": {
+      "schema": { "$ref": "#/entities/Reaction" },
+      "description": "Post support reactions."
+    },
+    "/communities/{communityId}": {
+      "schema": { "$ref": "#/entities/Community" },
+      "description": "Topic-based communities."
+    },
+    "/community_members/{memberDocId}": {
+      "schema": { "$ref": "#/entities/CommunityMember" },
+      "description": "User community memberships."
+    },
+    "/follows/{followId}": {
+      "schema": { "$ref": "#/entities/Follow" },
+      "description": "Follow relationships between users."
+    },
+    "/saved_posts/{savedId}": {
+      "schema": { "$ref": "#/entities/SavedPost" },
+      "description": "Saved post bookmarks."
+    },
+    "/private_journals/{entryId}": {
+      "schema": { "$ref": "#/entities/PrivateJournal" },
+      "description": "Private personal journal entries."
+    },
+    "/notifications/{notifId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User notification inbox."
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/Report" },
+      "description": "Safety and content moderation reports."
+    },
+    "/blocked_users/{blockId}": {
+      "schema": { "$ref": "#/entities/BlockedUser" },
+      "description": "User block and mute preferences."
+    }
+  }
+}

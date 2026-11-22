@@ -1,0 +1,6 @@
+{
+  "name": "OPEN FELLING",
+  "description": "Express Freely. Feel Lighter. A welcoming digital space to express your emotions, share personal thoughts, and connect with people who understand.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
