@@ -38,7 +38,7 @@ export function LandingPage() {
               </h1>
 
               <p className="text-base sm:text-lg text-[#77727A] leading-relaxed max-w-xl">
-                Sometimes we have so much to say but nowhere to say it. OPEN FELLING gives you a space to express your thoughts, share your experiences, and connect with people who understand. No judgement. Just a place to be yourself.
+                Sometimes we have so much to say but nowhere to say it. OPEN FEELING gives you a space to express your thoughts, share your experiences, and connect with people who understand. No judgement. Just a place to be yourself.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -95,15 +95,15 @@ export function LandingPage() {
           <p className="font-display italic text-xl sm:text-2xl text-[#29272B] leading-relaxed text-balance">
             &ldquo;Sometimes people don&apos;t need advice. Sometimes they simply need a place to express what they feel and someone willing to listen.&rdquo;
           </p>
-          <p className="text-xs text-[#77727A]">The central philosophy of OPEN FELLING</p>
+          <p className="text-xs text-[#77727A]">The central philosophy of OPEN FEELING</p>
         </div>
       </section>
 
-      {/* 1. How OPEN FELLING Works */}
+      {/* 1. How OPEN FEELING Works */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 border-b border-[#EAE4DD]">
         <div className="max-w-2xl space-y-2 mb-10">
           <h2 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
-            How OPEN FELLING Works
+            How OPEN FEELING Works
           </h2>
           <p className="text-sm sm:text-base text-[#77727A]">
             Designed for honesty and warmth—never for chasing popularity or follower metrics.

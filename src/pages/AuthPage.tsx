@@ -114,7 +114,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
           </div>
           <h1 className="text-2xl font-display font-medium text-[#29272B] pt-2">
             {mode === 'signup'
-              ? 'Join OPEN FELLING'
+              ? 'Join OPEN FEELING'
               : mode === 'forgot'
                 ? 'Reset Your Password'
                 : mode === 'onboarding'
@@ -325,7 +325,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
                 : mode === 'forgot'
                   ? 'Send Reset Link'
                   : mode === 'onboarding'
-                    ? 'Enter OPEN FELLING'
+                    ? 'Enter OPEN FEELING'
                     : 'Sign In'}
           </button>
         </form>
@@ -333,7 +333,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
         <div className="text-center text-xs text-[#77727A] pt-2 border-t border-[#EAE4DD]">
           {mode === 'login' && (
             <p>
-              New to OPEN FELLING?{' '}
+              New to OPEN FEELING?{' '}
               <button
                 type="button"
                 onClick={() => {
