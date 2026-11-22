@@ -36,9 +36,12 @@ import {
 
 function toDate(value: unknown): Date {
   if (value instanceof Timestamp) return value.toDate();
-  if (value instanceof Date) return value;
-  if (typeof value === 'string' || typeof value === 'number') return new Date(value);
-  return new Date();
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? new Date(0) : value;
+  if (typeof value === 'string' || typeof value === 'number') {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? new Date(0) : parsed;
+  }
+  return new Date(0);
 }
 
 export function makeId(prefix = ''): string {
