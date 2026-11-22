@@ -14,7 +14,7 @@ export function BrandLogo({ onClick, size = 'md' }: BrandLogoProps) {
       type="button"
       onClick={onClick}
       className="inline-flex items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E9A9B8] rounded-md whitespace-nowrap shrink-0 cursor-pointer"
-      aria-label="OPEN FELLING Home"
+      aria-label="OPEN FEELING Home"
     >
       <img
         src="/src/assets/images/open_felling_icon_1795332091293.webp"
@@ -23,7 +23,7 @@ export function BrandLogo({ onClick, size = 'md' }: BrandLogoProps) {
         className={`${iconSize} object-cover border border-[#EAE4DD] bg-[#F8F6F3] shrink-0`}
       />
       <span className={`font-display font-medium tracking-tight text-[#29272B] ${textSize}`}>
-        OPEN FELLING
+        OPEN FEELING
       </span>
     </button>
   );
