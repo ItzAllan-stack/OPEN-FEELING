@@ -11,6 +11,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   query,
   serverTimestamp,
   setDoc,
@@ -271,6 +272,19 @@ describe('aggregate counter integrity', () => {
     });
     batch.update(doc(db, 'posts', 'p1'), {
       reactionCounts: { ...zeroCounts, love: 1 }, updatedAt: serverTimestamp(),
+    });
+    await assertSucceeds(batch.commit());
+  });
+
+  it('accepts FieldValue.increment() for reaction counts', async () => {
+    await seed(async (db) => setDoc(doc(db, 'posts', 'p1'), post('p1', 'alice')));
+    const db = as('bob');
+    const batch = writeBatch(db);
+    batch.set(doc(db, 'posts', 'p1', 'reactions', 'bob_love'), {
+      id: 'bob_love', postId: 'p1', userUid: 'bob', type: 'love', createdAt: serverTimestamp(),
+    });
+    batch.update(doc(db, 'posts', 'p1'), {
+      'reactionCounts.love': increment(1), updatedAt: serverTimestamp(),
     });
     await assertSucceeds(batch.commit());
   });
