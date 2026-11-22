@@ -1,9 +1,21 @@
 import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { doc, getDocFromServer, getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
+
+// Optional App Check (reCAPTCHA v3). Enabled when VITE_RECAPTCHA_SITE_KEY is
+// set. Enforcement itself is toggled in the Firebase console; initializing
+// here only attaches attestation tokens to requests. See README "App Check".
+const appCheckSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
+if (appCheckSiteKey) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(appCheckSiteKey),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
 export const auth = getAuth(app);
 export const googleAuthProvider = new GoogleAuthProvider();
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);

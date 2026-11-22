@@ -10,10 +10,12 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import { ADMIN_EMAIL, CURATED_AVATARS } from '../constants/emotions.ts';
+import { CURATED_AVATARS } from '../constants/emotions.ts';
 import { STARTER_COMMUNITIES, STARTER_POSTS } from '../data/starterData.ts';
 import { auth, googleAuthProvider } from '../lib/firebase.ts';
+import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
 import {
+  checkIsAdmin,
   createUserProfile,
   deleteUserAccountData,
   getPrivateUser,
@@ -88,6 +90,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [publicUser, setPublicUser] = useState<PublicUser | null>(null);
   const [privateUser, setPrivateUser] = useState<PrivateUser | null>(null);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [isAdminRegistry, setIsAdminRegistry] = useState(false);
 
   const [currentPath, setCurrentPath] = useState<string>(() => {
     return window.location.pathname || '/';
@@ -97,7 +100,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [userPrivatePosts, setUserPrivatePosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
   const [ownedAnonymousIds, setOwnedAnonymousIds] = useState<string[]>([]);
-  const [communities, setCommunities] = useState<Community[]>(STARTER_COMMUNITIES);
+  const [communities, setCommunities] = useState<Community[]>(
+    SAMPLE_CONTENT_ENABLED ? STARTER_COMMUNITIES : []
+  );
   const [joinedCommunityIds, setJoinedCommunityIds] = useState<string[]>([]);
   const [savedPostIds, setSavedPostIds] = useState<string[]>([]);
   const [followingUids, setFollowingUids] = useState<string[]>([]);
@@ -133,12 +138,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const loadProfiles = useCallback(async (user: User) => {
-    const [pub, priv] = await Promise.all([
+    const [pub, priv, registryAdmin] = await Promise.all([
       getPublicUser(user.uid),
       getPrivateUser(user.uid),
+      checkIsAdmin(user.uid),
     ]);
     setPublicUser(pub);
     setPrivateUser(priv);
+    setIsAdminRegistry(registryAdmin);
     setNeedsOnboarding(!pub);
     if (pub) {
       seedStarterCommunitiesIfNeeded(user.uid);
@@ -162,6 +169,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } else {
         setPublicUser(null);
         setPrivateUser(null);
+        setIsAdminRegistry(false);
         setNeedsOnboarding(false);
         setUserPrivatePosts([]);
         setOwnedAnonymousIds([]);
@@ -228,7 +236,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       map.set(p.id, p);
     }
     if (map.size === 0) {
-      return STARTER_POSTS;
+      return SAMPLE_CONTENT_ENABLED ? STARTER_POSTS : [];
     }
     return Array.from(map.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
@@ -237,11 +245,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = useMemo(() => {
     if (!firebaseUser) return false;
-    return (
-      (firebaseUser.email === ADMIN_EMAIL && firebaseUser.emailVerified) ||
-      privateUser?.role === 'admin'
-    );
-  }, [firebaseUser, privateUser]);
+    // The admins registry (admins/{uid}) is the single source of admin
+    // rights - mirroring the security rules. Verified email is required to
+    // match isAdmin() in firestore.rules.
+    return Boolean(firebaseUser.emailVerified) && isAdminRegistry;
+  }, [firebaseUser, isAdminRegistry]);
 
   const sakuraEnabled = privateUser ? privateUser.sakuraEnabled : sakuraLocalOverride;
 
@@ -255,7 +263,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const pub = await getPublicUser(cred.user.uid);
     if (!pub) {
       setNeedsOnboarding(true);
-      showToast('Welcome to OPEN FELLING. Please finish choosing your username.', 'info');
+      showToast('Welcome to OPEN FEELING. Please finish choosing your username.', 'info');
     } else {
       showToast(`Welcome back, ${pub.displayName}.`, 'success');
       navigate('/home');
@@ -285,7 +293,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setPublicUser(pub);
       setPrivateUser(priv);
       setNeedsOnboarding(false);
-      showToast('Account created. Welcome to OPEN FELLING.', 'success');
+      showToast('Account created. Welcome to OPEN FEELING.', 'success');
       navigate('/home');
     },
     [navigate, showToast]
@@ -295,7 +303,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string) => {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       await loadProfiles(cred.user);
-      showToast('Welcome back to OPEN FELLING.', 'success');
+      showToast('Welcome back to OPEN FEELING.', 'success');
       navigate('/home');
     },
     [loadProfiles, navigate, showToast]
@@ -318,7 +326,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setPublicUser(pub);
       setPrivateUser(priv);
       setNeedsOnboarding(false);
-      showToast('Your OPEN FELLING space is ready.', 'success');
+      showToast('Your OPEN FEELING space is ready.', 'success');
       navigate('/home');
     },
     [firebaseUser, navigate, showToast]

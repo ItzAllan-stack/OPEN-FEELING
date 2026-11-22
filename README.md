@@ -13,8 +13,10 @@ React 19 + Vite 8, TypeScript, Tailwind CSS v4, Firebase (Auth + Firestore), Fra
 - `npm ci`
 - `npm run dev` — starts the app at http://localhost:3000
 
-Firebase configuration lives in `firebase-applet-config.json`. Copy `.env.example`
-to `.env` if your local setup needs environment variables.
+Firebase configuration lives in `firebase-applet-config.json` (the web API key
+is a client identifier, not a secret; access control lives in `firestore.rules`).
+Copy `.env.example` to `.env.local` only if you need local overrides such as
+`VITE_RECAPTCHA_SITE_KEY` for App Check. No secret is required to run the app.
 
 ## Scripts
 
@@ -26,6 +28,40 @@ to `.env` if your local setup needs environment variables.
 | `npm run lint` | TypeScript typecheck (`tsc --noEmit`) |
 | `npm run clean` | Remove `dist/` and `server.js` |
 | `npm run test:rules` | Firestore rules tests against the emulator |
+| `npm run backfill:counters` | Dry-run recount of aggregate counters (`--apply` to write) |
+
+## Sample content and starter data
+
+Starter posts/communities exist only to make a fresh local environment feel
+alive. In production builds (`import.meta.env.PROD`) the sample fallback is
+disabled: an empty database renders the real empty states, never fake posts.
+For local development it stays on by default; set
+`VITE_ENABLE_SAMPLE_CONTENT=false` in `.env.local` to disable it there as
+well. Starter communities are seeded from the client only when
+`VITE_ENABLE_STARTER_SEED=true`; otherwise seeding never runs, so production
+data is not at the mercy of the first login.
+
+## App Check
+
+The Firebase web SDK can attach App Check attestation tokens (reCAPTCHA v3) to
+every request. To enable:
+
+1. Firebase console -> App Check -> APIs -> get a reCAPTCHA v3 secret, and
+   register your web app.
+2. Add the site key to `.env.local` (and to your hosting provider's
+   environment) as `VITE_RECAPTCHA_SITE_KEY=...`. The app initializes App
+   Check automatically when the variable is set; unset it and App Check stays
+   off.
+3. Enable App Check **enforcement** for Cloud Firestore in the console.
+   Initialization alone does not block abuse; enforcement does.
+4. Watch the App Check metrics panel for a few days before tightening further.
+
+Note: per-user write quotas and rate limits are not enforceable in Firestore
+security rules alone (rules cannot persist a rate-limit counter transaction
+across requests). App Check plus the existing rules is the baseline defence;
+hard per-user rate limits require a Cloud Functions backend or Firebase App
+Check enforcement and are intentionally out of scope for this client-only
+codebase.
 
 ## Firestore rules and tests
 
@@ -39,5 +75,46 @@ documents the invariants and adversarial cases. Deploy rules with
 
 ## CI
 
-`.github/workflows/ci.yml` runs the typecheck, dependency audit, build, and
-Firestore rules tests on every push and pull request.
+`.github/workflows/ci.yml` runs the typecheck, build, and Firestore rules tests
+on pushes to `main` and on pull requests, with superseded runs cancelled
+automatically. Dependency audits live in `.github/workflows/audit.yml`, which
+runs weekly (and on demand) so a fresh high-severity advisory does not block
+unrelated changes; run `npm audit --audit-level=high` locally before releases.
+
+## Admin access
+
+Admin rights derive exclusively from the `admins/{uid}` registry in Firestore
+(mirroring `firestore.rules`); email claims carry no privileges. To grant
+admin to an account (use a verified-email account, or `isAdmin()` will still
+fail the rules' `email_verified` check):
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccount.json
+npm run grant-admin -- user@example.com
+```
+
+To revoke, delete the `admins/{uid}` document in the Firebase console.
+
+> Before deploying a `firestore.rules` build that removes any legacy
+> bootstrap admin path, make sure at least one `admins/{uid}` document exists
+> and you can sign in with that account - otherwise you will lock every admin
+> out of the moderation UI.
+
+## Data maintenance
+
+Aggregate counters (`reactionCounts`, `commentsCount`, `followersCount`,
+`followingCount`, `memberCount`) are maintained with `FieldValue.increment()`
+on the client and bounded to +/-1 by the security rules. Databases written by
+older clients may contain drifted counts; the rules also reject decrements
+below zero, so a count stuck at 0 would otherwise block unfollow/leave/delete
+operations. Repair existing drift once with:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccount.json
+npm run backfill:counters            # dry run: prints drift, writes nothing
+npm run backfill:counters -- --apply # write corrections
+```
+
+The script (`scripts/recount-counters.mjs`) uses the Admin SDK, bypasses the
+security rules by design, is idempotent, and never deletes documents. Review
+the dry-run output before passing `--apply`.

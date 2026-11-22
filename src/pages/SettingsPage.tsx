@@ -139,7 +139,7 @@ export function SettingsPage() {
         <section className="bg-[#FDF7F7] border border-[#E5B8B8] rounded-2xl p-6 space-y-3">
           <h2 className="text-base font-medium text-[#8C3737]">Delete Account</h2>
           <p className="text-xs text-[#77727A] leading-relaxed">
-            Permanently remove your profile, username reservation, and private settings from OPEN FELLING.
+            Permanently remove your profile, username reservation, and private settings from OPEN FEELING.
           </p>
           <button
             type="button"

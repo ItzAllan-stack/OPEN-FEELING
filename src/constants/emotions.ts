@@ -149,4 +149,3 @@ export const CURATED_AVATARS: string[] = [
   '/assets/images/story_community_warmth_1795329056419.webp',
 ];
 
-export const ADMIN_EMAIL = 'mroy4957@gmail.com';

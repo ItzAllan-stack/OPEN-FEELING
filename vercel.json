@@ -1,8 +1,32 @@
 {
   "rewrites": [
     {
-      "source": "/src/assets/:path*",
-      "destination": "/assets/:path*"
+      "source": "/src/assets/images/avatar_community_1_1795329057107.jpg",
+      "destination": "/assets/images/avatar_community_1_1795329057107.webp"
+    },
+    {
+      "source": "/src/assets/images/avatar_community_2_1795329056950.jpg",
+      "destination": "/assets/images/avatar_community_2_1795329056950.webp"
+    },
+    {
+      "source": "/src/assets/images/hero_open_felling_1795329057276.jpg",
+      "destination": "/assets/images/hero_open_felling_1795329057276.webp"
+    },
+    {
+      "source": "/src/assets/images/open_felling_icon_1795332091293.jpg",
+      "destination": "/assets/images/open_felling_icon_1795332091293.webp"
+    },
+    {
+      "source": "/src/assets/images/story_community_warmth_1795329056419.jpg",
+      "destination": "/assets/images/story_community_warmth_1795329056419.webp"
+    },
+    {
+      "source": "/src/assets/images/story_journal_calm_1795329057247.jpg",
+      "destination": "/assets/images/story_journal_calm_1795329057247.webp"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

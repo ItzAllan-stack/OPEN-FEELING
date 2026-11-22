@@ -76,7 +76,7 @@ export function PostComposer({
           ? 'Saved privately so only you can see it.'
           : visibility === 'anonymous'
             ? 'Shared anonymously with the community.'
-            : 'Shared with OPEN FELLING.',
+            : 'Shared with OPEN FEELING.',
         'success'
       );
       if (onPublished) onPublished(postId);
