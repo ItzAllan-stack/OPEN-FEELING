@@ -13,6 +13,7 @@ import {
 import { ADMIN_EMAIL, CURATED_AVATARS } from '../constants/emotions.ts';
 import { STARTER_COMMUNITIES, STARTER_POSTS } from '../data/starterData.ts';
 import { auth, googleAuthProvider } from '../lib/firebase.ts';
+import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
 import {
   createUserProfile,
   deleteUserAccountData,
@@ -97,7 +98,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [userPrivatePosts, setUserPrivatePosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
   const [ownedAnonymousIds, setOwnedAnonymousIds] = useState<string[]>([]);
-  const [communities, setCommunities] = useState<Community[]>(STARTER_COMMUNITIES);
+  const [communities, setCommunities] = useState<Community[]>(
+    SAMPLE_CONTENT_ENABLED ? STARTER_COMMUNITIES : []
+  );
   const [joinedCommunityIds, setJoinedCommunityIds] = useState<string[]>([]);
   const [savedPostIds, setSavedPostIds] = useState<string[]>([]);
   const [followingUids, setFollowingUids] = useState<string[]>([]);
@@ -228,7 +231,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       map.set(p.id, p);
     }
     if (map.size === 0) {
-      return STARTER_POSTS;
+      return SAMPLE_CONTENT_ENABLED ? STARTER_POSTS : [];
     }
     return Array.from(map.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()

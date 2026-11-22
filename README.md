@@ -30,6 +30,39 @@ Copy `.env.example` to `.env.local` only if you need local overrides such as
 | `npm run test:rules` | Firestore rules tests against the emulator |
 | `npm run backfill:counters` | Dry-run recount of aggregate counters (`--apply` to write) |
 
+## Sample content and starter data
+
+Starter posts/communities exist only to make a fresh local environment feel
+alive. In production builds (`import.meta.env.PROD`) the sample fallback is
+disabled: an empty database renders the real empty states, never fake posts.
+For local development it stays on by default; set
+`VITE_ENABLE_SAMPLE_CONTENT=false` in `.env.local` to disable it there as
+well. Starter communities are seeded from the client only when
+`VITE_ENABLE_STARTER_SEED=true`; otherwise seeding never runs, so production
+data is not at the mercy of the first login.
+
+## App Check
+
+The Firebase web SDK can attach App Check attestation tokens (reCAPTCHA v3) to
+every request. To enable:
+
+1. Firebase console -> App Check -> APIs -> get a reCAPTCHA v3 secret, and
+   register your web app.
+2. Add the site key to `.env.local` (and to your hosting provider's
+   environment) as `VITE_RECAPTCHA_SITE_KEY=...`. The app initializes App
+   Check automatically when the variable is set; unset it and App Check stays
+   off.
+3. Enable App Check **enforcement** for Cloud Firestore in the console.
+   Initialization alone does not block abuse; enforcement does.
+4. Watch the App Check metrics panel for a few days before tightening further.
+
+Note: per-user write quotas and rate limits are not enforceable in Firestore
+security rules alone (rules cannot persist a rate-limit counter transaction
+across requests). App Check plus the existing rules is the baseline defence;
+hard per-user rate limits require a Cloud Functions backend or Firebase App
+Check enforcement and are intentionally out of scope for this client-only
+codebase.
+
 ## Firestore rules and tests
 
 `firestore.rules` is the source of truth for data access; `security_spec.md`

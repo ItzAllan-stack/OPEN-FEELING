@@ -18,6 +18,7 @@ import {
 import { db, handleFirestoreError, OperationType } from '../lib/firebase.ts';
 import { EMPTY_REACTION_COUNTS } from '../constants/emotions.ts';
 import { STARTER_COMMUNITIES } from '../data/starterData.ts';
+import { SAMPLE_CONTENT_ENABLED, STARTER_SEED_ENABLED } from '../lib/features.ts';
 import {
   AppNotification,
   BlockedUserEntry,
@@ -715,7 +716,7 @@ export function subscribeCommunities(onData: (communities: Community[]) => void)
     collection(db, 'communities'),
     (snap) => {
       if (snap.empty) {
-        onData(STARTER_COMMUNITIES);
+        onData(SAMPLE_CONTENT_ENABLED ? STARTER_COMMUNITIES : []);
         return;
       }
       const items = snap.docs.map((d) => mapCommunity(d.data() as Record<string, unknown>));
@@ -726,6 +727,7 @@ export function subscribeCommunities(onData: (communities: Community[]) => void)
 }
 
 export async function seedStarterCommunitiesIfNeeded(uid: string): Promise<void> {
+  if (!STARTER_SEED_ENABLED) return;
   try {
     const existingSnap = await getDocs(query(collection(db, 'communities'), limit(1)));
     if (!existingSnap.empty) return;
