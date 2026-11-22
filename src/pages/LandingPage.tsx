@@ -81,6 +81,9 @@ export function LandingPage() {
                   src="/src/assets/images/hero_open_felling_1795329057276.webp"
                   alt="Quiet sunlit reading nook with open journal and warm tea"
                   referrerPolicy="no-referrer"
+                  width="1280"
+                  height="714"
+                  fetchPriority="high"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -159,6 +162,9 @@ export function LandingPage() {
                 src="/src/assets/images/story_journal_calm_1795329057247.webp"
                 alt="Open cream notebook and brass pen on linen cloth"
                 referrerPolicy="no-referrer"
+                loading="lazy"
+                width="960"
+                height="717"
                 className="w-full aspect-[4/3] object-cover"
               />
             </div>
@@ -249,6 +255,9 @@ export function LandingPage() {
                 src="/src/assets/images/story_community_warmth_1795329056419.webp"
                 alt="Two stoneware mugs on a warm sunlit wooden table"
                 referrerPolicy="no-referrer"
+                loading="lazy"
+                width="960"
+                height="717"
                 className="w-full aspect-[4/3] object-cover"
               />
             </div>
