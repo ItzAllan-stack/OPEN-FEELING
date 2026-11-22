@@ -42,8 +42,11 @@ documents the invariants and adversarial cases. Deploy rules with
 
 ## CI
 
-`.github/workflows/ci.yml` runs the typecheck, dependency audit, build, and
-Firestore rules tests on every push and pull request.
+`.github/workflows/ci.yml` runs the typecheck, build, and Firestore rules tests
+on pushes to `main` and on pull requests, with superseded runs cancelled
+automatically. Dependency audits live in `.github/workflows/audit.yml`, which
+runs weekly (and on demand) so a fresh high-severity advisory does not block
+unrelated changes; run `npm audit --audit-level=high` locally before releases.
 
 ## Data maintenance
 
