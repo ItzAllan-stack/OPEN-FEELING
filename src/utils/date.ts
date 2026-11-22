@@ -1,5 +1,6 @@
 export function formatRelativeTime(date: Date): string {
-  const diffSec = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (Number.isNaN(date.getTime())) return 'Date unavailable';
+  const diffSec = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
   if (diffSec < 45) return 'Just now';
   const diffMin = Math.floor(diffSec / 60);
   if (diffMin < 60) return `${diffMin}m ago`;
@@ -11,6 +12,7 @@ export function formatRelativeTime(date: Date): string {
 }
 
 export function formatFullDate(date: Date): string {
+  if (Number.isNaN(date.getTime())) return 'Date unavailable';
   return date.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
