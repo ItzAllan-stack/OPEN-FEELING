@@ -10,7 +10,7 @@ import {
   isSafeAvatarUrl,
 } from '../utils/date.ts';
 
-const GALLERY_PERMISSION_KEY = 'open_felling_gallery_permission';
+const GALLERY_PERMISSION_KEY = 'open_feeling_gallery_permission';
 
 export function EditProfilePage() {
   const { publicUser, refreshUserProfile, navigate, showToast } = useApp();
@@ -321,7 +321,7 @@ export function EditProfilePage() {
         open={permissionModalOpen}
         onClose={() => setPermissionModalOpen(false)}
         title="Allow Photo Gallery Access"
-        subtitle="OPEN FELLING would like to access your device's photo gallery to select a profile picture."
+        subtitle="OPEN FEELING would like to access your device's photo gallery to select a profile picture."
         maxWidthClass="max-w-sm"
       >
         <div className="space-y-4">

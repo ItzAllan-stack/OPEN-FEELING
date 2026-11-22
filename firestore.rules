@@ -19,17 +19,12 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
-    // TODO(security): drop this bootstrap email once an admins/{uid} document exists
-    // for the account. The admins registry should be the only source of admin rights.
-    function isBootstrapAdmin() {
-      return isVerified() && request.auth.token.email == 'mroy4957@gmail.com';
-    }
-
+    // Admin rights derive exclusively from the admins registry; email claims
+    // (including any former bootstrap address) confer no privileges. Seed
+    // admins/{uid} out-of-band (see scripts/grant-admin.mjs).
     function isAdmin() {
-      return isVerified() && (
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
-        isBootstrapAdmin()
-      );
+      return isVerified()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
     function isValidId(id) {

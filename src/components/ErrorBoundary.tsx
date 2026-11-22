@@ -22,7 +22,7 @@ export class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error) {
-    console.error('OPEN FELLING ErrorBoundary caught:', error);
+    console.error('OPEN FEELING ErrorBoundary caught:', error);
   }
 
   render() {
@@ -41,7 +41,7 @@ export class ErrorBoundary extends React.Component<
               onClick={() => window.location.reload()}
               className="px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3D3A40] transition-colors cursor-pointer"
             >
-              Refresh OPEN FELLING
+              Refresh OPEN FEELING
             </button>
           </div>
         </div>
