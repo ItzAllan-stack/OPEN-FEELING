@@ -26,6 +26,7 @@ to `.env` if your local setup needs environment variables.
 | `npm run lint` | TypeScript typecheck (`tsc --noEmit`) |
 | `npm run clean` | Remove `dist/` and `server.js` |
 | `npm run test:rules` | Firestore rules tests against the emulator |
+| `npm run backfill:counters` | Dry-run recount of aggregate counters (`--apply` to write) |
 
 ## Firestore rules and tests
 
@@ -41,3 +42,22 @@ documents the invariants and adversarial cases. Deploy rules with
 
 `.github/workflows/ci.yml` runs the typecheck, dependency audit, build, and
 Firestore rules tests on every push and pull request.
+
+## Data maintenance
+
+Aggregate counters (`reactionCounts`, `commentsCount`, `followersCount`,
+`followingCount`, `memberCount`) are maintained with `FieldValue.increment()`
+on the client and bounded to +/-1 by the security rules. Databases written by
+older clients may contain drifted counts; the rules also reject decrements
+below zero, so a count stuck at 0 would otherwise block unfollow/leave/delete
+operations. Repair existing drift once with:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccount.json
+npm run backfill:counters            # dry run: prints drift, writes nothing
+npm run backfill:counters -- --apply # write corrections
+```
+
+The script (`scripts/recount-counters.mjs`) uses the Admin SDK, bypasses the
+security rules by design, is idempotent, and never deletes documents. Review
+the dry-run output before passing `--apply`.
