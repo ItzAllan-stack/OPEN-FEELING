@@ -27,7 +27,7 @@ export function PrivacySettingsPage() {
           </h1>
           <div className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-3 text-sm text-[#77727A] leading-relaxed">
             <p>
-              At <strong className="text-[#29272B]">OPEN FELLING</strong>, privacy is enforced at the database layer:
+              At <strong className="text-[#29272B]">OPEN FEELING</strong>, privacy is enforced at the database layer:
             </p>
             <ul className="list-disc pl-5 space-y-1.5">
               <li>Anonymous posts strip your name, username, and UID from the public document.</li>
@@ -120,7 +120,7 @@ export function PrivacySettingsPage() {
         <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-3">
           <h2 className="text-base font-medium text-[#29272B]">About Anonymous Expression</h2>
           <p className="text-xs text-[#77727A] leading-relaxed">
-            When you publish anonymously, OPEN FELLING removes your display name, username, and profile link from public post documents. Ownership is stored separately so you can still delete your own posts and authorized moderators can investigate reported safety issues under controlled permissions. Platform anonymity does not guarantee absolute anonymity.
+            When you publish anonymously, OPEN FEELING removes your display name, username, and profile link from public post documents. Ownership is stored separately so you can still delete your own posts and authorized moderators can investigate reported safety issues under controlled permissions. Platform anonymity does not guarantee absolute anonymity.
           </p>
         </section>
 

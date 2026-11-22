@@ -6,12 +6,12 @@ export function GuidelinesPage() {
     <AppShell>
       <div className="max-w-3xl space-y-8">
         <div className="space-y-2">
-          <p className="text-xs font-medium text-[#9F4E65]">OPEN FELLING Standards</p>
+          <p className="text-xs font-medium text-[#9F4E65]">OPEN FEELING Standards</p>
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Community Guidelines &amp; Emotional Safety
           </h1>
           <p className="text-sm text-[#77727A] leading-relaxed">
-            OPEN FELLING exists so people can express what they truly feel without fear of judgement, ridicule, or popularity contests.
+            OPEN FEELING exists so people can express what they truly feel without fear of judgement, ridicule, or popularity contests.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export function GuidelinesPage() {
               4. Serious distress &amp; professional care
             </h2>
             <p className="text-[#77727A]">
-              OPEN FELLING is a peer community for emotional expression—not a medical service, therapy provider, or crisis hotline. If you or someone you know is in immediate danger or experiencing overwhelming distress, please reach out to local emergency services or a qualified mental health professional right away (for example, call or text 988 in the US/Canada, or contact your local crisis helpline).
+              OPEN FEELING is a peer community for emotional expression—not a medical service, therapy provider, or crisis hotline. If you or someone you know is in immediate danger or experiencing overwhelming distress, please reach out to local emergency services or a qualified mental health professional right away (for example, call or text 988 in the US/Canada, or contact your local crisis helpline).
             </p>
           </section>
         </div>

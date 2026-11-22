@@ -351,7 +351,7 @@ export function CommentSection({ post }: CommentSectionProps) {
         open={Boolean(reportingComment)}
         onClose={() => setReportingComment(null)}
         title="Report Comment"
-        subtitle="Help us keep OPEN FELLING gentle and safe."
+        subtitle="Help us keep OPEN FEELING gentle and safe."
       >
         <form onSubmit={handleReportSubmit} className="space-y-4">
           <div>

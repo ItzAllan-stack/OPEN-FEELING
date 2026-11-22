@@ -142,7 +142,7 @@ function as(uid: string, claims: Record<string, unknown> = {}): Firestore {
 
 before(async () => {
   testEnv = await initializeTestEnvironment({
-    projectId: 'demo-open-felling',
+    projectId: 'demo-open-feeling',
     firestore: { rules, host: '127.0.0.1', port: 8080 },
   });
 });

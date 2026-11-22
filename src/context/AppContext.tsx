@@ -255,7 +255,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const pub = await getPublicUser(cred.user.uid);
     if (!pub) {
       setNeedsOnboarding(true);
-      showToast('Welcome to OPEN FELLING. Please finish choosing your username.', 'info');
+      showToast('Welcome to OPEN FEELING. Please finish choosing your username.', 'info');
     } else {
       showToast(`Welcome back, ${pub.displayName}.`, 'success');
       navigate('/home');
@@ -285,7 +285,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setPublicUser(pub);
       setPrivateUser(priv);
       setNeedsOnboarding(false);
-      showToast('Account created. Welcome to OPEN FELLING.', 'success');
+      showToast('Account created. Welcome to OPEN FEELING.', 'success');
       navigate('/home');
     },
     [navigate, showToast]
@@ -295,7 +295,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string) => {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       await loadProfiles(cred.user);
-      showToast('Welcome back to OPEN FELLING.', 'success');
+      showToast('Welcome back to OPEN FEELING.', 'success');
       navigate('/home');
     },
     [loadProfiles, navigate, showToast]
@@ -318,7 +318,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setPublicUser(pub);
       setPrivateUser(priv);
       setNeedsOnboarding(false);
-      showToast('Your OPEN FELLING space is ready.', 'success');
+      showToast('Your OPEN FEELING space is ready.', 'success');
       navigate('/home');
     },
     [firebaseUser, navigate, showToast]

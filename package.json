@@ -1,5 +1,5 @@
 {
-  "name": "open-felling",
+  "name": "open-feeling",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -10,7 +10,7 @@
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true});require('node:fs').rmSync('server.js',{force:true})\"",
     "lint": "tsc --noEmit",
     "lint:eslint": "eslint .",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-open-felling \"npm run test:rules:node\"",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-open-feeling \"npm run test:rules:node\"",
     "test:rules:node": "tsx --test tests/firestore.rules.test.ts"
   },
   "dependencies": {
