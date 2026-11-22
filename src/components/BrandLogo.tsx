@@ -17,7 +17,7 @@ export function BrandLogo({ onClick, size = 'md' }: BrandLogoProps) {
       aria-label="OPEN FELLING Home"
     >
       <img
-        src="/src/assets/images/open_felling_icon_1795332091293.jpg"
+        src="/src/assets/images/open_felling_icon_1795332091293.webp"
         alt=""
         referrerPolicy="no-referrer"
         className={`${iconSize} object-cover border border-[#EAE4DD] bg-[#F8F6F3] shrink-0`}

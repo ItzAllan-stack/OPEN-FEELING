@@ -4,23 +4,25 @@ import { Header } from './components/Header.tsx';
 import { MobileNavigation } from './components/MobileNavigation.tsx';
 import { ToastContainer } from './components/Toast.tsx';
 import { AppProvider, useApp } from './context/AppContext.tsx';
-import { AuthPage } from './pages/AuthPage.tsx';
-import { CommunitiesPage } from './pages/CommunitiesPage.tsx';
-import { CommunityDetailsPage } from './pages/CommunityDetailsPage.tsx';
-import { CreatePostPage } from './pages/CreatePostPage.tsx';
-import { EditProfilePage } from './pages/EditProfilePage.tsx';
-import { ExplorePage } from './pages/ExplorePage.tsx';
-import { GuidelinesPage } from './pages/GuidelinesPage.tsx';
-import { HomeFeedPage } from './pages/HomeFeedPage.tsx';
-import { LandingPage } from './pages/LandingPage.tsx';
-import { ModerationPage } from './pages/ModerationPage.tsx';
-import { NotificationsPage } from './pages/NotificationsPage.tsx';
-import { PersonalJournalPage } from './pages/PersonalJournalPage.tsx';
-import { PostDetailsPage } from './pages/PostDetailsPage.tsx';
-import { PrivacySettingsPage } from './pages/PrivacySettingsPage.tsx';
-import { ProfilePage } from './pages/ProfilePage.tsx';
-import { SavedPostsPage } from './pages/SavedPostsPage.tsx';
-import { SettingsPage } from './pages/SettingsPage.tsx';
+
+// Pages are loaded on demand; each page module exports its component by name.
+const AuthPage = React.lazy(() => import('./pages/AuthPage.tsx').then((m) => ({ default: m.AuthPage })));
+const CommunitiesPage = React.lazy(() => import('./pages/CommunitiesPage.tsx').then((m) => ({ default: m.CommunitiesPage })));
+const CommunityDetailsPage = React.lazy(() => import('./pages/CommunityDetailsPage.tsx').then((m) => ({ default: m.CommunityDetailsPage })));
+const CreatePostPage = React.lazy(() => import('./pages/CreatePostPage.tsx').then((m) => ({ default: m.CreatePostPage })));
+const EditProfilePage = React.lazy(() => import('./pages/EditProfilePage.tsx').then((m) => ({ default: m.EditProfilePage })));
+const ExplorePage = React.lazy(() => import('./pages/ExplorePage.tsx').then((m) => ({ default: m.ExplorePage })));
+const GuidelinesPage = React.lazy(() => import('./pages/GuidelinesPage.tsx').then((m) => ({ default: m.GuidelinesPage })));
+const HomeFeedPage = React.lazy(() => import('./pages/HomeFeedPage.tsx').then((m) => ({ default: m.HomeFeedPage })));
+const LandingPage = React.lazy(() => import('./pages/LandingPage.tsx').then((m) => ({ default: m.LandingPage })));
+const ModerationPage = React.lazy(() => import('./pages/ModerationPage.tsx').then((m) => ({ default: m.ModerationPage })));
+const NotificationsPage = React.lazy(() => import('./pages/NotificationsPage.tsx').then((m) => ({ default: m.NotificationsPage })));
+const PersonalJournalPage = React.lazy(() => import('./pages/PersonalJournalPage.tsx').then((m) => ({ default: m.PersonalJournalPage })));
+const PostDetailsPage = React.lazy(() => import('./pages/PostDetailsPage.tsx').then((m) => ({ default: m.PostDetailsPage })));
+const PrivacySettingsPage = React.lazy(() => import('./pages/PrivacySettingsPage.tsx').then((m) => ({ default: m.PrivacySettingsPage })));
+const ProfilePage = React.lazy(() => import('./pages/ProfilePage.tsx').then((m) => ({ default: m.ProfilePage })));
+const SavedPostsPage = React.lazy(() => import('./pages/SavedPostsPage.tsx').then((m) => ({ default: m.SavedPostsPage })));
+const SettingsPage = React.lazy(() => import('./pages/SettingsPage.tsx').then((m) => ({ default: m.SettingsPage })));
 
 function AppRouter() {
   const { currentPath, authLoading, firebaseUser, needsOnboarding } = useApp();
@@ -71,7 +73,17 @@ function AppRouter() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]">
       <Header />
-      <div className="flex-1">{renderPage()}</div>
+      <div className="flex-1">
+        <React.Suspense
+          fallback={
+            <div className="min-h-[60vh] flex items-center justify-center p-6">
+              <p className="text-sm text-[#77727A]">Opening your space...</p>
+            </div>
+          }
+        >
+          {renderPage()}
+        </React.Suspense>
+      </div>
       <MobileNavigation />
       <ToastContainer />
     </div>
