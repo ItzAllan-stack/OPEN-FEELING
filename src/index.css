@@ -75,3 +75,19 @@
     display: none !important;
   }
 }
+
+@media print {
+  header,
+  nav,
+  button,
+  [role='status'] {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  #root {
+    max-width: 100% !important;
+  }
+}

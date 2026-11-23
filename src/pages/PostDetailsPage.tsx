@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Printer } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { CommentSection } from '../components/CommentSection.tsx';
 import { LoadingSkeleton } from '../components/LoadingSkeleton.tsx';
@@ -55,6 +55,17 @@ export function PostDetailsPage({ postId }: PostDetailsPageProps) {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to stories</span>
         </button>
+
+        {post && !loading && (
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          >
+            <Printer className="w-3.5 h-3.5" />
+            <span>Print this reflection</span>
+          </button>
+        )}
 
         {loading ? (
           <LoadingSkeleton count={1} />
