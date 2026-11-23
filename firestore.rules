@@ -251,6 +251,32 @@ service cloud.firestore {
       );
     }
 
+    function isValidPostDraft(data, draftId, uid) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'title', 'content', 'emotion', 'tags', 'visibility',
+          'communityId', 'communityName', 'imageUrl', 'scheduledFor',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'title', 'content', 'emotion', 'tags', 'visibility',
+          'communityId', 'communityName', 'imageUrl', 'scheduledFor',
+          'createdAt', 'updatedAt'
+        ])
+        && data.id == draftId
+        && data.ownerUid == uid
+        && data.title is string && data.title.size() <= 140
+        && data.content is string && data.content.size() >= 1 && data.content.size() <= 4000
+        && isValidEmotion(data.emotion)
+        && data.tags is list && data.tags.size() <= 5 && (data.tags.size() == 0 || (data.tags[0] is string && data.tags[0].size() <= 32))
+        && isValidVisibility(data.visibility)
+        && data.communityId is string && data.communityId.size() <= 128
+        && data.communityName is string && data.communityName.size() <= 80
+        && data.imageUrl is string && data.imageUrl.size() <= 500
+        && (data.scheduledFor == null || data.scheduledFor is timestamp)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
     // 2b. Counter integrity helpers
     // Aggregate counters may only move by one and, where the supporting document
     // has a deterministic ID, only in the batch that creates/deletes that document.
@@ -475,6 +501,24 @@ service cloud.firestore {
       allow update: if false;
       allow delete: if username is string && username.size() >= 3 && username.size() <= 32
         && isSignedIn() && (existing().uid == request.auth.uid || isAdmin());
+    }
+
+    // Owner-only post drafts, optionally scheduled for later publishing
+    match /post_drafts/{draftId} {
+      allow get: if isValidId(draftId) && isSignedIn() && existing().ownerUid == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+      allow create: if isValidId(draftId)
+        && isSignedIn()
+        && isValidPostDraft(incoming(), draftId, request.auth.uid)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(draftId)
+        && isSignedIn()
+        && isValidPostDraft(incoming(), draftId, request.auth.uid)
+        && existing().ownerUid == request.auth.uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time;
+      allow delete: if isValidId(draftId) && isSignedIn() && existing().ownerUid == request.auth.uid;
     }
 
     // Posts

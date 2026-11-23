@@ -69,6 +69,22 @@ export interface Post {
   isStarterSample?: boolean;
 }
 
+export interface PostDraft {
+  id: string;
+  ownerUid: string;
+  title: string;
+  content: string;
+  emotion: EmotionId;
+  tags: string[];
+  visibility: PostVisibility;
+  communityId: string;
+  communityName: string;
+  imageUrl: string;
+  scheduledFor: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface CommentItem {
   id: string;
   postId: string;
