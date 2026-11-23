@@ -5,6 +5,7 @@ import { EmotionSelector } from '../components/EmotionSelector.tsx';
 import { Modal } from '../components/Modal.tsx';
 import { SearchBar } from '../components/SearchBar.tsx';
 import { EMOTION_MAP } from '../constants/emotions.ts';
+import { randomJournalPrompt, todayJournalPrompt } from '../constants/journalPrompts.ts';
 import { useApp } from '../context/AppContext.tsx';
 import {
   createJournalEntry,
@@ -14,11 +15,13 @@ import {
 } from '../services/firestoreService.ts';
 import { EmotionId, PrivateJournalEntry } from '../types/index.ts';
 import { getTodayIsoDate } from '../utils/date.ts';
+import { computeJournalStreak } from '../utils/journal.ts';
 
 export function PersonalJournalPage() {
   const { publicUser, navigate, showToast } = useApp();
   const [entries, setEntries] = useState<PrivateJournalEntry[]>([]);
   const [search, setSearch] = useState('');
+  const [promptOverride, setPromptOverride] = useState<string | null>(null);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -44,6 +47,26 @@ export function PersonalJournalPage() {
         e.entryDate.includes(q)
     );
   }, [entries, search]);
+
+  const streak = useMemo(() => computeJournalStreak(entries), [entries]);
+  const journalPrompt = promptOverride ?? todayJournalPrompt();
+
+  useEffect(() => {
+    if (!publicUser || entries.length === 0) return;
+    const sortedDates = entries
+      .map((e) => e.entryDate || e.createdAt.toISOString().slice(0, 10))
+      .sort()
+      .reverse();
+    const lastDate = sortedDates[0];
+    if (!lastDate) return;
+    const today = getTodayIsoDate();
+    const daysSinceLast = Math.floor(
+      (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${lastDate}T00:00:00Z`)) / 86_400_000
+    );
+    if (daysSinceLast >= 7) {
+      showToast('We noticed you took a break — no pressure. Ready to write?', 'info');
+    }
+  }, [entries, publicUser, showToast]);
 
   if (!publicUser) {
     return (
@@ -139,6 +162,31 @@ export function PersonalJournalPage() {
             Write thoughts you are not ready—or never want—to publish. Every entry is locked to your account.
           </p>
         </div>
+
+        {/* Streak & Gentle Prompt */}
+        <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-5 sm:p-6 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-medium text-[#29272B]">Streak</h2>
+            <p className="text-xs text-[#77727A] tabular-nums">
+              {streak === 0
+                ? 'Fresh start — a quiet beginning can be today.'
+                : `${streak} ${streak === 1 ? 'day' : 'days'} in a row`}
+            </p>
+          </div>
+          <p className="text-sm text-[#29272B]/90 leading-relaxed">
+            Today&apos;s gentle prompt:{' '}
+            <span className="font-medium text-[#29272B]">{journalPrompt}</span>
+          </p>
+          <div>
+            <button
+              type="button"
+              onClick={() => setPromptOverride(randomJournalPrompt())}
+              className="px-3.5 py-1.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] cursor-pointer"
+            >
+              Another prompt
+            </button>
+          </div>
+        </section>
 
         {/* Journal Composer */}
         <form
