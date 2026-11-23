@@ -8,6 +8,7 @@ import {
 } from '@firebase/rules-unit-testing';
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -103,6 +104,25 @@ function community(id: string, extra: Record<string, unknown> = {}) {
     memberCount: 0,
     createdByUid: 'alice',
     createdAt: now(),
+    ...extra,
+  };
+}
+
+function draft(id: string, ownerUid: string, extra: Record<string, unknown> = {}) {
+  return {
+    id,
+    ownerUid,
+    title: 'Unsent thoughts',
+    content: 'Something I am not ready to publish yet',
+    emotion: 'happy',
+    tags: [],
+    visibility: 'public',
+    communityId: '',
+    communityName: '',
+    imageUrl: '',
+    scheduledFor: null,
+    createdAt: now(),
+    updatedAt: now(),
     ...extra,
   };
 }
@@ -418,6 +438,48 @@ describe('additional collection ownership', () => {
     const db = as('bob');
     await assertFails(setDoc(doc(db, 'blocked_users', 'alice_bob_block'), {
       id: 'alice_bob_block', blockerUid: 'alice', blockedUid: 'bob', mode: 'block', createdAt: serverTimestamp(),
+    }));
+  });
+});
+
+describe('post drafts', () => {
+  it('lets the owner create, read, update and delete their draft', async () => {
+    const db = as('alice');
+    await assertSucceeds(setDoc(doc(db, 'post_drafts', 'd1'), {
+      ...draft('d1', 'alice'), createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+    }));
+    await assertSucceeds(getDoc(doc(db, 'post_drafts', 'd1')));
+    await assertSucceeds(updateDoc(doc(db, 'post_drafts', 'd1'), {
+      content: 'Edited while still private', updatedAt: serverTimestamp(),
+    }));
+    await assertSucceeds(deleteDoc(doc(db, 'post_drafts', 'd1')));
+  });
+
+  it('denies creating a draft for another user', async () => {
+    const db = as('bob');
+    await assertFails(setDoc(doc(db, 'post_drafts', 'd2'), {
+      ...draft('d2', 'alice'), createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+    }));
+  });
+
+  it('denies reading, listing, updating or deleting another user\'s draft', async () => {
+    await seed(async (db) => setDoc(doc(db, 'post_drafts', 'd3'), {
+      ...draft('d3', 'alice'), scheduledFor: Timestamp.fromDate(new Date(Date.now() + 86_400_000)),
+    }));
+    const db = as('bob');
+    await assertFails(getDoc(doc(db, 'post_drafts', 'd3')));
+    await assertFails(getDocs(query(collection(db, 'post_drafts'), where('ownerUid', '==', 'alice'))));
+    await assertFails(updateDoc(doc(db, 'post_drafts', 'd3'), {
+      content: 'tampered', updatedAt: serverTimestamp(),
+    }));
+    await assertFails(deleteDoc(doc(db, 'post_drafts', 'd3')));
+  });
+
+  it('denies a non-timestamp scheduledFor value', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'post_drafts', 'd4'), {
+      ...draft('d4', 'alice', { scheduledFor: 'tomorrow' }),
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
     }));
   });
 });
