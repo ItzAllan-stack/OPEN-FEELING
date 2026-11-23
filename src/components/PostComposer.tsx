@@ -89,6 +89,7 @@ export function PostComposer({
   const [submitting, setSubmitting] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const scheduleId = React.useId();
@@ -262,6 +263,7 @@ export function PostComposer({
 
   return (
     <form
+      ref={formRef}
       onSubmit={handlePublish}
       className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-4"
     >
@@ -350,6 +352,12 @@ export function PostComposer({
         maxLength={4000}
         placeholder="Express freely without judgement..."
         aria-label="Share what you feel"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            formRef.current?.requestSubmit();
+          }
+        }}
         className="w-full p-4 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[15px] text-[#29272B] leading-relaxed placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors"
       />
 
@@ -520,7 +528,7 @@ export function PostComposer({
 
       <div className="flex items-center justify-between gap-4 pt-2">
         <span className="text-xs text-[#77727A] tabular-nums">
-          {content.length}/4000
+          {content.length}/4000 · Enter to publish, Shift+Enter for a new line
         </span>
         <button
           type="submit"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { Header } from './components/Header.tsx';
 import { MobileNavigation } from './components/MobileNavigation.tsx';
@@ -43,6 +43,26 @@ function NotFoundPage() {
 
 function AppRouter() {
   const { currentPath, authLoading, firebaseUser, needsOnboarding } = useApp();
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+        if (!input) return;
+        event.preventDefault();
+        input.focus();
+        input.scrollIntoView({ block: 'center' });
+      } else if (
+        event.key === 'Escape' &&
+        document.activeElement instanceof HTMLInputElement &&
+        document.activeElement.hasAttribute('data-search-input')
+      ) {
+        document.activeElement.blur();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const renderPage = () => {
     if (authLoading) {
