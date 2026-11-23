@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Lock, Pencil, Plus, Trash2 } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Download, Lock, Mic, Pencil, Plus, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EmotionAnalyticsCard } from '../components/EmotionAnalyticsCard.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
@@ -18,11 +18,34 @@ import { EmotionId, PrivateJournalEntry } from '../types/index.ts';
 import { getTodayIsoDate } from '../utils/date.ts';
 import { computeJournalStreak } from '../utils/journal.ts';
 
+type SpeechLike = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+  start(): void;
+  stop(): void;
+};
+
+function createRecognition(): SpeechLike | null {
+  const w = window as unknown as {
+    SpeechRecognition?: new () => SpeechLike;
+    webkitSpeechRecognition?: new () => SpeechLike;
+  };
+  const Ctor = w.SpeechRecognition || w.webkitSpeechRecognition;
+  return Ctor ? new Ctor() : null;
+}
+
 export function PersonalJournalPage() {
   const { publicUser, navigate, showToast } = useApp();
   const [entries, setEntries] = useState<PrivateJournalEntry[]>([]);
   const [search, setSearch] = useState('');
   const [promptOverride, setPromptOverride] = useState<string | null>(null);
+  const recognitionRef = useRef<SpeechLike | null>(null);
+  const [listening, setListening] = useState(false);
+  const [voiceSupported] = useState(() => Boolean(createRecognition()));
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -134,6 +157,61 @@ export function PersonalJournalPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => () => recognitionRef.current?.stop(), []);
+
+  const toggleDictation = () => {
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+    const recognition = createRecognition();
+    if (!recognition) return;
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .map((result) => result[0]?.transcript ?? '')
+        .filter(Boolean)
+        .join(' ');
+      if (transcript) setContent((prev) => (prev ? `${prev.trimEnd()} ${transcript}` : transcript));
+    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  };
+
+  const exportJournal = () => {
+    const lines: string[] = [
+      '# OPEN FEELING — Private Journal',
+      '',
+      `Exported ${new Date().toLocaleDateString()} · ${entries.length} entries`,
+      '',
+    ];
+    [...entries]
+      .sort((a, b) => b.entryDate.localeCompare(a.entryDate))
+      .forEach((entry) => {
+        const emotion = entry.emotion ? EMOTION_MAP[entry.emotion]?.label : '';
+        lines.push(`## ${entry.entryDate}${entry.title ? ` — ${entry.title}` : ''}`);
+        lines.push('');
+        if (emotion) lines.push(`Emotion: ${emotion}`, '');
+        lines.push(entry.content, '', '---', '');
+      });
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `open-feeling-journal-${getTodayIsoDate()}.md`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    showToast('Journal exported as Markdown.', 'success');
+  };
+
   const handleDelete = async (id: string) => {
     try {
       await deleteJournalEntry(id);
@@ -228,6 +306,28 @@ export function PersonalJournalPage() {
             className="w-full p-4 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[15px] leading-relaxed text-[#29272B] focus:outline-none focus:border-[#E9A9B8]"
           />
 
+          <div className="flex items-center justify-between gap-2">
+            {voiceSupported ? (
+              <button
+                type="button"
+                onClick={toggleDictation}
+                aria-pressed={listening}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs cursor-pointer ${
+                  listening
+                    ? 'border-[#9F4E65] bg-[#F4DCE3]/45 text-[#7D3B4B]'
+                    : 'border-[#EAE4DD] bg-[#F8F6F3] text-[#77727A] hover:text-[#29272B]'
+                }`}
+              >
+                <Mic className="w-3.5 h-3.5" />
+                {listening ? 'Stop dictating' : 'Dictate'}
+              </button>
+            ) : (
+              <span className="text-[11px] text-[#77727A]">
+                Voice dictation is not available in this browser.
+              </span>
+            )}
+          </div>
+
           <div className="space-y-2">
             <p className="text-xs text-[#77727A]">Optional emotion tag</p>
             <EmotionSelector value={emotion} onChange={setEmotion} />
@@ -265,12 +365,23 @@ export function PersonalJournalPage() {
             <h2 className="text-xl font-display font-medium text-[#29272B]">
               Previous Reflections ({entries.length})
             </h2>
-            <div className="sm:w-64">
-              <SearchBar
-                value={search}
-                onChange={setSearch}
-                placeholder="Search your journal..."
-              />
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={exportJournal}
+                disabled={entries.length === 0}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer whitespace-nowrap"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Export
+              </button>
+              <div className="sm:w-56">
+                <SearchBar
+                  value={search}
+                  onChange={setSearch}
+                  placeholder="Search your journal..."
+                />
+              </div>
             </div>
           </div>
 
