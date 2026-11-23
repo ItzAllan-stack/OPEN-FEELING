@@ -27,6 +27,7 @@ import {
   EmotionId,
   ModerationReport,
   Post,
+  PostDraft,
   PostVisibility,
   PrivateJournalEntry,
   PrivateUser,
@@ -500,6 +501,119 @@ export async function createPost(params: {
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, `posts/${postId}`);
   }
+}
+
+// ============================================================================
+// Post Drafts (optionally scheduled for later publishing)
+// ============================================================================
+
+function mapPostDraft(data: Record<string, unknown>): PostDraft {
+  return {
+    id: String(data.id ?? ''),
+    ownerUid: String(data.ownerUid ?? ''),
+    title: String(data.title ?? ''),
+    content: String(data.content ?? ''),
+    emotion: (data.emotion as EmotionId) ?? '',
+    tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+    visibility: (data.visibility as PostVisibility) ?? 'public',
+    communityId: String(data.communityId ?? ''),
+    communityName: String(data.communityName ?? ''),
+    imageUrl: String(data.imageUrl ?? ''),
+    scheduledFor: data.scheduledFor instanceof Timestamp ? data.scheduledFor.toDate() : null,
+    createdAt: toDate(data.createdAt),
+    updatedAt: toDate(data.updatedAt),
+  };
+}
+
+export type PostDraftInput = Pick<
+  PostDraft,
+  | 'title'
+  | 'content'
+  | 'emotion'
+  | 'tags'
+  | 'visibility'
+  | 'communityId'
+  | 'communityName'
+  | 'imageUrl'
+  | 'scheduledFor'
+>;
+
+function prepareDraftInput(params: PostDraftInput) {
+  return {
+    title: params.title.trim().slice(0, 140),
+    content: params.content.trim().slice(0, 4000),
+    emotion: params.emotion,
+    tags: params.tags
+      .map((t) => t.trim().toLowerCase().replace(/^#/, '').slice(0, 32))
+      .filter(Boolean)
+      .slice(0, 5),
+    visibility: params.visibility,
+    communityId: (params.communityId || '').slice(0, 128),
+    communityName: (params.communityName || '').slice(0, 80),
+    imageUrl: (params.imageUrl || '').trim().slice(0, 500),
+    scheduledFor: params.scheduledFor,
+  };
+}
+
+export function subscribePostDrafts(uid: string, onData: (drafts: PostDraft[]) => void): () => void {
+  const q = query(collection(db, 'post_drafts'), where('ownerUid', '==', uid), limit(50));
+  return onSnapshot(
+    q,
+    (snap) => onData(snap.docs.map((d) => mapPostDraft(d.data() as Record<string, unknown>))),
+    (error) => handleFirestoreError(error, OperationType.LIST, 'post_drafts')
+  );
+}
+
+export async function savePostDraft(params: PostDraftInput & { uid: string }): Promise<string> {
+  const draftId = makeId('draft');
+  try {
+    await setDoc(doc(db, 'post_drafts', draftId), {
+      id: draftId,
+      ownerUid: params.uid,
+      ...prepareDraftInput(params),
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return draftId;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.CREATE, `post_drafts/${draftId}`);
+  }
+}
+
+export async function updatePostDraft(id: string, params: PostDraftInput): Promise<void> {
+  try {
+    await updateDoc(doc(db, 'post_drafts', id), {
+      ...prepareDraftInput(params),
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, `post_drafts/${id}`);
+  }
+}
+
+export async function deletePostDraft(id: string): Promise<void> {
+  try {
+    await deleteDoc(doc(db, 'post_drafts', id));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `post_drafts/${id}`);
+  }
+}
+
+/** Publish a draft as a normal post, then remove the draft. */
+export async function publishPostDraft(draft: PostDraft, user: PublicUser): Promise<string> {
+  const postId = await createPost({
+    user,
+    title: draft.title,
+    content: draft.content,
+    emotion: draft.emotion,
+    tags: draft.tags,
+    visibility: draft.visibility,
+    communityId: draft.communityId,
+    communityName: draft.communityName,
+    imageUrl: draft.imageUrl,
+  });
+  await deletePostDraft(draft.id);
+  return postId;
 }
 
 export async function updatePostContent(

@@ -9,9 +9,10 @@ import {
   Sparkles,
   Hash,
   Eye,
+  Clock,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
-import { createPost } from '../services/firestoreService.ts';
+import { createPost, savePostDraft } from '../services/firestoreService.ts';
 import { EmotionId, PostVisibility } from '../types/index.ts';
 import { isSafeImageUrl } from '../utils/date.ts';
 import { renderInline } from '../utils/inlineMarkdown.tsx';
@@ -63,12 +64,14 @@ function ToolbarButton({
 interface PostComposerProps {
   defaultCommunityId?: string;
   onPublished?: (postId: string) => void;
+  onDraftSaved?: () => void;
   compact?: boolean;
 }
 
 export function PostComposer({
   defaultCommunityId = '',
   onPublished,
+  onDraftSaved,
   compact = false,
 }: PostComposerProps) {
   const { publicUser, privateUser, communities, navigate, showToast } = useApp();
@@ -88,6 +91,77 @@ export function PostComposer({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const scheduleId = React.useId();
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [scheduledFor, setScheduledFor] = useState('');
+
+  const resetComposer = () => {
+    setTitle('');
+    setContent('');
+    setEmotion('');
+    setTagsInput('');
+    setImageUrl('');
+    setScheduledFor('');
+    setScheduleOpen(false);
+  };
+
+  const draftPayload = (tags: string[]) => {
+    const selectedCommunity = communities.find((c) => c.id === communityId);
+    return {
+      uid: publicUser!.uid,
+      title,
+      content,
+      emotion,
+      tags,
+      visibility,
+      communityId: selectedCommunity?.id || '',
+      communityName: selectedCommunity?.name || '',
+      imageUrl: imageUrl.trim(),
+      scheduledFor: scheduledFor ? new Date(scheduledFor) : null,
+    };
+  };
+
+  const saveDraftWithTags = async (tags: string[]) => {
+    setSubmitting(true);
+    try {
+      await savePostDraft(draftPayload(tags));
+      const when = scheduledFor ? new Date(scheduledFor) : null;
+      showToast(
+        when && when.getTime() > Date.now()
+          ? 'Draft saved — it will publish when due, next time you open this space.'
+          : 'Draft saved. Publish it any time.',
+        'success'
+      );
+      resetComposer();
+      onDraftSaved?.();
+    } catch {
+      showToast('Could not save your draft. Please try again.', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSaveDraft = () => {
+    if (!publicUser) {
+      showToast('Please sign in to save a draft.', 'info');
+      navigate('/login');
+      return;
+    }
+    if (!content.trim()) {
+      showToast('Write a few words before saving a draft.', 'info');
+      return;
+    }
+    const when = scheduledFor ? new Date(scheduledFor) : null;
+    if (when && Number.isNaN(when.getTime())) {
+      showToast('Please choose a valid date and time.', 'error');
+      return;
+    }
+    const tags = tagsInput
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    void saveDraftWithTags(tags);
+  };
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,6 +189,16 @@ export function PostComposer({
     ).filter((tag) => tag.length >= 3);
     const parsedTags = [...new Set([...baseTags, ...inlineTags])].slice(0, 5);
 
+    const when = scheduledFor ? new Date(scheduledFor) : null;
+    if (when && Number.isNaN(when.getTime())) {
+      showToast('Please choose a valid date and time.', 'error');
+      return;
+    }
+    if (when && when.getTime() > Date.now()) {
+      await saveDraftWithTags(parsedTags);
+      return;
+    }
+
     setSubmitting(true);
     try {
       const postId = await createPost({
@@ -128,11 +212,7 @@ export function PostComposer({
         communityName: selectedCommunity?.name || '',
         imageUrl: imageUrl.trim(),
       });
-      setTitle('');
-      setContent('');
-      setEmotion('');
-      setTagsInput('');
-      setImageUrl('');
+      resetComposer();
       showToast(
         visibility === 'private'
           ? 'Saved privately so only you can see it.'
@@ -400,6 +480,41 @@ export function PostComposer({
               </p>
             )}
           </div>
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2 pt-1">
+        <button
+          type="button"
+          onClick={() => setScheduleOpen((v) => !v)}
+          aria-pressed={scheduleOpen}
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] cursor-pointer"
+        >
+          <Clock className="w-3.5 h-3.5" />
+          {scheduleOpen ? 'Hide schedule' : 'Schedule'}
+        </button>
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={submitting || !content.trim()}
+          className="px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer"
+        >
+          Save as draft
+        </button>
+      </div>
+
+      {scheduleOpen && (
+        <div className="space-y-1.5">
+          <label htmlFor={scheduleId} className="block text-xs font-medium text-[#77727A]">
+            Publish automatically when you next open this page (optional)
+          </label>
+          <input
+            id={scheduleId}
+            type="datetime-local"
+            value={scheduledFor}
+            onChange={(e) => setScheduledFor(e.target.value)}
+            className="w-full sm:w-auto px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] focus:outline-none focus:border-[#E9A9B8]"
+          />
         </div>
       )}
 
