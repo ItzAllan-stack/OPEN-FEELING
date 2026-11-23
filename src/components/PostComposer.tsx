@@ -1,10 +1,64 @@
-import React, { useState } from 'react';
-import { Globe, EyeOff, Lock, Image as ImageIcon } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import {
+  Globe,
+  EyeOff,
+  Lock,
+  Image as ImageIcon,
+  Bold,
+  Italic,
+  Sparkles,
+  Hash,
+  Eye,
+} from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
 import { createPost } from '../services/firestoreService.ts';
 import { EmotionId, PostVisibility } from '../types/index.ts';
 import { isSafeImageUrl } from '../utils/date.ts';
+import { renderInline } from '../utils/inlineMarkdown.tsx';
 import { EmotionSelector } from './EmotionSelector.tsx';
+
+const EMOJI_PALETTE: string[] = [
+  '🌟',
+  '❤️',
+  '🫶',
+  '🌸',
+  '📖',
+  '🌈',
+  '☕',
+  '🌙',
+  '💭',
+  '✨',
+  '💬',
+  '🤍',
+];
+
+function ToolbarButton({
+  onClick,
+  'aria-label': label,
+  pressed,
+  children,
+}: {
+  onClick: () => void;
+  'aria-label': string;
+  pressed?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      aria-pressed={pressed}
+      className={`rounded-xl border p-2 transition-colors cursor-pointer ${
+        pressed
+          ? 'border-[#29272B] bg-[#F4DCE3]/45 text-[#9F4E65]'
+          : 'border-[#EAE4DD] bg-[#FCFBFA] text-[#29272B]/70 hover:border-[#D5CCC3] hover:bg-[#F8F6F3] hover:text-[#29272B]'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 interface PostComposerProps {
   defaultCommunityId?: string;
@@ -31,6 +85,10 @@ export function PostComposer({
   const [showExtras, setShowExtras] = useState(!compact);
   const [submitting, setSubmitting] = useState(false);
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!publicUser) {
@@ -48,10 +106,14 @@ export function PostComposer({
     }
 
     const selectedCommunity = communities.find((c) => c.id === communityId);
-    const parsedTags = tagsInput
+    const baseTags = tagsInput
       .split(',')
       .map((t) => t.trim())
       .filter(Boolean);
+    const inlineTags = Array.from(
+      new Set((content.match(/#[A-Za-z0-9_]{2,32}/g) || []).map((tag) => tag.slice(1)))
+    ).filter((tag) => tag.length >= 3);
+    const parsedTags = [...new Set([...baseTags, ...inlineTags])].slice(0, 5);
 
     setSubmitting(true);
     try {
@@ -87,6 +149,37 @@ export function PostComposer({
     }
   };
 
+  const insertAtCursor = (text: string) => {
+    const el = textareaRef.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const next = content.slice(0, start) + text + content.slice(end);
+    setContent(next);
+    const cursor = start + text.length;
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(cursor, cursor);
+    }, 0);
+  };
+
+  const applyInline = (open: string, close: string) => {
+    const el = textareaRef.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const selected = content.slice(start, end);
+    const insertion = selected ? open + selected + close : open;
+    const tailStart = selected ? end : start;
+    const next = content.slice(0, start) + insertion + content.slice(tailStart);
+    setContent(next);
+    const cursor = start + insertion.length;
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(cursor, cursor);
+    }, 0);
+  };
+
   return (
     <form
       onSubmit={handlePublish}
@@ -113,7 +206,63 @@ export function PostComposer({
         />
       )}
 
+      {/* Formatting toolbar */}
+      <div
+        className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#EAE4DD] bg-[#FCFBFA] px-2 py-1.5"
+        role="toolbar"
+        aria-label="Post formatting"
+      >
+        <ToolbarButton onClick={() => applyInline('**', '**')} aria-label="Bold">
+          <Bold className="w-4 h-4" />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => applyInline('*', '*')} aria-label="Italic">
+          <Italic className="w-4 h-4" />
+        </ToolbarButton>
+        <div className="relative">
+          <ToolbarButton
+            onClick={() => setPickerOpen((v) => !v)}
+            aria-label="Insert emoji"
+            aria-pressed={pickerOpen}
+          >
+            <Sparkles className="w-4 h-4" />
+          </ToolbarButton>
+          {pickerOpen && (
+            <div
+              className="absolute top-full left-0 z-20 mt-1 grid grid-cols-6 gap-1 rounded-xl border border-[#EAE4DD] bg-[#FCFBFA] p-2 shadow-sm"
+              role="listbox"
+              aria-label="Insert emoji"
+            >
+              {EMOJI_PALETTE.map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  onClick={() => {
+                    insertAtCursor(emoji);
+                    setPickerOpen(false);
+                  }}
+                  aria-label={emoji}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-lg leading-none cursor-pointer"
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <ToolbarButton onClick={() => insertAtCursor('#')} aria-label="Add hashtag">
+          <Hash className="w-4 h-4" />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => setShowPreview((v) => !v)}
+          aria-label="Toggle preview"
+          aria-pressed={showPreview}
+        >
+          <Eye className="w-4 h-4" />
+        </ToolbarButton>
+      </div>
+
       <textarea
+        ref={textareaRef}
         value={content}
         onFocus={() => setShowExtras(true)}
         onChange={(e) => setContent(e.target.value)}
@@ -123,6 +272,20 @@ export function PostComposer({
         aria-label="Share what you feel"
         className="w-full p-4 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[15px] text-[#29272B] leading-relaxed placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors"
       />
+
+      {showPreview && (
+        <div
+          className="rounded-xl border border-[#EAE4DD] bg-[#FCFBFA] p-4 text-[15px] text-[#29272B]/90 leading-[1.65] whitespace-pre-wrap"
+          role="region"
+          aria-label="Post preview"
+        >
+          {content ? (
+            renderInline(content)
+          ) : (
+            <span className="text-[#77727A]">Nothing to preview yet…</span>
+          )}
+        </div>
+      )}
 
       {showExtras && (
         <div className="space-y-4 pt-1">
