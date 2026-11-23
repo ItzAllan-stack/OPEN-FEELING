@@ -17,6 +17,7 @@ import {
 } from '../services/firestoreService.ts';
 import { Post } from '../types/index.ts';
 import { formatRelativeTime, isSafeAvatarUrl, isSafeImageUrl } from '../utils/date.ts';
+import { renderInline } from '../utils/inlineMarkdown.tsx';
 import { Modal } from './Modal.tsx';
 import { ReactionBar } from './ReactionBar.tsx';
 
@@ -240,7 +241,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
             !showFullContent && post.content.length > 360 ? 'line-clamp-5' : ''
           }`}
         >
-          {post.content}
+          {renderInline(post.content)}
         </p>
 
         {!showFullContent && post.content.length > 360 && (
