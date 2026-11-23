@@ -1,4 +1,4 @@
-# OPEN FEELING
+# OPEN-FEELING
 
 Express Freely. Feel Lighter. A welcoming digital space to share emotions, keep a
 private journal, and connect with people who understand.
