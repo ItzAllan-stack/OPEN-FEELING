@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Lock, Pencil, Plus, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
+import { EmotionAnalyticsCard } from '../components/EmotionAnalyticsCard.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
 import { Modal } from '../components/Modal.tsx';
 import { SearchBar } from '../components/SearchBar.tsx';
@@ -187,6 +188,8 @@ export function PersonalJournalPage() {
             </button>
           </div>
         </section>
+
+        <EmotionAnalyticsCard entries={entries} />
 
         {/* Journal Composer */}
         <form
