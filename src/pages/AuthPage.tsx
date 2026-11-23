@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { BrandLogo } from '../components/BrandLogo.tsx';
+import { EmotionSelector } from '../components/EmotionSelector.tsx';
 import { useApp } from '../context/AppContext.tsx';
-import { checkUsernameAvailable } from '../services/firestoreService.ts';
+import { checkUsernameAvailable, createJournalEntry } from '../services/firestoreService.ts';
+import { EmotionId } from '../types/index.ts';
+import { getTodayIsoDate } from '../utils/date.ts';
 
 interface AuthPageProps {
   initialMode: 'login' | 'signup' | 'forgot' | 'onboarding';
@@ -14,6 +17,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
     signInWithEmail,
     completeOnboarding,
     requestPasswordReset,
+    firebaseUser,
     navigate,
     showToast,
   } = useApp();
@@ -29,6 +33,8 @@ export function AuthPage({ initialMode }: AuthPageProps) {
   const [errorMsg, setErrorMsg] = useState('');
   const [infoMsg, setInfoMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [firstThought, setFirstThought] = useState('');
+  const [firstEmotion, setFirstEmotion] = useState<EmotionId>('');
 
   const handleUsernameBlur = async () => {
     const clean = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
@@ -90,6 +96,20 @@ export function AuthPage({ initialMode }: AuthPageProps) {
         if (!ageConfirmed) throw new Error('Please confirm you meet the minimum age requirement (16+).');
         if (!guidelinesAccepted) throw new Error('Please accept the Community Guidelines and Privacy Policy.');
         await completeOnboarding(displayName.trim(), username);
+        if (firstThought.trim() && firebaseUser?.uid) {
+          try {
+            await createJournalEntry({
+              uid: firebaseUser.uid,
+              title: 'My first reflection',
+              content: firstThought.trim().slice(0, 8000),
+              emotion: firstEmotion,
+              entryDate: getTodayIsoDate(),
+            });
+            showToast('Your first reflection was saved privately.', 'success');
+          } catch {
+            showToast('Your profile is ready; your first reflection could not be saved just yet.', 'info');
+          }
+        }
       }
     } catch (err: unknown) {
       const raw = err instanceof Error ? err.message : 'Authentication could not be completed.';
@@ -298,6 +318,25 @@ export function AuthPage({ initialMode }: AuthPageProps) {
                   .
                 </span>
               </label>
+            </div>
+          )}
+
+          {mode === 'onboarding' && (
+            <div className="space-y-2.5 rounded-xl border border-[#EAE4DD] bg-[#F8F6F3] p-3.5">
+              <p className="text-xs font-medium text-[#29272B]">A gentle first reflection (optional)</p>
+              <p className="text-[11px] text-[#77727A]">
+                If you'd like, write a thought now — it will be saved only in your private journal.
+              </p>
+              <textarea
+                value={firstThought}
+                onChange={(e) => setFirstThought(e.target.value)}
+                maxLength={8000}
+                rows={3}
+                placeholder="What's been on your mind lately?"
+                aria-label="First private reflection"
+                className="w-full p-3 rounded-xl bg-[#FCFBFA] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8]"
+              />
+              <EmotionSelector value={firstEmotion} onChange={setFirstEmotion} />
             </div>
           )}
 
