@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Lock, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Download, Lock, Pencil, Plus, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EmotionAnalyticsCard } from '../components/EmotionAnalyticsCard.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
@@ -134,6 +134,34 @@ export function PersonalJournalPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const exportJournal = () => {
+    const lines: string[] = [
+      '# OPEN FEELING — Private Journal',
+      '',
+      `Exported ${new Date().toLocaleDateString()} · ${entries.length} entries`,
+      '',
+    ];
+    [...entries]
+      .sort((a, b) => b.entryDate.localeCompare(a.entryDate))
+      .forEach((entry) => {
+        const emotion = entry.emotion ? EMOTION_MAP[entry.emotion]?.label : '';
+        lines.push(`## ${entry.entryDate}${entry.title ? ` — ${entry.title}` : ''}`);
+        lines.push('');
+        if (emotion) lines.push(`Emotion: ${emotion}`, '');
+        lines.push(entry.content, '', '---', '');
+      });
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `open-feeling-journal-${getTodayIsoDate()}.md`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    showToast('Journal exported as Markdown.', 'success');
+  };
+
   const handleDelete = async (id: string) => {
     try {
       await deleteJournalEntry(id);
@@ -265,12 +293,23 @@ export function PersonalJournalPage() {
             <h2 className="text-xl font-display font-medium text-[#29272B]">
               Previous Reflections ({entries.length})
             </h2>
-            <div className="sm:w-64">
-              <SearchBar
-                value={search}
-                onChange={setSearch}
-                placeholder="Search your journal..."
-              />
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={exportJournal}
+                disabled={entries.length === 0}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer whitespace-nowrap"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Export
+              </button>
+              <div className="sm:w-56">
+                <SearchBar
+                  value={search}
+                  onChange={setSearch}
+                  placeholder="Search your journal..."
+                />
+              </div>
             </div>
           </div>
 
