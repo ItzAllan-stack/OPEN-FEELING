@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { Users } from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
 import { toggleCommunityMembership } from '../services/firestoreService.ts';
