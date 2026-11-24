@@ -1,3 +1,4 @@
+import { EyeOff, HeartHandshake, Lock, MessageSquareHeart, ShieldCheck, Sparkles } from 'lucide-react';
 import React from 'react';
 import { HeartHandshake, MessageSquareHeart, ShieldCheck } from 'lucide-react';
 import { BrandLogo } from '../components/BrandLogo.tsx';

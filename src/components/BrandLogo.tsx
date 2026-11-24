@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface BrandLogoProps {
   onClick?: () => void;
   size?: 'sm' | 'md';

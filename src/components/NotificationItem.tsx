@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart, MessageCircle, UserPlus, Users, ShieldAlert } from 'lucide-react';
 import { AppNotification } from '../types/index.ts';
 import { formatRelativeTime } from '../utils/date.ts';

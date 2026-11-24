@@ -616,7 +616,6 @@ describe('resonance', () => {
   });
 });
 
-const fiveYearsMs = 5 * 365 * 24 * 60 * 60 * 1000;
 const futureLetter = (id: string, extra: Record<string, unknown> = {}) => {
   return {
     id,

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { EyeOff, FileText, Search as SearchIcon, Users, X } from 'lucide-react';
 import { EMOTION_MAP } from '../constants/emotions.ts';
 import { useApp } from '../context/AppContext.tsx';
