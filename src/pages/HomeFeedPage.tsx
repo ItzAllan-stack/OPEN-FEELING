@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell.tsx';
 import { LoadingSkeleton } from '../components/LoadingSkeleton.tsx';
 import { PostCard } from '../components/PostCard.tsx';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Bell, CheckCheck, Settings } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { NotificationItem } from '../components/NotificationItem.tsx';

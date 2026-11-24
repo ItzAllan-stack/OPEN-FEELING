@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bookmark } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { PostCard } from '../components/PostCard.tsx';

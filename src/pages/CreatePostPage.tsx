@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { PostComposer } from '../components/PostComposer.tsx';

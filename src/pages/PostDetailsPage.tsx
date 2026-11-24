@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { CommentSection } from '../components/CommentSection.tsx';

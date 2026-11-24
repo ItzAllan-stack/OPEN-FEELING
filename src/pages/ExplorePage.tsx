@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
 import { LoadingSkeleton } from '../components/LoadingSkeleton.tsx';

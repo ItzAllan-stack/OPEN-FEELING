@@ -1,4 +1,3 @@
-import React from 'react';
 import { Home, Compass, PenLine, Bell, User } from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
 

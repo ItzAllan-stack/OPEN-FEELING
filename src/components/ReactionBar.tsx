@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MEANINGFUL_REACTIONS } from '../constants/emotions.ts';
 import { useApp } from '../context/AppContext.tsx';
 import {
