@@ -85,6 +85,32 @@ export interface PostDraft {
   updatedAt: Date;
 }
 
+// Resonance — anonymous, ephemeral feeling check-ins. A check-in only records
+// which emotion is being felt; no identity or author fields are stored, so the
+// public document can never reveal who checked in.
+export type ResonanceEmotion = Exclude<EmotionId, ''>;
+
+export interface ResonanceCheckIn {
+  id: string;
+  emotion: ResonanceEmotion;
+  /** Server timestamp. */
+  createdAt: Date;
+  /** Client clock, validated against the server clock; never more than ~24h. */
+  expiresAt: Date;
+}
+
+// A single supportive line shared anonymously with everyone feeling the same
+// emotion. It expires together with the check-ins it accompanies.
+export interface ResonanceCareNote {
+  id: string;
+  emotion: ResonanceEmotion;
+  message: string;
+  /** Server timestamp. */
+  createdAt: Date;
+  /** Client clock, validated against the server clock; never more than ~24h. */
+  expiresAt: Date;
+}
+
 export interface CommentItem {
   id: string;
   postId: string;

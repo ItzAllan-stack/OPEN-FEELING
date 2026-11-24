@@ -277,6 +277,40 @@ service cloud.firestore {
         && data.updatedAt is timestamp;
     }
 
+    // Resonance content is ephemeral and anonymous. Documents carry no identity.
+    // createdAt must be the server timestamp; expiresAt is bounded by the server
+    // clock so a device cannot grant itself more than ~24h (one hour of clock
+    // skew is tolerated). Reads compare expiresAt directly to request.time,
+    // which is what lets a range query match the rule.
+    function isValidResonanceEmotion(val) {
+      return val is string && val != '' && isValidEmotion(val);
+    }
+
+    function isValidResonanceLifetime(data) {
+      return data.createdAt is timestamp
+        && data.createdAt == request.time
+        && data.expiresAt is timestamp
+        && data.expiresAt > request.time
+        && data.expiresAt <= request.time + duration.value(25, 'h');
+    }
+
+    function isValidResonanceCheckIn(data, checkInId) {
+      return data.keys().hasAll(['id', 'emotion', 'createdAt', 'expiresAt'])
+        && data.keys().hasOnly(['id', 'emotion', 'createdAt', 'expiresAt'])
+        && data.id == checkInId
+        && isValidResonanceEmotion(data.emotion)
+        && isValidResonanceLifetime(data);
+    }
+
+    function isValidResonanceCareNote(data, careId) {
+      return data.keys().hasAll(['id', 'emotion', 'message', 'createdAt', 'expiresAt'])
+        && data.keys().hasOnly(['id', 'emotion', 'message', 'createdAt', 'expiresAt'])
+        && data.id == careId
+        && isValidResonanceEmotion(data.emotion)
+        && data.message is string && data.message.size() >= 1 && data.message.size() <= 280
+        && isValidResonanceLifetime(data);
+    }
+
     // 2b. Counter integrity helpers
     // Aggregate counters may only move by one and, where the supporting document
     // has a deterministic ID, only in the batch that creates/deletes that document.
@@ -729,6 +763,29 @@ service cloud.firestore {
         && incoming().createdAt == request.time;
       allow update: if false;
       allow delete: if isValidCompoundId(savedId) && isSignedIn() && existing().userUid == request.auth.uid;
+    }
+
+    // Resonance — anonymous feeling check-ins that expire after 24h.
+    // Documents carry no identity, and reads are limited to live check-ins.
+    match /resonances/{resonanceId} {
+      allow get: if isValidId(resonanceId) && isSignedIn() && existing().expiresAt > request.time;
+      allow list: if isSignedIn() && resource.data.expiresAt > request.time;
+      allow create: if isValidId(resonanceId)
+        && isSignedIn()
+        && isValidResonanceCheckIn(incoming(), resonanceId);
+      allow update: if false;
+      allow delete: if isValidId(resonanceId) && isAdmin();
+    }
+
+    // Resonance care — one anonymous supportive line per emotion, also 24h.
+    match /resonance_care/{careId} {
+      allow get: if isValidId(careId) && isSignedIn() && existing().expiresAt > request.time;
+      allow list: if isSignedIn() && resource.data.expiresAt > request.time;
+      allow create: if isValidId(careId)
+        && isSignedIn()
+        && isValidResonanceCareNote(incoming(), careId);
+      allow update: if false;
+      allow delete: if isValidId(careId) && isAdmin();
     }
 
     // Private Personal Journal ("My Personal Space") — Strictly Owner Only
