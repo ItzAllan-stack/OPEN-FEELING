@@ -88,14 +88,16 @@ export function getEmotionStats(entries: PrivateJournalEntry[], days = 30): Emot
     .map(([word, count]) => ({ word, count }));
 
   const dayEmotionMap: Record<string, EmotionMeta> = {};
-  const dayOrder: string[] = [];
+  const isoDays: string[] = [];
   let cursor = getTodayIsoDate();
   for (let i = 0; i < days; i++) {
-    dayOrder.push(cursor);
+    isoDays.push(cursor);
     const meta = entriesByDay.get(cursor);
     if (meta) dayEmotionMap[cursor] = meta;
     cursor = isoAddDays(cursor, -1);
   }
+  // Oldest -> newest (ends with today), as documented on the return type.
+  const dayOrder = isoDays.reverse();
 
   return { totalEntries, emotionCounts, topEmotions, wordCloud, totalWords, dayEmotionMap, dayOrder };
 }
