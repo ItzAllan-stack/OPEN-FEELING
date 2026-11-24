@@ -65,7 +65,7 @@ export function LandingPage() {
                   onClick={() =>
                     navigate(firebaseUser && publicUser ? '/create' : '/signup')
                   }
-                  className="px-6 py-3 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   Share Your Feelings
                 </button>
@@ -253,7 +253,7 @@ export function LandingPage() {
               <button
                 type="button"
                 onClick={() => navigate(firebaseUser && publicUser ? '/home' : '/signup')}
-                className="px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors cursor-pointer"
               >
                 {firebaseUser && publicUser ? 'Open My Dashboard' : 'Join the Community'}
               </button>

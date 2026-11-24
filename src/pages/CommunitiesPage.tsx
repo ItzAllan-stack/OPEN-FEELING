@@ -75,7 +75,7 @@ export function CommunitiesPage() {
               }
               setCreateOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium hover:bg-[#3E3B41] transition-colors whitespace-nowrap shrink-0 cursor-pointer self-start"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer self-start"
           >
             <Plus className="w-4 h-4" />
             <span>New Community</span>
@@ -155,7 +155,7 @@ export function CommunitiesPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium cursor-pointer"
             >
               {submitting ? 'Creating...' : 'Create Space'}
             </button>

@@ -99,7 +99,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => navigate('/create')}
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               Share Feelings
             </button>
@@ -107,7 +107,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => navigate('/signup')}
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               Share Your Feelings
             </button>

@@ -154,7 +154,7 @@ export function ExplorePage() {
               onClick={() => setCollection(tab.id)}
               className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 collection === tab.id
-                  ? 'bg-[#29272B] text-[#FCFBFA] border-[#29272B]'
+                  ? 'bg-[#9F4E65] text-[#FCFBFA] border-[#9F4E65]'
                   : 'bg-[#F8F6F3] text-[#6B6770] border-[#EAE4DD] hover:text-[#29272B]'
               }`}
             >

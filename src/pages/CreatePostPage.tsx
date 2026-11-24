@@ -106,7 +106,7 @@ export function CreatePostPage() {
                     <button
                       type="button"
                       onClick={() => handlePublishNow(draft)}
-                      className="px-3 py-1.5 rounded-lg bg-[#29272B] text-[#FCFBFA] text-xs cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-[#9F4E65] text-[#FCFBFA] text-xs cursor-pointer"
                     >
                       Publish now
                     </button>
