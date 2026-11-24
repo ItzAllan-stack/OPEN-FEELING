@@ -43,7 +43,7 @@ function NotFoundPage() {
 }
 
 function AppRouter() {
-  const { currentPath, authLoading, firebaseUser, publicUser, needsOnboarding, ambientColor, navigate } = useApp();
+  const { currentPath, authLoading, firebaseUser, publicUser, needsOnboarding, navigate } = useApp();
 
   const isAuthRoute =
     currentPath === '/login' || currentPath === '/signup' || currentPath === '/forgot-password';
@@ -127,10 +127,7 @@ function AppRouter() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]"
-      style={ambientColor ? ({ backgroundColor: ambientColor } as React.CSSProperties) : undefined}
-    >
+    <div className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]">
       <Header />
       <div className="flex-1">
         <React.Suspense
