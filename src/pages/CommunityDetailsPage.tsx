@@ -33,7 +33,7 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
           <button
             type="button"
             onClick={() => navigate('/communities')}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
           >
             Browse All Communities
           </button>
@@ -128,7 +128,7 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
               className={`px-5 py-2.5 rounded-xl text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 isMember
                   ? 'bg-[#F8F6F3] border border-[#EAE4DD] text-[#29272B]'
-                  : 'bg-[#29272B] text-[#FCFBFA] hover:bg-[#3E3B41]'
+                  : 'bg-[#9F4E65] text-[#FCFBFA] hover:bg-[#8A4358]'
               }`}
             >
               {isMember ? 'Joined' : 'Join Community'}
