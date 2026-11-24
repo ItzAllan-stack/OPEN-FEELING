@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { CommunityCard } from '../components/CommunityCard.tsx';
@@ -8,7 +8,9 @@ import { useApp } from '../context/AppContext.tsx';
 import { createCommunity } from '../services/firestoreService.ts';
 
 export function CommunitiesPage() {
-  const { publicUser, communities, navigate, showToast } = useApp();
+  const { publicUser, communities, joinedCommunityIds, navigate, showToast } = useApp();
+  const [view, setView] = useState<'all' | 'joined'>('all');
+  const [sort, setSort] = useState<'popular' | 'newest' | 'name'>('popular');
   const [search, setSearch] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
   const [name, setName] = useState('');
@@ -16,13 +18,21 @@ export function CommunitiesPage() {
   const [rulesText, setRulesText] = useState('Listen gently without judgement.\nRespect personal privacy.');
   const [submitting, setSubmitting] = useState(false);
 
-  const filtered = communities.filter((c) => {
-    if (!search.trim()) return true;
-    const q = search.trim().toLowerCase();
-    return (
-      c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)
-    );
-  });
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return communities
+      .filter((community) => view === 'all' || joinedCommunityIds.includes(community.id))
+      .filter((community) =>
+        !query ||
+        community.name.toLowerCase().includes(query) ||
+        community.description.toLowerCase().includes(query)
+      )
+      .sort((a, b) => {
+        if (sort === 'name') return a.name.localeCompare(b.name);
+        if (sort === 'newest') return b.createdAt.getTime() - a.createdAt.getTime();
+        return b.memberCount - a.memberCount;
+      });
+  }, [communities, joinedCommunityIds, search, sort, view]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,11 +98,49 @@ export function CommunitiesPage() {
           placeholder="Search community spaces..."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtered.map((community) => (
-            <CommunityCard key={community.id} community={community} />
-          ))}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-1 rounded-xl border border-[#EAE4DD] bg-[#F8F6F3] p-1">
+            {(['all', 'joined'] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setView(tab)}
+                aria-pressed={view === tab}
+                className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize ${view === tab ? 'bg-[#FCFBFA] text-[#29272B] shadow-sm' : 'text-[#6B6770]'}`}
+              >
+                {tab === 'all' ? 'Discover' : 'Joined'}
+              </button>
+            ))}
+          </div>
+          <label className="flex items-center gap-2 text-xs text-[#6B6770]">
+            Sort by
+            <select
+              value={sort}
+              onChange={(event) => setSort(event.target.value as typeof sort)}
+              className="rounded-lg border border-[#EAE4DD] bg-[#FCFBFA] px-2.5 py-2 text-[#29272B]"
+            >
+              <option value="popular">Most members</option>
+              <option value="newest">Recently created</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
         </div>
+
+        {filtered.length === 0 ? (
+          <div className="rounded-2xl border border-[#EAE4DD] bg-[#F8F6F3] p-8 text-center">
+            <p className="text-sm text-[#6B6770]">
+              {view === 'joined'
+                ? 'You have not joined any community spaces yet.'
+                : 'No community spaces match your search.'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filtered.map((community) => (
+              <CommunityCard key={community.id} community={community} />
+            ))}
+          </div>
+        )}
       </div>
 
       <Modal
