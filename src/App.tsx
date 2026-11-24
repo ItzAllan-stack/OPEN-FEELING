@@ -42,7 +42,7 @@ function NotFoundPage() {
 }
 
 function AppRouter() {
-  const { currentPath, authLoading, firebaseUser, needsOnboarding } = useApp();
+  const { currentPath, authLoading, firebaseUser, needsOnboarding, ambientColor } = useApp();
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -108,7 +108,10 @@ function AppRouter() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]">
+    <div
+      className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]"
+      style={ambientColor ? ({ backgroundColor: ambientColor } as React.CSSProperties) : undefined}
+    >
       <Header />
       <div className="flex-1">
         <React.Suspense
