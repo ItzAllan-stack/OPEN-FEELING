@@ -40,6 +40,7 @@ import {
   ReactionCounts,
   ReactionType,
   ResonanceEmotion,
+  FutureLetter,
 } from '../types/index.ts';
 import type { ResonanceCareNote, ResonanceCheckIn } from '../types/index.ts';
 
@@ -1473,4 +1474,75 @@ export function subscribeActiveResonanceCare(
       else handleFirestoreError(error, OperationType.LIST, 'resonance_care');
     }
   );
+}
+
+// ============================================================================
+// Future letters — deliver-on-a-date private notes
+// ============================================================================
+
+function mapFutureLetter(data: Record<string, unknown>): FutureLetter {
+  return {
+    id: String(data.id ?? ''),
+    uid: String(data.uid ?? ''),
+    title: String(data.title ?? ''),
+    content: String(data.content ?? ''),
+    targetDate: toDate(data.targetDate),
+    createdAt: toDate(data.createdAt),
+    updatedAt: toDate(data.updatedAt),
+  };
+}
+
+/** Write a letter to your future self. targetDate is enforced by security rules. */
+export async function createFutureLetter(params: {
+  uid: string;
+  title: string;
+  content: string;
+  targetDate: Date;
+}): Promise<string> {
+  const id = makeId('letter');
+  try {
+    await setDoc(doc(db, 'future_letters', id), {
+      id,
+      uid: params.uid,
+      title: params.title.trim().slice(0, 200),
+      content: params.content.trim().slice(0, 8000),
+      targetDate: params.targetDate,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return id;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.CREATE, `future_letters/${id}`);
+  }
+}
+
+/** Live feed of a user's own letters, sorted by delivery date. */
+export function subscribeFutureLetters(
+  uid: string,
+  onData: (letters: FutureLetter[]) => void,
+  onErr?: (err: Error) => void
+): () => void {
+  const q = query(collection(db, 'future_letters'), where('uid', '==', uid));
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items = snap.docs
+        .map((d) => mapFutureLetter(d.data() as Record<string, unknown>))
+        .sort((a, b) => a.targetDate.getTime() - b.targetDate.getTime());
+      onData(items);
+    },
+    (error) => {
+      if (onErr) onErr(error);
+      else handleFirestoreError(error, OperationType.LIST, 'future_letters');
+    }
+  );
+}
+
+/** Delete one of your own letters before it is delivered. */
+export async function deleteFutureLetter(id: string): Promise<void> {
+  try {
+    await deleteDoc(doc(db, 'future_letters', id));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `future_letters/${id}`);
+  }
 }
