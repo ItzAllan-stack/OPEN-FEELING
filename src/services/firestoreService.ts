@@ -41,6 +41,7 @@ import {
   ReactionType,
   ResonanceEmotion,
   FutureLetter,
+  YearInReview,
 } from '../types/index.ts';
 import type { ResonanceCareNote, ResonanceCheckIn } from '../types/index.ts';
 
@@ -1542,4 +1543,139 @@ export async function deleteFutureLetter(id: string): Promise<void> {
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `future_letters/${id}`);
   }
+}
+
+// ============================================================================
+// Year in review — aggregates over a calendar year of private reflections
+// ============================================================================
+
+const YEAR_REVIEW_WARMTH_PHRASES: string[] = [
+  'You carried this year gently, even when it did not feel that way.',
+  'This year asked you to feel, and you found the words anyway.',
+  'Your story this year was quieter than you thought and louder than you admitted.',
+  'You kept going one feeling at a time — that counts.',
+  'This year was made of small returns of the self you keep promising to visit.',
+];
+
+const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function startOfYear(year: number): Date {
+  return new Date(year, 0, 1);
+}
+
+function endOfYear(year: number): Date {
+  return new Date(year + 1, 0, 1);
+}
+
+function hashYear(year: number): number {
+  let hash = 0;
+  const value = String(year);
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) % 9973;
+  }
+  return hash;
+}
+
+/**
+ * Live year-in-review summary: how many feelings and words this person put
+ * into the world over the given calendar year, which emotions topped it, which
+ * tags repeated, and a gentle warmth line for the recap.
+ *
+ * Reads the user's own posts and private journal entries (both owner-readable
+ * per security rules) and filters them down to the requested year.
+ */
+export function subscribeYearReview(
+  uid: string,
+  year: number,
+  onData: (summary: YearInReview) => void,
+  onErr?: (err: Error) => void
+): () => void {
+  const yearStart = startOfYear(year).getTime();
+  const yearEnd = endOfYear(year).getTime();
+  const posts: Post[] = [];
+  const journals: PrivateJournalEntry[] = [];
+  let postsLoaded = false;
+  let journalsLoaded = false;
+
+  const compute = () => {
+    if (!postsLoaded || !journalsLoaded) return;
+
+    const yearPosts = posts.filter((p) => {
+      const t = p.createdAt?.getTime() ?? 0;
+      return t >= yearStart && t < yearEnd;
+    });
+    const yearJournals = journals.filter(
+      (j) => j.createdAt.getTime() >= yearStart && j.createdAt.getTime() < yearEnd
+    );
+
+    const emotionCounts: Record<string, number> = {};
+    const tagCounts = new Map<string, number>();
+    let totalWords = 0;
+
+    for (const post of yearPosts) {
+      emotionCounts[post.emotion] = (emotionCounts[post.emotion] ?? 0) + 1;
+      const words = post.content.trim().split(/\s+/).filter(Boolean);
+      totalWords += words.length;
+      for (const tag of post.tags ?? []) {
+        if (!tag) continue;
+        tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+      }
+    }
+    for (const entry of yearJournals) {
+      emotionCounts[entry.emotion] = (emotionCounts[entry.emotion] ?? 0) + 1;
+      const words = `${entry.title ?? ''} ${entry.content ?? ''}`.split(/\s+/).filter(Boolean);
+      totalWords += words.length;
+    }
+
+    const topEmotions = Object.entries(emotionCounts)
+      .map(([emotion, count]) => ({ emotion: emotion as EmotionId, count }))
+      .filter((item) => item.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    const topTags = [...tagCounts.entries()]
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    const dowCounts = new Map<number, number>();
+    for (const post of yearPosts) {
+      const dow = post.createdAt.getDay();
+      dowCounts.set(dow, (dowCounts.get(dow) ?? 0) + 1);
+    }
+    const dayOfWeekActivity = [...dowCounts.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([dow, count]) => ({ day: WEEKDAY_NAMES[dow] ?? '', count }));
+
+    onData({
+      year,
+      postCount: yearPosts.length,
+      journalCount: yearJournals.length,
+      emotionCounts,
+      topEmotions,
+      topTags,
+      dayOfWeekActivity,
+      dominantEmotion: topEmotions[0]?.emotion ?? null,
+      warmthPhrase: YEAR_REVIEW_WARMTH_PHRASES[hashYear(year) % YEAR_REVIEW_WARMTH_PHRASES.length],
+      totalWords,
+    });
+  };
+
+  const unsubPosts = subscribeUserPrivatePosts(uid, (items) => {
+    posts.length = 0;
+    posts.push(...items);
+    postsLoaded = true;
+    compute();
+  });
+  const unsubJournals = subscribePrivateJournal(uid, (items) => {
+    journals.length = 0;
+    journals.push(...items);
+    journalsLoaded = true;
+    compute();
+  });
+
+  return () => {
+    unsubPosts();
+    unsubJournals();
+  };
 }

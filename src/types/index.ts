@@ -203,3 +203,18 @@ export interface FutureLetter {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Aggregates over a calendar year of the signed-in user's own reflections:
+// published feelings, private journal entries, top emotions and tags.
+export interface YearInReview {
+  year: number;
+  postCount: number;
+  journalCount: number;
+  emotionCounts: Record<string, number>;
+  topEmotions: { emotion: EmotionId; count: number }[];
+  topTags: { tag: string; count: number }[];
+  dayOfWeekActivity: { day: string; count: number }[];
+  dominantEmotion: EmotionId | null;
+  warmthPhrase: string;
+  totalWords: number;
+}
