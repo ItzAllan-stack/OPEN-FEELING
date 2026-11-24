@@ -14,7 +14,7 @@ import { CURATED_AVATARS, EMOTION_MAP, type EmotionMeta } from '../constants/emo
 import { STARTER_COMMUNITIES, STARTER_POSTS } from '../data/starterData.ts';
 import { auth, googleAuthProvider } from '../lib/firebase.ts';
 import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
-import { getAmbientColor, getAmbientPace, getTimeOfDay } from '../utils/ambientColor.ts';
+import { getAmbientPace } from '../utils/ambientColor.ts';
 import {
   checkIsAdmin,
   checkUsernameAvailable,
@@ -51,7 +51,6 @@ interface AppContextValue {
   publicUser: PublicUser | null;
   privateUser: PrivateUser | null;
   isAdmin: boolean;
-  ambientColor: string | null;
   sakuraPace: number;
   sakuraEnabled: boolean;
   setSakuraLocal: (enabled: boolean) => void;
@@ -258,8 +257,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     );
   }, [firestorePublicPosts, userPrivatePosts, blockedSet]);
 
-  // Ambient mood: blend a soft tint from the emotions in the signed-in user's
-  // own recent reflections, so the whole app background shifts gently with mood.
+  // Sakura pace still responds gently to the signed-in user's recent reflections.
   const recentAuthoredEmotions = useMemo(() => {
     const uid = privateUser?.uid;
     if (!uid) return [];
@@ -269,11 +267,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       .map((p) => EMOTION_MAP[p.emotion])
       .filter((m): m is EmotionMeta => Boolean(m));
   }, [posts, privateUser]);
-
-  const ambientColor = useMemo(
-    () => getAmbientColor(recentAuthoredEmotions, getTimeOfDay()),
-    [recentAuthoredEmotions]
-  );
 
   const sakuraPace = useMemo(() => getAmbientPace(recentAuthoredEmotions), [recentAuthoredEmotions]);
 
@@ -420,7 +413,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     publicUser,
     privateUser,
     isAdmin,
-    ambientColor,
     sakuraPace,
     sakuraEnabled,
     setSakuraLocal: setSakuraLocalOverride,
