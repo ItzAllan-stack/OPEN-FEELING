@@ -138,7 +138,7 @@ export function ExplorePage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Explore &amp; Discover
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Find relatable stories by emotion, topic, tag, or public username. Private posts are never shown here.
           </p>
         </div>
@@ -155,7 +155,7 @@ export function ExplorePage() {
               className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 collection === tab.id
                   ? 'bg-[#29272B] text-[#FCFBFA] border-[#29272B]'
-                  : 'bg-[#F8F6F3] text-[#77727A] border-[#EAE4DD] hover:text-[#29272B]'
+                  : 'bg-[#F8F6F3] text-[#6B6770] border-[#EAE4DD] hover:text-[#29272B]'
               }`}
             >
               {tab.label}
@@ -165,13 +165,13 @@ export function ExplorePage() {
 
         {/* Emotion Filter */}
         <div className="space-y-2">
-          <p className="text-xs font-medium text-[#77727A]">Filter by emotion</p>
+          <p className="text-xs font-medium text-[#6B6770]">Filter by emotion</p>
           <EmotionSelector value={selectedEmotion} onChange={setSelectedEmotion} />
         </div>
 
         {trimmedQuery && matchingUsers.length > 0 && (
           <section aria-label="Matching people" className="space-y-2.5">
-            <h2 className="text-xs font-medium text-[#77727A]">
+            <h2 className="text-xs font-medium text-[#6B6770]">
               People ({matchingUsers.length})
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -198,9 +198,9 @@ export function ExplorePage() {
                     <p className="text-sm font-semibold text-[#29272B] truncate">
                       {u.displayName}
                     </p>
-                    <p className="text-xs text-[#77727A] truncate">@{u.username}</p>
+                    <p className="text-xs text-[#6B6770] truncate">@{u.username}</p>
                     {u.bio && (
-                      <p className="text-xs text-[#77727A] line-clamp-1 mt-0.5">
+                      <p className="text-xs text-[#6B6770] line-clamp-1 mt-0.5">
                         {u.bio}
                       </p>
                     )}
@@ -213,7 +213,7 @@ export function ExplorePage() {
 
         {trimmedQuery && matchingCommunities.length > 0 && (
           <section aria-label="Matching communities" className="space-y-2.5">
-            <h2 className="text-xs font-medium text-[#77727A]">
+            <h2 className="text-xs font-medium text-[#6B6770]">
               Communities ({matchingCommunities.length})
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -227,10 +227,10 @@ export function ExplorePage() {
                   <p className="text-sm font-semibold text-[#29272B] truncate">
                     {c.name}
                   </p>
-                  <p className="text-xs text-[#77727A] line-clamp-1 mt-0.5">
+                  <p className="text-xs text-[#6B6770] line-clamp-1 mt-0.5">
                     {c.description}
                   </p>
-                  <p className="text-[11px] text-[#77727A] tabular-nums mt-1">
+                  <p className="text-[11px] text-[#6B6770] tabular-nums mt-1">
                     {c.memberCount} members
                   </p>
                 </button>
@@ -246,7 +246,7 @@ export function ExplorePage() {
             <p className="text-base font-display text-[#29272B]">
               {trimmedQuery ? 'No matching results found' : 'No matching public stories found'}
             </p>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               Try another keyword or clear your filters to browse recent reflections.
             </p>
           </div>
@@ -254,7 +254,7 @@ export function ExplorePage() {
           results.length > 0 && (
             <div className="space-y-4">
               {trimmedQuery && (matchingUsers.length > 0 || matchingCommunities.length > 0) && (
-                <h2 className="text-xs font-medium text-[#77727A]">
+                <h2 className="text-xs font-medium text-[#6B6770]">
                   Stories ({results.length})
                 </h2>
               )}

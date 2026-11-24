@@ -65,7 +65,7 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
     <div className="space-y-5">
       <div className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-5 space-y-3">
         <h3 className="text-sm font-medium text-[#29272B]">Community Rules</h3>
-        <ol className="space-y-2 text-xs text-[#77727A] list-decimal pl-4 leading-relaxed">
+        <ol className="space-y-2 text-xs text-[#6B6770] list-decimal pl-4 leading-relaxed">
           {community.rules.map((rule, i) => (
             <li key={i}>{rule}</li>
           ))}
@@ -78,7 +78,7 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
             <Shield className="w-4 h-4 text-[#9F4E65]" />
             <span>Community Moderation</span>
           </div>
-          <p className="text-xs text-[#77727A] leading-relaxed">
+          <p className="text-xs text-[#6B6770] leading-relaxed">
             Use the Report action on any post or visit the Moderation Dashboard to review flagged content in this space.
           </p>
           {isAdmin && (
@@ -101,7 +101,7 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
         <button
           type="button"
           onClick={() => navigate('/communities')}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>All communities</span>
@@ -114,10 +114,10 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
               <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
                 {community.name}
               </h1>
-              <p className="text-sm text-[#77727A] leading-relaxed max-w-2xl">
+              <p className="text-sm text-[#6B6770] leading-relaxed max-w-2xl">
                 {community.description}
               </p>
-              <p className="text-xs text-[#77727A] tabular-nums pt-1">
+              <p className="text-xs text-[#6B6770] tabular-nums pt-1">
                 {community.memberCount} members · {communityPosts.length} stories shared
               </p>
             </div>
@@ -143,7 +143,7 @@ export function CommunityDetailsPage({ communityId }: CommunityDetailsPageProps)
             <p className="text-base font-display text-[#29272B]">
               Be the first to share in {community.name}
             </p>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               Your reflection can help open a warm conversation here.
             </p>
           </div>

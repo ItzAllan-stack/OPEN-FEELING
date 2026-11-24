@@ -50,7 +50,7 @@ export function PostDetailsPage({ postId }: PostDetailsPageProps) {
         <button
           type="button"
           onClick={() => navigate('/home')}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to stories</span>
@@ -60,7 +60,7 @@ export function PostDetailsPage({ postId }: PostDetailsPageProps) {
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
           >
             <Printer className="w-3.5 h-3.5" />
             <span>Print this reflection</span>
@@ -72,7 +72,7 @@ export function PostDetailsPage({ postId }: PostDetailsPageProps) {
         ) : !post ? (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center space-y-3">
             <h1 className="text-xl font-display text-[#29272B]">Story not available</h1>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               This reflection may be private to its author or may have been removed.
             </p>
             <button

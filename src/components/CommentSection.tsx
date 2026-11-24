@@ -175,9 +175,9 @@ export function CommentSection({ post }: CommentSectionProps) {
               >
                 {comment.authorName}
               </button>
-              <span className="text-[#77727A]">@{comment.authorUsername}</span>
-              <span aria-hidden="true" className="text-[#77727A]">·</span>
-              <span className="text-[#77727A] tabular-nums">
+              <span className="text-[#6B6770]">@{comment.authorUsername}</span>
+              <span aria-hidden="true" className="text-[#6B6770]">·</span>
+              <span className="text-[#6B6770] tabular-nums">
                 {formatRelativeTime(comment.createdAt)}
               </span>
             </div>
@@ -192,7 +192,7 @@ export function CommentSection({ post }: CommentSectionProps) {
                   setReplyText('');
                 }}
                 aria-label="Reply to comment"
-                className="p-1.5 rounded-lg text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
+                className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
               >
                 <Reply className="w-3.5 h-3.5" />
               </button>
@@ -205,7 +205,7 @@ export function CommentSection({ post }: CommentSectionProps) {
                   setEditText(comment.content);
                 }}
                 aria-label="Edit comment"
-                className="p-1.5 rounded-lg text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
+                className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
               >
                 <Pencil className="w-3.5 h-3.5" />
               </button>
@@ -215,7 +215,7 @@ export function CommentSection({ post }: CommentSectionProps) {
                 type="button"
                 onClick={() => handleDelete(comment.id)}
                 aria-label="Delete comment"
-                className="p-1.5 rounded-lg text-[#77727A] hover:text-[#A84848] hover:bg-[#FDF5F5] cursor-pointer"
+                className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#A84848] hover:bg-[#FDF5F5] cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -225,7 +225,7 @@ export function CommentSection({ post }: CommentSectionProps) {
                 type="button"
                 onClick={() => setReportingComment(comment)}
                 aria-label="Report comment"
-                className="p-1.5 rounded-lg text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
+                className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
               >
                 <Flag className="w-3.5 h-3.5" />
               </button>
@@ -246,7 +246,7 @@ export function CommentSection({ post }: CommentSectionProps) {
               <button
                 type="button"
                 onClick={() => setEditingId(null)}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
               >
                 Cancel
               </button>
@@ -279,7 +279,7 @@ export function CommentSection({ post }: CommentSectionProps) {
               <button
                 type="button"
                 onClick={() => setReplyingTo(null)}
-                className="px-3 py-1.5 rounded-lg text-xs text-[#77727A] hover:text-[#29272B] cursor-pointer"
+                className="px-3 py-1.5 rounded-lg text-xs text-[#6B6770] hover:text-[#29272B] cursor-pointer"
               >
                 Cancel
               </button>
@@ -306,7 +306,7 @@ export function CommentSection({ post }: CommentSectionProps) {
   return (
     <section aria-label="Supportive comments" className="pt-6 border-t border-[#EAE4DD]">
       <div className="flex items-center gap-2 mb-4">
-        <MessageCircle className="w-4 h-4 text-[#77727A]" />
+        <MessageCircle className="w-4 h-4 text-[#6B6770]" />
         <h3 className="text-base font-medium text-[#29272B]">
           Supportive Listening ({comments.length})
         </h3>
@@ -323,10 +323,10 @@ export function CommentSection({ post }: CommentSectionProps) {
           }
           rows={3}
           maxLength={1500}
-          className="w-full p-3.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors"
+          className="w-full p-3.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors"
         />
         <div className="flex items-center justify-between gap-4">
-          <p className="text-xs text-[#77727A]">
+          <p className="text-xs text-[#6B6770]">
             Remember: sometimes listening matters more than fixing.
           </p>
           <button
@@ -340,7 +340,7 @@ export function CommentSection({ post }: CommentSectionProps) {
       </form>
 
       {topLevel.length === 0 ? (
-        <p className="text-sm text-[#77727A] py-4">
+        <p className="text-sm text-[#6B6770] py-4">
           No comments yet. Be the first to offer a gentle word.
         </p>
       ) : (
@@ -385,7 +385,7 @@ export function CommentSection({ post }: CommentSectionProps) {
             <button
               type="button"
               onClick={() => setReportingComment(null)}
-              className="px-4 py-2 rounded-xl text-sm text-[#77727A] hover:text-[#29272B] cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm text-[#6B6770] hover:text-[#29272B] cursor-pointer"
             >
               Cancel
             </button>

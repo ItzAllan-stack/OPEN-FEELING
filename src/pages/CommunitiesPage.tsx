@@ -60,7 +60,7 @@ export function CommunitiesPage() {
             <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
               Community Spaces
             </h1>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               Topic-based circles for shared experiences, quiet encouragement, and honest conversation.
             </p>
           </div>
@@ -148,7 +148,7 @@ export function CommunitiesPage() {
             <button
               type="button"
               onClick={() => setCreateOpen(false)}
-              className="px-4 py-2 rounded-xl text-sm text-[#77727A] cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm text-[#6B6770] cursor-pointer"
             >
               Cancel
             </button>

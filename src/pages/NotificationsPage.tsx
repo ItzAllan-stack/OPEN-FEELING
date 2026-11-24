@@ -58,7 +58,7 @@ export function NotificationsPage() {
             <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
               Notifications
             </h1>
-            <p className="text-sm text-[#77727A] tabular-nums">
+            <p className="text-sm text-[#6B6770] tabular-nums">
               {unreadNotificationsCount} unread updates
             </p>
           </div>
@@ -80,7 +80,7 @@ export function NotificationsPage() {
             <button
               type="button"
               onClick={() => navigate('/settings')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FCFBFA] border border-[#EAE4DD] text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FCFBFA] border border-[#EAE4DD] text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5" />
               <span>Preferences</span>
@@ -97,7 +97,7 @@ export function NotificationsPage() {
               className={`px-3.5 py-1.5 rounded-lg text-xs font-medium capitalize cursor-pointer ${
                 filter === tab
                   ? 'bg-[#FCFBFA] text-[#29272B] border border-[#EAE4DD]'
-                  : 'text-[#77727A]'
+                  : 'text-[#6B6770]'
               }`}
             >
               {tab}
@@ -107,9 +107,9 @@ export function NotificationsPage() {
 
         {visible.length === 0 ? (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center space-y-2">
-            <Bell className="w-6 h-6 text-[#77727A] mx-auto" />
+            <Bell className="w-6 h-6 text-[#6B6770] mx-auto" />
             <p className="text-base font-display text-[#29272B]">All quiet here</p>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               When someone sends warmth, replies, or follows your reflections, you will see it here.
             </p>
           </div>

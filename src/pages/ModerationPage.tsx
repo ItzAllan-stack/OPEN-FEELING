@@ -28,7 +28,7 @@ export function ModerationPage() {
       <AppShell>
         <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center space-y-3">
           <h1 className="text-xl font-display text-[#29272B]">Moderator Access Only</h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             This dashboard is restricted to verified community moderators.
           </p>
           <button
@@ -85,7 +85,7 @@ export function ModerationPage() {
             <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
               Moderation Dashboard
             </h1>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               Review community reports safely and protect emotional well-being.
             </p>
           </div>
@@ -93,7 +93,7 @@ export function ModerationPage() {
 
         {reports.length === 0 ? (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center">
-            <p className="text-sm text-[#77727A]">No moderation reports in the queue.</p>
+            <p className="text-sm text-[#6B6770]">No moderation reports in the queue.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -106,7 +106,7 @@ export function ModerationPage() {
                   key={report.id}
                   className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-5 space-y-3"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#77727A]">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#6B6770]">
                     <span>
                       Target: <strong className="text-[#29272B]">{report.targetType}</strong> ({report.targetId})
                     </span>
@@ -118,14 +118,14 @@ export function ModerationPage() {
                   <div>
                     <p className="text-sm font-medium text-[#29272B]">{report.reason}</p>
                     {report.details && (
-                      <p className="mt-1 text-xs text-[#77727A]">{report.details}</p>
+                      <p className="mt-1 text-xs text-[#6B6770]">{report.details}</p>
                     )}
                   </div>
 
                   {targetPost && (
                     <div className="p-3 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#29272B]">
                       <p className="font-medium">Reported content preview:</p>
-                      <p className="mt-1 text-[#77727A] line-clamp-3">{targetPost.content}</p>
+                      <p className="mt-1 text-[#6B6770] line-clamp-3">{targetPost.content}</p>
                     </div>
                   )}
 
@@ -176,7 +176,7 @@ export function ModerationPage() {
                     <button
                       type="button"
                       onClick={() => handleStatus(report, 'dismissed')}
-                      className="px-3 py-1.5 rounded-lg bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] cursor-pointer"
                     >
                       Dismiss
                     </button>

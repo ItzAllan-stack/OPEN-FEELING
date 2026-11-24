@@ -66,13 +66,13 @@ export function Sidebar() {
               className={`w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
                 active
                   ? 'bg-[#F4DCE3]/65 text-[#29272B]'
-                  : 'text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3]'
+                  : 'text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3]'
               }`}
             >
               <span className="flex items-center gap-3 min-w-0">
                 <Icon
                   className={`w-4 h-4 shrink-0 ${
-                    active ? 'text-[#9F4E65]' : 'text-[#77727A]'
+                    active ? 'text-[#9F4E65]' : 'text-[#6B6770]'
                   }`}
                 />
                 <span className="truncate">{item.label}</span>
@@ -93,14 +93,14 @@ export function Sidebar() {
             <p className="text-sm font-medium text-[#29272B] truncate">
               {publicUser.displayName}
             </p>
-            <p className="text-xs text-[#77727A] truncate">
+            <p className="text-xs text-[#6B6770] truncate">
               @{publicUser.username}
             </p>
           </div>
           <button
             type="button"
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-sm text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3] transition-colors cursor-pointer"
+            className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-sm text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3] transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>

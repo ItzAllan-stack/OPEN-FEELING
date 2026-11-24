@@ -113,7 +113,7 @@ export function PersonalJournalPage() {
         <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center space-y-3">
           <Lock className="w-6 h-6 text-[#9F4E65] mx-auto" />
           <h1 className="text-2xl font-display text-[#29272B]">My Personal Space</h1>
-          <p className="text-sm text-[#77727A] max-w-md mx-auto">
+          <p className="text-sm text-[#6B6770] max-w-md mx-auto">
             A private personal journal protected by strict owner-only access rules. Sign in to write thoughts just for yourself.
           </p>
           <button
@@ -271,7 +271,7 @@ export function PersonalJournalPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             My Personal Space
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Write thoughts you are not ready—or never want—to publish. Every entry is locked to your account.
           </p>
         </div>
@@ -280,7 +280,7 @@ export function PersonalJournalPage() {
         <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-5 sm:p-6 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-medium text-[#29272B]">Streak</h2>
-            <p className="text-xs text-[#77727A] tabular-nums">
+            <p className="text-xs text-[#6B6770] tabular-nums">
               {streak === 0
                 ? 'Fresh start — a quiet beginning can be today.'
                 : `${streak} ${streak === 1 ? 'day' : 'days'} in a row`}
@@ -294,7 +294,7 @@ export function PersonalJournalPage() {
             <button
               type="button"
               onClick={() => setPromptOverride(randomJournalPrompt())}
-              className="px-3.5 py-1.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] cursor-pointer"
             >
               Another prompt
             </button>
@@ -341,7 +341,7 @@ export function PersonalJournalPage() {
           />
 
           <div className="space-y-2">
-            <p className="text-xs text-[#77727A]">Optional emotion tag</p>
+            <p className="text-xs text-[#6B6770]">Optional emotion tag</p>
             <EmotionSelector value={emotion} onChange={setEmotion} />
           </div>
 
@@ -355,7 +355,7 @@ export function PersonalJournalPage() {
                   setContent('');
                   setEmotion('');
                 }}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-[#77727A] cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-[#6B6770] cursor-pointer"
               >
                 Cancel Edit
               </button>
@@ -377,7 +377,7 @@ export function PersonalJournalPage() {
             <Mail className="w-4 h-4 text-[#9F4E65] mt-0.5 shrink-0" />
             <div>
               <h2 className="text-base font-medium text-[#29272B]">Letters to your future self</h2>
-              <p className="text-sm text-[#77727A]">
+              <p className="text-sm text-[#6B6770]">
                 Write a private note that only you will open on a future day. It never lands in your journal
                 before its time.
               </p>
@@ -407,7 +407,7 @@ export function PersonalJournalPage() {
 
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div className="space-y-1">
-                <label htmlFor="future-letter-date" className="block text-xs text-[#77727A]">
+                <label htmlFor="future-letter-date" className="block text-xs text-[#6B6770]">
                   Deliver on
                 </label>
                 <input
@@ -434,7 +434,7 @@ export function PersonalJournalPage() {
           <div className="pt-4 border-t border-[#EAE4DD] space-y-3">
             <h3 className="text-sm font-medium text-[#29272B]">Your letters arrive</h3>
             {dueLetters.length === 0 ? (
-              <p className="text-sm text-[#77727A]">
+              <p className="text-sm text-[#6B6770]">
                 No letters have arrived yet. Your future self is still writing.
               </p>
             ) : (
@@ -446,7 +446,7 @@ export function PersonalJournalPage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="text-xs text-[#77727A] tabular-nums">
+                        <p className="text-xs text-[#6B6770] tabular-nums">
                           Delivered {formatFullDate(new Date(letter.targetDate))}
                         </p>
                         <h4 className="mt-0.5 text-base font-display font-medium text-[#29272B]">
@@ -458,7 +458,7 @@ export function PersonalJournalPage() {
                         onClick={() => handleDeleteLetter(letter.id)}
                         disabled={deletingLetterId === letter.id}
                         aria-label="Delete future letter"
-                        className="p-1.5 rounded-lg text-[#77727A] hover:text-[#A84848] hover:bg-[#FDF5F5] disabled:opacity-50 cursor-pointer"
+                        className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#A84848] hover:bg-[#FDF5F5] disabled:opacity-50 cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -484,7 +484,7 @@ export function PersonalJournalPage() {
                 type="button"
                 onClick={exportJournal}
                 disabled={entries.length === 0}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] disabled:opacity-50 cursor-pointer whitespace-nowrap"
               >
                 <Download className="w-3.5 h-3.5" />
                 Export
@@ -501,7 +501,7 @@ export function PersonalJournalPage() {
 
           {filtered.length === 0 ? (
             <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center">
-              <p className="text-sm text-[#77727A]">
+              <p className="text-sm text-[#6B6770]">
                 {entries.length === 0
                   ? 'Your personal space is ready whenever you want to write your first private reflection.'
                   : 'No journal entries match your search.'}
@@ -518,7 +518,7 @@ export function PersonalJournalPage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#77727A]">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#6B6770]">
                           <span className="tabular-nums font-medium">{entry.entryDate}</span>
                           {em && (
                             <>
@@ -539,7 +539,7 @@ export function PersonalJournalPage() {
                           type="button"
                           onClick={() => startEdit(entry)}
                           aria-label="Edit journal entry"
-                          className="p-1.5 rounded-lg text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
+                          className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3] cursor-pointer"
                         >
                           <Pencil className="w-4 h-4" />
                         </button>
@@ -547,7 +547,7 @@ export function PersonalJournalPage() {
                           type="button"
                           onClick={() => handleDelete(entry.id)}
                           aria-label="Delete journal entry"
-                          className="p-1.5 rounded-lg text-[#77727A] hover:text-[#A84848] hover:bg-[#FDF5F5] cursor-pointer"
+                          className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#A84848] hover:bg-[#FDF5F5] cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -569,7 +569,7 @@ export function PersonalJournalPage() {
           <button
             type="button"
             onClick={() => navigate(`/review/${new Date().getFullYear()}`)}
-            className="text-xs text-[#77727A] underline underline-offset-4 hover:text-[#29272B] cursor-pointer"
+            className="text-xs text-[#6B6770] underline underline-offset-4 hover:text-[#29272B] cursor-pointer"
           >
             See your year in feelings
           </button>

@@ -34,7 +34,7 @@ export function MobileNavigation() {
             type="button"
             onClick={() => navigate(tab.path)}
             className={`relative flex flex-col items-center justify-center min-w-[56px] min-h-[44px] rounded-xl px-2 py-1 text-[11px] font-medium transition-colors cursor-pointer ${
-              active ? 'text-[#9F4E65]' : 'text-[#77727A] hover:text-[#29272B]'
+              active ? 'text-[#9F4E65]' : 'text-[#6B6770] hover:text-[#29272B]'
             }`}
           >
             <Icon className="w-5 h-5" />

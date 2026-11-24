@@ -19,7 +19,7 @@ export function Header() {
         {/* Zone 2: Concise single-line nav links */}
         <nav
           aria-label="Primary navigation"
-          className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 text-sm font-medium text-[#77727A]"
+          className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 text-sm font-medium text-[#6B6770]"
         >
           <button
             type="button"
@@ -86,7 +86,7 @@ export function Header() {
             onClick={() => setMobileSearchOpen((prev) => !prev)}
             aria-label={mobileSearchOpen ? 'Close global search' : 'Open global search'}
             aria-expanded={mobileSearchOpen}
-            className="lg:hidden p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#77727A] hover:text-[#29272B] transition-colors cursor-pointer"
+            className="lg:hidden p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#6B6770] hover:text-[#29272B] transition-colors cursor-pointer"
           >
             {mobileSearchOpen ? (
               <X className="w-4 h-4" />

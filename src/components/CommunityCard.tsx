@@ -45,14 +45,14 @@ export function CommunityCard({ community }: CommunityCardProps) {
           >
             <Users className="w-4 h-4 text-[#29272B]" />
           </div>
-          <span className="text-xs text-[#77727A] tabular-nums">
+          <span className="text-xs text-[#6B6770] tabular-nums">
             {community.memberCount} members
           </span>
         </div>
         <h3 className="text-base font-display font-medium text-[#29272B]">
           {community.name}
         </h3>
-        <p className="text-sm text-[#77727A] leading-relaxed line-clamp-2">
+        <p className="text-sm text-[#6B6770] leading-relaxed line-clamp-2">
           {community.description}
         </p>
       </div>

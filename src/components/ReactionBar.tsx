@@ -75,7 +75,7 @@ export function ReactionBar({ post, compact = false }: ReactionBarProps) {
             className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               active
                 ? 'bg-[#F4DCE3]/70 border-[#E9A9B8] text-[#29272B]'
-                : 'bg-[#FCFBFA] border-[#EAE4DD] text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3]'
+                : 'bg-[#FCFBFA] border-[#EAE4DD] text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3]'
             }`}
           >
             <span aria-hidden="true">{item.symbol}</span>

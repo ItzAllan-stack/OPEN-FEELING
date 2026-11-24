@@ -43,7 +43,7 @@ export function NotificationItem({
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm text-[#29272B] leading-snug">{item.message}</p>
-          <p className="mt-1 text-xs text-[#77727A] tabular-nums">
+          <p className="mt-1 text-xs text-[#6B6770] tabular-nums">
             {formatRelativeTime(item.createdAt)}
             {!item.isRead && ' · Unread'}
           </p>

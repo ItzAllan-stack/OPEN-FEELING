@@ -52,7 +52,7 @@ function ToolbarButton({
       aria-pressed={pressed}
       className={`rounded-xl border p-2 transition-colors cursor-pointer ${
         pressed
-          ? 'border-[#29272B] bg-[#F4DCE3]/45 text-[#9F4E65]'
+          ? 'border-[#29272B] bg-[#F4DCE3]/45 text-[#8A4358]'
           : 'border-[#EAE4DD] bg-[#FCFBFA] text-[#29272B]/70 hover:border-[#D5CCC3] hover:bg-[#F8F6F3] hover:text-[#29272B]'
       }`}
     >
@@ -271,7 +271,7 @@ export function PostComposer({
         <h2 className="text-xl font-display font-medium text-[#29272B]">
           What&apos;s on your mind today?
         </h2>
-        <p className="mt-1 text-sm text-[#77727A]">
+        <p className="mt-1 text-sm text-[#6B6770]">
           You don&apos;t have to keep everything inside. Write whatever you feel.
         </p>
       </div>
@@ -284,7 +284,7 @@ export function PostComposer({
           maxLength={140}
           placeholder="Optional title (e.g., Quiet thoughts tonight)"
           aria-label="Optional post title"
-          className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA]"
+          className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA]"
         />
       )}
 
@@ -358,7 +358,7 @@ export function PostComposer({
             formRef.current?.requestSubmit();
           }
         }}
-        className="w-full p-4 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[15px] text-[#29272B] leading-relaxed placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors"
+        className="w-full p-4 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[15px] text-[#29272B] leading-relaxed placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors"
       />
 
       {showPreview && (
@@ -370,7 +370,7 @@ export function PostComposer({
           {content ? (
             renderInline(content)
           ) : (
-            <span className="text-[#77727A]">Nothing to preview yet…</span>
+            <span className="text-[#6B6770]">Nothing to preview yet…</span>
           )}
         </div>
       )}
@@ -378,7 +378,7 @@ export function PostComposer({
       {showExtras && (
         <div className="space-y-4 pt-1">
           <div>
-            <p className="text-xs font-medium text-[#77727A] mb-2">
+            <p className="text-xs font-medium text-[#6B6770] mb-2">
               How does this feel? (Optional)
             </p>
             <EmotionSelector value={emotion} onChange={setEmotion} />
@@ -386,7 +386,7 @@ export function PostComposer({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-[#77727A] mb-1.5">
+              <label className="block text-xs font-medium text-[#6B6770] mb-1.5">
                 Community Space (Optional)
               </label>
               <select
@@ -404,7 +404,7 @@ export function PostComposer({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#77727A] mb-1.5">
+              <label className="block text-xs font-medium text-[#6B6770] mb-1.5">
                 Tags (Optional, comma-separated)
               </label>
               <input
@@ -412,13 +412,13 @@ export function PostComposer({
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
                 placeholder="healing, gratitude, late-night"
-                className="w-full px-3 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8]"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8]"
               />
             </div>
           </div>
 
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-medium text-[#77727A] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-medium text-[#6B6770] mb-1.5">
               <ImageIcon className="w-3.5 h-3.5" />
               <span>Optional Image URL (https://)</span>
             </label>
@@ -427,7 +427,7 @@ export function PostComposer({
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://..."
-              className="w-full px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8]"
+              className="w-full px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8]"
             />
           </div>
 
@@ -475,7 +475,7 @@ export function PostComposer({
                       <Icon className="w-3.5 h-3.5" />
                       <span>{opt.label}</span>
                     </div>
-                    <p className="mt-1 text-[11px] text-[#77727A] leading-snug">
+                    <p className="mt-1 text-[11px] text-[#6B6770] leading-snug">
                       {opt.desc}
                     </p>
                   </button>
@@ -483,7 +483,7 @@ export function PostComposer({
               })}
             </div>
             {visibility === 'anonymous' && (
-              <p className="text-[11px] text-[#77727A] leading-relaxed">
+              <p className="text-[11px] text-[#6B6770] leading-relaxed">
                 Your profile name and username are removed from the public post document on the server. Note: moderators may review reported content for safety, so platform anonymity does not guarantee absolute anonymity.
               </p>
             )}
@@ -496,7 +496,7 @@ export function PostComposer({
           type="button"
           onClick={() => setScheduleOpen((v) => !v)}
           aria-pressed={scheduleOpen}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <Clock className="w-3.5 h-3.5" />
           {scheduleOpen ? 'Hide schedule' : 'Schedule'}
@@ -505,7 +505,7 @@ export function PostComposer({
           type="button"
           onClick={handleSaveDraft}
           disabled={submitting || !content.trim()}
-          className="px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer"
+          className="px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] disabled:opacity-50 cursor-pointer"
         >
           Save as draft
         </button>
@@ -513,7 +513,7 @@ export function PostComposer({
 
       {scheduleOpen && (
         <div className="space-y-1.5">
-          <label htmlFor={scheduleId} className="block text-xs font-medium text-[#77727A]">
+          <label htmlFor={scheduleId} className="block text-xs font-medium text-[#6B6770]">
             Publish automatically when you next open this page (optional)
           </label>
           <input
@@ -527,7 +527,7 @@ export function PostComposer({
       )}
 
       <div className="flex items-center justify-between gap-4 pt-2">
-        <span className="text-xs text-[#77727A] tabular-nums">
+        <span className="text-xs text-[#6B6770] tabular-nums">
           {content.length}/4000 · Enter to publish, Shift+Enter for a new line
         </span>
         <button
