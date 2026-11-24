@@ -17,6 +17,11 @@ import {
 } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase.ts';
 import { EMPTY_REACTION_COUNTS } from '../constants/emotions.ts';
+import {
+  RESONANCE_CARE_MAX_LENGTH,
+  RESONANCE_MAX_VISIBLE_COUNT,
+  RESONANCE_READ_MARGIN_MS,
+} from '../constants/resonance.ts';
 import { STARTER_COMMUNITIES } from '../data/starterData.ts';
 import { SAMPLE_CONTENT_ENABLED, STARTER_SEED_ENABLED } from '../lib/features.ts';
 import {
@@ -34,7 +39,9 @@ import {
   PublicUser,
   ReactionCounts,
   ReactionType,
+  ResonanceEmotion,
 } from '../types/index.ts';
+import type { ResonanceCareNote, ResonanceCheckIn } from '../types/index.ts';
 
 function toDate(value: unknown): Date {
   if (value instanceof Timestamp) return value.toDate();
@@ -1330,4 +1337,137 @@ export async function adminResolvePostOwner(postId: string): Promise<string | nu
   } catch (error) {
     handleFirestoreError(error, OperationType.GET, `post_ownership/${postId}`);
   }
+}
+
+// ============================================================================
+// Resonance — anonymous, 24-hour feeling check-ins
+// ============================================================================
+
+/** Client-side clock for the expiry a document promises. */
+function nowPlusHours(hours: number): Date {
+  return new Date(Date.now() + hours * 60 * 60 * 1000);
+}
+
+function mapResonanceCheckIn(data: Record<string, unknown>): ResonanceCheckIn {
+  return {
+    id: String(data.id ?? ''),
+    emotion: (String(data.emotion ?? '') as ResonanceEmotion),
+    createdAt: toDate(data.createdAt),
+    expiresAt: toDate(data.expiresAt),
+  };
+}
+
+function mapResonanceCareNote(data: Record<string, unknown>): ResonanceCareNote {
+  return {
+    id: String(data.id ?? ''),
+    emotion: (String(data.emotion ?? '') as ResonanceEmotion),
+    message: String(data.message ?? ''),
+    createdAt: toDate(data.createdAt),
+    expiresAt: toDate(data.expiresAt),
+  };
+}
+
+/** Anonymous check-in. createdAt is server-set, expiresAt is ~24h ahead. */
+export async function createResonance(params: {
+  emotion: ResonanceEmotion;
+}): Promise<string> {
+  const id = makeId('res');
+  try {
+    await setDoc(doc(db, 'resonances', id), {
+      id,
+      emotion: params.emotion,
+      createdAt: serverTimestamp(),
+      expiresAt: nowPlusHours(24),
+    });
+    return id;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.CREATE, `resonances/${id}`);
+  }
+}
+
+/** Live feed of check-ins still inside their 24h window, newest first. */
+export function subscribeActiveResonances(
+  onData: (resonances: ResonanceCheckIn[]) => void,
+  onErr?: (err: Error) => void
+): () => void {
+  const marginAgo = new Date(Date.now() - RESONANCE_READ_MARGIN_MS);
+  const q = query(
+    collection(db, 'resonances'),
+    where('expiresAt', '>', marginAgo),
+    limit(200)
+  );
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items = snap.docs
+        .map((d) => mapResonanceCheckIn(d.data() as Record<string, unknown>))
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      onData(items);
+    },
+    (error) => {
+      if (onErr) onErr(error);
+      else handleFirestoreError(error, OperationType.LIST, 'resonances');
+    }
+  );
+}
+
+/** How many people are feeling this emotion right now (capped for display). */
+export async function countActiveResonances(
+  emotion: ResonanceEmotion
+): Promise<number> {
+  const marginAgo = new Date(Date.now() - RESONANCE_READ_MARGIN_MS);
+  const q = query(
+    collection(db, 'resonances'),
+    where('emotion', '==', emotion),
+    where('expiresAt', '>', marginAgo),
+    limit(RESONANCE_MAX_VISIBLE_COUNT + 1)
+  );
+  const snap = await getDocs(q);
+  return Math.min(snap.size, RESONANCE_MAX_VISIBLE_COUNT);
+}
+
+/** One anonymous supportive line for an emotion, also 24h. */
+export async function sendResonanceCare(params: {
+  emotion: ResonanceEmotion;
+  message: string;
+}): Promise<string> {
+  const id = makeId('care');
+  try {
+    await setDoc(doc(db, 'resonance_care', id), {
+      id,
+      emotion: params.emotion,
+      message: params.message.trim().slice(0, RESONANCE_CARE_MAX_LENGTH),
+      createdAt: serverTimestamp(),
+      expiresAt: nowPlusHours(24),
+    });
+    return id;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.CREATE, `resonance_care/${id}`);
+  }
+}
+
+/** Live care notes still inside their 24h window, newest first. */
+export function subscribeActiveResonanceCare(
+  onData: (notes: ResonanceCareNote[]) => void,
+  onErr?: (err: Error) => void
+): () => void {
+  const marginAgo = new Date(Date.now() - RESONANCE_READ_MARGIN_MS);
+  const q = query(
+    collection(db, 'resonance_care'),
+    where('expiresAt', '>', marginAgo),
+    limit(200)
+  );
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items = snap.docs
+        .map((d) => mapResonanceCareNote(d.data() as Record<string, unknown>))
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      onData(items);
+    },
+    (error) => {
+      if (onErr) onErr(error);
+      else handleFirestoreError(error, OperationType.LIST, 'resonance_care');
+    }
+  );
 }
