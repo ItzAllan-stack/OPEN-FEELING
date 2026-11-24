@@ -18,6 +18,7 @@ export function NotificationsPage() {
     showToast,
   } = useApp();
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [markingAll, setMarkingAll] = useState(false);
 
   if (!publicUser) {
     return (
@@ -40,13 +41,29 @@ export function NotificationsPage() {
     filter === 'unread' ? notifications.filter((n) => !n.isRead) : notifications;
 
   const handleOpen = async (item: AppNotification) => {
-    if (!item.isRead) {
-      await markNotificationRead(item.id);
+    try {
+      if (!item.isRead) {
+        await markNotificationRead(item.id);
+      }
+      if (item.postId) {
+        navigate(`/post/${item.postId}`);
+      } else if (item.type === 'follow') {
+        navigate(`/profile/${item.actorUid}`);
+      }
+    } catch {
+      showToast('Could not update this notification. Please try again.', 'error');
     }
-    if (item.postId) {
-      navigate(`/post/${item.postId}`);
-    } else if (item.type === 'follow') {
-      navigate(`/profile/${item.actorUid}`);
+  };
+
+  const handleMarkAllRead = async () => {
+    setMarkingAll(true);
+    try {
+      await markAllNotificationsRead(notifications);
+      showToast('All notifications marked as read.', 'success');
+    } catch {
+      showToast('Could not update notifications. Please try again.', 'error');
+    } finally {
+      setMarkingAll(false);
     }
   };
 
@@ -67,14 +84,12 @@ export function NotificationsPage() {
             {unreadNotificationsCount > 0 && (
               <button
                 type="button"
-                onClick={async () => {
-                  await markAllNotificationsRead(notifications);
-                  showToast('All notifications marked as read.', 'success');
-                }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs font-medium text-[#29272B] hover:bg-[#EEE8E1] cursor-pointer"
+                onClick={handleMarkAllRead}
+                disabled={markingAll}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs font-medium text-[#29272B] hover:bg-[#EEE8E1] disabled:opacity-50 cursor-pointer"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
-                <span>Mark all read</span>
+                <span>{markingAll ? 'Updating...' : 'Mark all read'}</span>
               </button>
             )}
             <button

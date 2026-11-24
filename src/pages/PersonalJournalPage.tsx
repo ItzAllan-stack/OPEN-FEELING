@@ -90,23 +90,6 @@ export function PersonalJournalPage() {
     });
   }, [dueLetters, publicUser, showToast]);
 
-  useEffect(() => {
-    if (!publicUser || entries.length === 0) return;
-    const sortedDates = entries
-      .map((e) => e.entryDate || e.createdAt.toISOString().slice(0, 10))
-      .sort()
-      .reverse();
-    const lastDate = sortedDates[0];
-    if (!lastDate) return;
-    const today = getTodayIsoDate();
-    const daysSinceLast = Math.floor(
-      (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${lastDate}T00:00:00Z`)) / 86_400_000
-    );
-    if (daysSinceLast >= 7) {
-      showToast('We noticed you took a break — no pressure. Ready to write?', 'info');
-    }
-  }, [entries, publicUser, showToast]);
-
   if (!publicUser) {
     return (
       <AppShell>
