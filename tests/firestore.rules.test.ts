@@ -615,3 +615,91 @@ describe('resonance', () => {
     await assertSucceeds(deleteDoc(doc(db, 'resonances', 'r8')));
   });
 });
+
+const fiveYearsMs = 5 * 365 * 24 * 60 * 60 * 1000;
+const futureLetter = (id: string, extra: Record<string, unknown> = {}) => {
+  return {
+    id,
+    uid: 'alice',
+    title: 'Dear me',
+    content: 'I hope you are doing well.',
+    targetDate: Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    ...extra,
+  };
+};
+
+describe('future letters', () => {
+  it('lets an owner create, read, update and delete their letter', async () => {
+    const db = as('alice');
+    await assertSucceeds(setDoc(doc(db, 'future_letters', 'l1'), futureLetter('l1')));
+    await assertSucceeds(getDoc(doc(db, 'future_letters', 'l1')));
+    await assertSucceeds(updateDoc(doc(db, 'future_letters', 'l1'), {
+      title: 'Dear future me', updatedAt: serverTimestamp(),
+    }));
+    await assertSucceeds(deleteDoc(doc(db, 'future_letters', 'l1')));
+  });
+
+  it('denies signed-out letter creation', async () => {
+    const db = modular(testEnv.unauthenticatedContext().firestore());
+    await assertFails(setDoc(doc(db, 'future_letters', 'l2'), futureLetter('l2')));
+  });
+
+  it('denies cross-user reads of a letter', async () => {
+    await seed(async (db) => setDoc(doc(db, 'future_letters', 'l3'), futureLetter('l3')));
+    const db = as('bob');
+    await assertFails(getDoc(doc(db, 'future_letters', 'l3')));
+    await assertFails(getDocs(query(collection(db, 'future_letters'), where('uid', '==', 'alice'))));
+  });
+
+  it('denies writing a letter under another user uid', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'future_letters', 'l4'), futureLetter('l4', { uid: 'bob' })));
+  });
+
+  it('denies a target date in the past', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'future_letters', 'l5'), futureLetter('l5', {
+      targetDate: Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000)),
+    })));
+  });
+
+  it('denies a target date beyond five years', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'future_letters', 'l6'), futureLetter('l6', {
+      targetDate: Timestamp.fromDate(new Date(Date.now() + 6 * 365 * 24 * 60 * 60 * 1000)),
+    })));
+  });
+
+  it('denies empty title or content', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'future_letters', 'l7'), futureLetter('l7', { title: '' })));
+    await assertFails(setDoc(doc(db, 'future_letters', 'l8'), futureLetter('l8', { content: '' })));
+  });
+
+  it('denies client-supplied createdAt or updatedAt', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'future_letters', 'l9'), futureLetter('l9', {
+      createdAt: now(),
+    })));
+    await assertFails(setDoc(doc(db, 'future_letters', 'l10'), futureLetter('l10', {
+      updatedAt: now(),
+    })));
+  });
+
+  it('limits updates to title and content only', async () => {
+    await seed(async (db) => setDoc(doc(db, 'future_letters', 'l11'), futureLetter('l11')));
+    const db = as('alice');
+    await assertFails(updateDoc(doc(db, 'future_letters', 'l11'), { uid: 'bob', updatedAt: serverTimestamp() }));
+    await assertSucceeds(updateDoc(doc(db, 'future_letters', 'l11'), {
+      title: 'Updated title', content: 'Updated body', updatedAt: serverTimestamp(),
+    }));
+  });
+
+  it('lets an owner delete their letter', async () => {
+    await seed(async (db) => setDoc(doc(db, 'future_letters', 'l12'), futureLetter('l12')));
+    const db = as('alice');
+    await assertSucceeds(deleteDoc(doc(db, 'future_letters', 'l12')));
+  });
+});

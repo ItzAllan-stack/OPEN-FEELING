@@ -311,6 +311,38 @@ service cloud.firestore {
         && isValidResonanceLifetime(data);
     }
 
+    // Future letters are owner-only: a person can only read, update, or delete
+    // their own letters, and targetDate must be in the future (no further than
+    // ~5 years out).
+    function isValidFutureLetterStructure(data, letterId) {
+      return data.keys().hasAll(['id', 'uid', 'title', 'content', 'targetDate', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'uid', 'title', 'content', 'targetDate', 'createdAt', 'updatedAt'])
+        && data.id == letterId
+        && data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.content is string && data.content.size() >= 1 && data.content.size() <= 8000
+        && data.targetDate is timestamp
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidFutureLetterCreate(data) {
+      return isValidFutureLetterStructure(data, data.id)
+        && data.uid == request.auth.uid
+        && data.targetDate > request.time
+        && data.targetDate <= request.time + duration.value(5 * 365, 'd')
+        && data.createdAt == request.time
+        && data.updatedAt == request.time;
+    }
+
+    function isValidFutureLetterUpdate(data, existingData) {
+      return isValidFutureLetterStructure(data, data.id)
+        && data.uid == existingData.uid
+        && data.targetDate == existingData.targetDate
+        && data.createdAt == existingData.createdAt
+        && data.updatedAt == request.time;
+    }
+
     // 2b. Counter integrity helpers
     // Aggregate counters may only move by one and, where the supporting document
     // has a deterministic ID, only in the batch that creates/deletes that document.
@@ -873,6 +905,21 @@ service cloud.firestore {
         && incoming().createdAt == request.time;
       allow update: if false;
       allow delete: if isValidCompoundId(blockId) && isSignedIn() && existing().blockerUid == request.auth.uid;
+    }
+
+    // Future letters — owner-only deliver-on-a-date collection.
+    match /future_letters/{letterId} {
+      allow get: if isValidId(letterId) && isSignedIn() && existing().uid == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create: if isValidId(letterId)
+        && isSignedIn()
+        && isValidFutureLetterCreate(incoming());
+      allow update: if isValidId(letterId)
+        && isSignedIn()
+        && existing().uid == request.auth.uid
+        && isValidFutureLetterUpdate(incoming(), existing())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'content', 'updatedAt']);
+      allow delete: if isValidId(letterId) && isSignedIn() && existing().uid == request.auth.uid;
     }
   }
 }
