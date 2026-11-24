@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 470" width="1180" height="470" role="img" aria-label="Anonymous posting flow: one atomic batch writes a public post stripped of identity plus a private ownership document; everyone sees Anonymous, only the author and verified admins can resolve identity.">
+  <title>OPEN FEELING — Anonymous by Construction</title>
+
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B96E87"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="470" fill="#FCFBFA"/>
+  <text x="40" y="34" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#89828A" letter-spacing="2">OPEN FEELING · ANONYMOUS BY CONSTRUCTION</text>
+
+  <!-- Step 1 -->
+  <rect x="40" y="96" width="230" height="150" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="66" y="132" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#29272B">1 · You write</text>
+  <text x="66" y="160" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#625D63">Post composer</text>
+  <text x="66" y="182" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#625D63">visibility: <tspan font-weight="700" fill="#9F4E65">anonymous</tspan></text>
+  <text x="66" y="204" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#89828A">emotion · tags · community</text>
+
+  <line x1="270" y1="171" x2="330" y2="171" stroke="#B96E87" stroke-width="2.5" marker-end="url(#arrow2)"/>
+
+  <!-- Step 2 · the batch -->
+  <rect x="330" y="66" width="480" height="236" rx="14" fill="#FDFAF9" stroke="#E5C6CE" stroke-width="1.5"/>
+  <text x="352" y="94" font-family="Georgia, 'Times New Roman', serif" font-size="14.5" font-weight="600" fill="#29272B">2 · One atomic batch</text>
+  <text x="352" y="112" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#89828A">writeBatch() commits both writes together — or neither does</text>
+
+  <rect x="352" y="126" width="436" height="70" rx="10" fill="#FFFFFF" stroke="#EAE4E1"/>
+  <text x="368" y="150" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="#29272B">posts/{id} <tspan font-weight="400" fill="#89828A">— public</tspan></text>
+  <text x="368" y="170" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">authorUid: "anonymous" · authorName: "Anonymous"</text>
+  <text x="368" y="185" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">zero identity fields anywhere on the document</text>
+
+  <rect x="352" y="206" width="436" height="70" rx="10" fill="#F8E9ED" stroke="#D98FA3"/>
+  <text x="368" y="230" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="#9F4E65">post_ownership/{id} <tspan font-weight="400" fill="#B96E87">— private</tspan></text>
+  <text x="368" y="250" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#9F4E65">ownerUid: your uid · readable only by you</text>
+  <text x="368" y="265" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#9F4E65">or a verified admin resolving a safety report</text>
+
+  <!-- Step 3 · readers -->
+  <line x1="810" y1="140" x2="880" y2="110" stroke="#B96E87" stroke-width="2.5" marker-end="url(#arrow2)"/>
+  <line x1="810" y1="230" x2="880" y2="256" stroke="#B96E87" stroke-width="2.5" marker-end="url(#arrow2)"/>
+
+  <rect x="880" y="52" width="260" height="112" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="902" y="84" font-family="Georgia, 'Times New Roman', serif" font-size="14.5" font-weight="600" fill="#29272B">Everyone else sees</text>
+  <text x="902" y="112" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="#625D63">“Anonymous”</text>
+  <text x="902" y="134" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#89828A">no profile · no link · no history</text>
+
+  <rect x="880" y="200" width="260" height="112" rx="14" fill="#F0EDF7" stroke="#C9C3E0"/>
+  <text x="902" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="14.5" font-weight="600" fill="#5F5877">Identity exists only for</text>
+  <text x="902" y="260" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="#5F5877">you + verified admins</text>
+  <text x="902" y="282" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#7a7394">report resolution · your own delete</text>
+
+  <!-- bottom note -->
+  <rect x="40" y="328" width="1100" height="46" rx="12" fill="#F8F3F2" stroke="#EAE4E1"/>
+  <text x="60" y="347" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11.5" font-weight="600" fill="#625D63">No half-published identity — the rules refuse the post unless its ownership document is created in the same batch.</text>
+  <text x="60" y="364" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#89828A">Comments and reactions on your post carry their authors’ names, never yours.</text>
+
+  <!-- legend -->
+  <text x="40" y="420" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#89828A">Enforcement: firestore.rules (isValidPost + getAfter ownership check) · covered by cases 3-4 of the Dirty Dozen (security_spec.md §2) · verified in CI on every pull request</text>
+</svg>
