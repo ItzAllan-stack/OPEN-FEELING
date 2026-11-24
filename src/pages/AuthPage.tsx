@@ -355,7 +355,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-2.5 px-4 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] disabled:opacity-50 transition-colors cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] disabled:opacity-50 transition-colors cursor-pointer"
           >
             {submitting
               ? 'Please wait...'

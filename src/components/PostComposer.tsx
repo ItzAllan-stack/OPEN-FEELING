@@ -52,7 +52,7 @@ function ToolbarButton({
       aria-pressed={pressed}
       className={`rounded-xl border p-2 transition-colors cursor-pointer ${
         pressed
-          ? 'border-[#29272B] bg-[#F4DCE3]/45 text-[#8A4358]'
+          ? 'border-[#9F4E65] bg-[#F4DCE3]/45 text-[#8A4358]'
           : 'border-[#EAE4DD] bg-[#FCFBFA] text-[#29272B]/70 hover:border-[#D5CCC3] hover:bg-[#F8F6F3] hover:text-[#29272B]'
       }`}
     >
@@ -467,7 +467,7 @@ export function PostComposer({
                     aria-pressed={active}
                     className={`p-3 rounded-xl border text-left transition-colors cursor-pointer ${
                       active
-                        ? 'bg-[#F4DCE3]/45 border-[#29272B]'
+                        ? 'bg-[#F4DCE3]/45 border-[#9F4E65]'
                         : 'bg-[#F8F6F3] border-[#EAE4DD] hover:border-[#D5CCC3]'
                     }`}
                   >
@@ -533,7 +533,7 @@ export function PostComposer({
         <button
           type="submit"
           disabled={submitting || !content.trim()}
-          className="px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+          className="px-5 py-2.5 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
         >
           {submitting
             ? 'Publishing...'

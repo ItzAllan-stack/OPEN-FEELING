@@ -27,7 +27,7 @@ export function EmotionSelector({
             aria-pressed={selected}
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               selected
-                ? 'border-[#29272B] text-[#29272B]'
+                ? 'border-[#9F4E65] text-[#29272B]'
                 : 'border-[#EAE4DD] bg-[#FCFBFA] text-[#6B6770] hover:text-[#29272B] hover:border-[#D5CCC3]'
             }`}
             style={selected ? { backgroundColor: emotion.tintBg } : undefined}

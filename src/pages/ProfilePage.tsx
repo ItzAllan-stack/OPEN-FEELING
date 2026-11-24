@@ -76,7 +76,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
           >
             Sign In
           </button>
@@ -101,7 +101,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
           <button
             type="button"
             onClick={() => navigate('/explore')}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
           >
             Explore Community
           </button>
@@ -232,7 +232,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
                   className={`px-4 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
                     isFollowing
                       ? 'bg-[#F8F6F3] border border-[#EAE4DD] text-[#29272B]'
-                      : 'bg-[#29272B] text-[#FCFBFA] hover:bg-[#3E3B41]'
+                      : 'bg-[#9F4E65] text-[#FCFBFA] hover:bg-[#8A4358]'
                   }`}
                 >
                   {isFollowing ? 'Following' : 'Follow'}
@@ -306,7 +306,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
                   <button
                     type="button"
                     onClick={() => navigate('/create')}
-                    className="mt-2 px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+                    className="mt-2 px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
                   >
                     Share a Reflection
                   </button>
@@ -365,7 +365,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium cursor-pointer"
             >
               Submit Report
             </button>

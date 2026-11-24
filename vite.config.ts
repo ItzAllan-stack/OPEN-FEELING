@@ -25,6 +25,12 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    allowedHosts: true,
+  },
+  preview: {
+    allowedHosts: true,
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, '.'),

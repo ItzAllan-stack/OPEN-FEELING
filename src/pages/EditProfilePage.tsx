@@ -43,7 +43,7 @@ export function EditProfilePage() {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
           >
             Sign In to Edit Profile
           </button>
@@ -179,7 +179,7 @@ export function EditProfilePage() {
                     type="button"
                     onClick={handleGalleryButtonClick}
                     disabled={uploadingPhoto}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium hover:bg-[#3E3B41] disabled:opacity-50 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium hover:bg-[#8A4358] disabled:opacity-50 transition-colors cursor-pointer"
                   >
                     <ImagePlus className="w-3.5 h-3.5" />
                     <span>
@@ -213,7 +213,7 @@ export function EditProfilePage() {
                   onClick={() => setAvatarUrl(url)}
                   className={`w-14 h-14 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${
                     avatarUrl === url
-                      ? 'border-[#29272B] scale-105'
+                      ? 'border-[#9F4E65] scale-105'
                       : 'border-[#EAE4DD] opacity-80 hover:opacity-100'
                   }`}
                 >
@@ -309,7 +309,7 @@ export function EditProfilePage() {
             <button
               type="submit"
               disabled={saving || uploadingPhoto}
-              className="px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium disabled:opacity-50 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium disabled:opacity-50 cursor-pointer"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
@@ -339,7 +339,7 @@ export function EditProfilePage() {
             <button
               type="button"
               onClick={handleAllowGalleryAccess}
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium cursor-pointer"
             >
               Allow &amp; Choose Photo
             </button>

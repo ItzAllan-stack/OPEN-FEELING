@@ -29,7 +29,7 @@ export function SettingsPage() {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
           >
             Sign In
           </button>
