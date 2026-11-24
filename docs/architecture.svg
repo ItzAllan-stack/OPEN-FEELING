@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 742" width="1180" height="742" role="img" aria-label="OPEN FEELING system architecture: a static React SPA hosted on Vercel talks to Firebase Auth and Cloud Firestore gated by security rules; GitHub Actions builds and tests; Admin SDK scripts handle operations.">
+  <title>OPEN FEELING — System Architecture</title>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B96E87"/>
+    </marker>
+    <marker id="arrow-dash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7f88"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="742" fill="#FCFBFA"/>
+  <text x="40" y="32" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#89828A" letter-spacing="2">OPEN FEELING · SYSTEM ARCHITECTURE</text>
+
+  <!-- ============ SECTION 1 · RUNTIME ============ -->
+  <text x="40" y="56" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#B96E87" letter-spacing="1.5">1 · RUNTIME — WHAT A VISITOR'S BROWSER RUNS</text>
+
+  <!-- SPA container -->
+  <rect x="40" y="66" width="636" height="246" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="64" y="93" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#29272B">Web app (static SPA)</text>
+  <text x="64" y="111" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#89828A">Vite 8 · React 19 · TypeScript, built to dist/ and hosted statically</text>
+
+  <rect x="64" y="124" width="588" height="44" rx="9" fill="#F8F6F3" stroke="#EAE4E1"/>
+  <text x="80" y="142" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="600" fill="#29272B">Routing &amp; shell</text>
+  <text x="80" y="158" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">App.tsx — lazy routes · AppShell · 404 fallback</text>
+
+  <rect x="64" y="176" width="588" height="44" rx="9" fill="#F8F6F3" stroke="#EAE4E1"/>
+  <text x="80" y="194" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="600" fill="#29272B">Feature layer</text>
+  <text x="80" y="210" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">Feed · Explore · Communities · Journal · Resonance · Year review · Moderation</text>
+
+  <rect x="64" y="228" width="588" height="44" rx="9" fill="#F8F6F3" stroke="#EAE4E1"/>
+  <text x="80" y="246" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="600" fill="#29272B">State · service layer</text>
+  <text x="80" y="262" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">AppContext (auth, feed, toasts) · firestoreService.ts — the only Firestore doorway</text>
+
+  <!-- Firebase container -->
+  <rect x="760" y="66" width="380" height="246" rx="14" fill="#FDFAF9" stroke="#E5C6CE" stroke-width="1.5"/>
+  <text x="784" y="93" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#29272B">Firebase</text>
+  <text x="784" y="111" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#89828A">Backend — no custom server to run</text>
+
+  <rect x="784" y="122" width="332" height="44" rx="9" fill="#FFFFFF" stroke="#EAE4E1"/>
+  <text x="800" y="140" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="600" fill="#29272B">Firebase Authentication</text>
+  <text x="800" y="156" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">Google + email/password · verified emails</text>
+
+  <rect x="784" y="174" width="332" height="44" rx="9" fill="#FFFFFF" stroke="#EAE4E1"/>
+  <text x="800" y="192" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="600" fill="#29272B">Cloud Firestore</text>
+  <text x="800" y="208" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">users · posts · comments · journals · resonances</text>
+
+  <rect x="784" y="226" width="332" height="62" rx="9" fill="#F8E9ED" stroke="#D98FA3"/>
+  <text x="800" y="244" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="#9F4E65">Firestore Security Rules</text>
+  <text x="800" y="260" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10" fill="#9F4E65">default-deny · hasOnly field lists · per-owner isolation</text>
+  <text x="800" y="275" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10" fill="#9F4E65">counter deltas ±1 · anonymous ownership kept apart</text>
+
+  <!-- runtime arrow + label -->
+  <line x1="676" y1="189" x2="754" y2="189" stroke="#B96E87" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="684" y="173" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="8.5" font-weight="600" fill="#8a7f88">HTTPS</text>
+  <text x="684" y="213" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="8.5" fill="#8a7f88">SDKs</text>
+
+  <!-- App Check strip -->
+  <rect x="40" y="326" width="1100" height="30" rx="15" fill="#F0EDF7" stroke="#C9C3E0" stroke-dasharray="6 4"/>
+  <text x="60" y="345" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" font-weight="600" fill="#5F5877">Optional hardening — VITE_RECAPTCHA_SITE_KEY attaches App Check (reCAPTCHA v3) tokens to every Firebase request · enforcement is enabled in the Firebase console</text>
+
+  <!-- ============ SECTION 2 · BUILD & RELEASE ============ -->
+  <text x="40" y="402" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#B96E87" letter-spacing="1.5">2 · BUILD &amp; RELEASE — HOW EVERY CHANGE SHIPS SAFELY</text>
+
+  <rect x="40" y="414" width="250" height="96" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="60" y="443" font-family="Georgia, 'Times New Roman', serif" font-size="14.5" font-weight="600" fill="#29272B">Developer</text>
+  <text x="60" y="465" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#625D63">branch → pull request</text>
+  <text x="60" y="482" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#625D63">npm run lint · build locally</text>
+
+  <line x1="290" y1="462" x2="330" y2="462" stroke="#8a7f88" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-dash)"/>
+
+  <rect x="330" y="414" width="430" height="96" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="350" y="443" font-family="Georgia, 'Times New Roman', serif" font-size="14.5" font-weight="600" fill="#29272B">GitHub Actions — ci.yml</text>
+  <text x="350" y="465" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">tsc --noEmit → vite build → rules tests (emulator, Java 21)</text>
+  <text x="350" y="482" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#625D63">audit.yml (weekly, on demand): npm audit --audit-level=high</text>
+
+  <line x1="760" y1="462" x2="800" y2="462" stroke="#8a7f88" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-dash)"/>
+
+  <rect x="800" y="414" width="340" height="96" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="820" y="443" font-family="Georgia, 'Times New Roman', serif" font-size="14.5" font-weight="600" fill="#29272B">Vercel — production</text>
+  <text x="820" y="465" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">dist/ static site · SPA rewrites → /index.html</text>
+  <text x="820" y="482" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#625D63">hashed assets · legacy .jpg → .webp</text>
+
+  <!-- ============ SECTION 3 · OPERATIONS ============ -->
+  <text x="40" y="556" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#B96E87" letter-spacing="1.5">3 · OPERATIONS — ADMIN SDK, NEVER FROM THE BROWSER</text>
+
+  <rect x="40" y="568" width="520" height="112" rx="14" fill="#FFFFFF" stroke="#EAE4E1" stroke-width="1.5"/>
+  <text x="60" y="596" font-family="Georgia, 'Times New Roman', serif" font-size="13.5" font-weight="600" fill="#29272B">scripts/recount-counters.mjs</text>
+  <text x="60" y="613" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">recomputes reaction/comment/follow/member counts · dry-run first</text>
+  <text x="60" y="637" font-family="Georgia, 'Times New Roman', serif" font-size="13.5" font-weight="600" fill="#29272B">scripts/grant-admin.mjs</text>
+  <text x="60" y="654" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">writes admins/{uid} — the only source of admin rights</text>
+
+  <line x1="560" y1="624" x2="772" y2="624" stroke="#8a7f88" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-dash)"/>
+
+  <rect x="772" y="568" width="368" height="112" rx="14" fill="#F0EDF7" stroke="#C9C3E0"/>
+  <text x="792" y="592" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="#5F5877">Admin SDK (service account)</text>
+  <text x="792" y="612" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#5F5877">bypasses security rules by design</text>
+  <text x="792" y="630" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#5F5877">never runs in the browser · never committed</text>
+  <text x="792" y="650" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10" fill="#7a7394">rules tests cover the matrix in security_spec.md</text>
+
+  <!-- legend -->
+  <line x1="40" y1="722" x2="92" y2="722" stroke="#B96E87" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="100" y="726" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">runtime path</text>
+  <line x1="212" y1="722" x2="264" y2="722" stroke="#8a7f88" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-dash)"/>
+  <text x="272" y="726" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" fill="#625D63">build / operations path</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 590" width="1180" height="590" role="img" aria-label="OPEN FEELING technology stack, layered: presentation, application, data, toolchain, quality, delivery. No app server at runtime.">
+  <title>OPEN FEELING — Technology Stack</title>
+
+  <rect x="0" y="0" width="1180" height="590" fill="#FCFBFA"/>
+  <text x="40" y="34" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#89828A" letter-spacing="2">OPEN FEELING · TECHNOLOGY STACK</text>
+
+  <!-- Layer 1 · Presentation -->
+  <rect x="40" y="52" width="1100" height="70" rx="12" fill="#F8E9ED" stroke="#E5C6CE"/>
+  <text x="64" y="81" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#B96E87" letter-spacing="1.5">PRESENTATION</text>
+  <text x="64" y="102" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#29272B">React 19 · TypeScript · Tailwind CSS v4 · Lucide icons · Fraunces &amp; Plus Jakarta Sans</text>
+
+  <!-- Layer 2 · Application -->
+  <rect x="40" y="134" width="1100" height="70" rx="12" fill="#FFFFFF" stroke="#EAE4E1"/>
+  <text x="64" y="163" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#89828A" letter-spacing="1.5">APPLICATION</text>
+  <text x="64" y="184" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#29272B">React Context · custom hooks · lazy-loaded routes · service layer (<tspan font-family="'SF Mono', Menlo, Consolas, monospace" font-size="12">firestoreService.ts</tspan>)</text>
+
+  <!-- Layer 3 · Data -->
+  <rect x="40" y="216" width="1100" height="70" rx="12" fill="#F0EDF7" stroke="#C9C3E0"/>
+  <text x="64" y="245" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#5F5877" letter-spacing="1.5">DATA &amp; ACCESS</text>
+  <text x="64" y="266" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#29272B">Cloud Firestore + Security Rules (default-deny) · Firebase Authentication · Admin SDK scripts</text>
+
+  <!-- Layer 4 · Toolchain -->
+  <rect x="40" y="298" width="1100" height="70" rx="12" fill="#FFFFFF" stroke="#EAE4E1"/>
+  <text x="64" y="327" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#89828A" letter-spacing="1.5">TOOLCHAIN</text>
+  <text x="64" y="348" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#29272B">Vite 8 (Rolldown) · TypeScript · ESLint (+ @firebase/eslint-plugin-security-rules) · npm lockfile</text>
+
+  <!-- Layer 5 · Quality -->
+  <rect x="40" y="380" width="1100" height="70" rx="12" fill="#EDF3ED" stroke="#CBDCCB"/>
+  <text x="64" y="409" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#4F6B52" letter-spacing="1.5">QUALITY</text>
+  <text x="64" y="430" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#29272B">node:test + @firebase/rules-unit-testing · Firestore emulator · GitHub Actions · weekly npm audit</text>
+
+  <!-- Layer 6 · Delivery -->
+  <rect x="40" y="462" width="1100" height="70" rx="12" fill="#F8F3F2" stroke="#EAE4E1"/>
+  <text x="64" y="491" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#89828A" letter-spacing="1.5">DELIVERY</text>
+  <text x="64" y="512" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#29272B">Vercel static hosting · vercel.json SPA rewrites · GitHub Actions on main + pull requests · Node 24</text>
+
+  <!-- footnote -->
+  <text x="40" y="566" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#89828A">No app server at runtime — the whole product is a static bundle talking straight to Firebase; the rules file is the backend's brain.</text>
+</svg>
