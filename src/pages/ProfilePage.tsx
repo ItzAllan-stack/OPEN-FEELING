@@ -241,7 +241,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
                   type="button"
                   onClick={() => handleBlockMute('mute')}
                   title="Mute user"
-                  className="p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#77727A] hover:text-[#29272B] cursor-pointer"
+                  className="p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#6B6770] hover:text-[#29272B] cursor-pointer"
                 >
                   <VolumeX className="w-4 h-4" />
                 </button>
@@ -249,7 +249,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
                   type="button"
                   onClick={() => handleBlockMute('block')}
                   title="Block user"
-                  className="p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#77727A] hover:text-[#A84848] cursor-pointer"
+                  className="p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#6B6770] hover:text-[#A84848] cursor-pointer"
                 >
                   <Ban className="w-4 h-4" />
                 </button>
@@ -257,7 +257,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
                   type="button"
                   onClick={() => setReportOpen(true)}
                   title="Report user"
-                  className="p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#77727A] hover:text-[#29272B] cursor-pointer"
+                  className="p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#6B6770] hover:text-[#29272B] cursor-pointer"
                 >
                   <Flag className="w-4 h-4" />
                 </button>

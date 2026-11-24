@@ -496,7 +496,7 @@ export function PostComposer({
           type="button"
           onClick={() => setScheduleOpen((v) => !v)}
           aria-pressed={scheduleOpen}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <Clock className="w-3.5 h-3.5" />
           {scheduleOpen ? 'Hide schedule' : 'Schedule'}
@@ -505,7 +505,7 @@ export function PostComposer({
           type="button"
           onClick={handleSaveDraft}
           disabled={submitting || !content.trim()}
-          className="px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer"
+          className="px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] disabled:opacity-50 cursor-pointer"
         >
           Save as draft
         </button>

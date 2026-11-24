@@ -166,7 +166,7 @@ export function YearReviewPage({ year }: YearReviewPageProps) {
         <button
           type="button"
           onClick={() => navigate('/journal')}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to my personal space
