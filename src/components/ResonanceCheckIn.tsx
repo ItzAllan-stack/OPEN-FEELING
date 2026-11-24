@@ -180,7 +180,7 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
             disabled={!selectedEmotion || submitting}
             className={`px-5 py-2 rounded-xl text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
               submitting
-                ? 'bg-[#D5CCC3] text-[#77727A]'
+                ? 'bg-[#F4DCE3] text-[#9F4E65]'
                 : 'bg-[#29272B] text-[#FCFBFA] hover:bg-[#1a191c]'
             }`}
           >
