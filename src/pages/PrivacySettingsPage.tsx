@@ -96,7 +96,7 @@ export function PrivacySettingsPage() {
                 className={`px-3.5 py-2.5 rounded-xl border text-xs font-medium capitalize cursor-pointer ${
                   privateUser.defaultVisibility === vis
                     ? 'bg-[#F4DCE3]/50 border-[#29272B] text-[#29272B]'
-                    : 'bg-[#F8F6F3] border-[#EAE4DD] text-[#77727A]'
+                    : 'bg-[#F8F6F3] border-[#EAE4DD] text-[#6B6770]'
                 }`}
               >
                 {vis}

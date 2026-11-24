@@ -86,7 +86,7 @@ export function Header() {
             onClick={() => setMobileSearchOpen((prev) => !prev)}
             aria-label={mobileSearchOpen ? 'Close global search' : 'Open global search'}
             aria-expanded={mobileSearchOpen}
-            className="lg:hidden p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#77727A] hover:text-[#29272B] transition-colors cursor-pointer"
+            className="lg:hidden p-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[#6B6770] hover:text-[#29272B] transition-colors cursor-pointer"
           >
             {mobileSearchOpen ? (
               <X className="w-4 h-4" />

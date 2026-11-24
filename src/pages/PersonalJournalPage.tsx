@@ -294,7 +294,7 @@ export function PersonalJournalPage() {
             <button
               type="button"
               onClick={() => setPromptOverride(randomJournalPrompt())}
-              className="px-3.5 py-1.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] cursor-pointer"
             >
               Another prompt
             </button>
@@ -484,7 +484,7 @@ export function PersonalJournalPage() {
                 type="button"
                 onClick={exportJournal}
                 disabled={entries.length === 0}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#29272B] disabled:opacity-50 cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#29272B] disabled:opacity-50 cursor-pointer whitespace-nowrap"
               >
                 <Download className="w-3.5 h-3.5" />
                 Export

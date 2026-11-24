@@ -173,7 +173,7 @@ export function HomeFeedPage() {
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
                 selectedEmotion === emotion.id
                   ? 'bg-[#F4DCE3]/60 text-[#29272B] font-medium'
-                  : 'hover:bg-[#F8F6F3] text-[#77727A]'
+                  : 'hover:bg-[#F8F6F3] text-[#6B6770]'
               }`}
             >
               <span className="flex items-center gap-2">

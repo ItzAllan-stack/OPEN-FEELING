@@ -176,7 +176,7 @@ export function ModerationPage() {
                     <button
                       type="button"
                       onClick={() => handleStatus(report, 'dismissed')}
-                      className="px-3 py-1.5 rounded-lg bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#77727A] cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#6B6770] cursor-pointer"
                     >
                       Dismiss
                     </button>

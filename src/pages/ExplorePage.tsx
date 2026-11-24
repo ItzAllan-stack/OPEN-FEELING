@@ -155,7 +155,7 @@ export function ExplorePage() {
               className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 collection === tab.id
                   ? 'bg-[#29272B] text-[#FCFBFA] border-[#29272B]'
-                  : 'bg-[#F8F6F3] text-[#77727A] border-[#EAE4DD] hover:text-[#29272B]'
+                  : 'bg-[#F8F6F3] text-[#6B6770] border-[#EAE4DD] hover:text-[#29272B]'
               }`}
             >
               {tab.label}

@@ -215,7 +215,7 @@ export function CommentSection({ post }: CommentSectionProps) {
                 type="button"
                 onClick={() => handleDelete(comment.id)}
                 aria-label="Delete comment"
-                className="p-1.5 rounded-lg text-[#77727A] hover:text-[#A84848] hover:bg-[#FDF5F5] cursor-pointer"
+                className="p-1.5 rounded-lg text-[#6B6770] hover:text-[#A84848] hover:bg-[#FDF5F5] cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
