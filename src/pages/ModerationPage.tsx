@@ -34,7 +34,7 @@ export function ModerationPage() {
           <button
             type="button"
             onClick={() => navigate('/home')}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
           >
             Return Home
           </button>
@@ -169,7 +169,7 @@ export function ModerationPage() {
                     <button
                       type="button"
                       onClick={() => handleStatus(report, 'resolved')}
-                      className="px-3 py-1.5 rounded-lg bg-[#29272B] text-[#FCFBFA] text-xs cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-[#9F4E65] text-[#FCFBFA] text-xs cursor-pointer"
                     >
                       Mark Resolved
                     </button>

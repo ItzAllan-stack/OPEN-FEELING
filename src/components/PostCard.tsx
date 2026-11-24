@@ -380,7 +380,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium cursor-pointer"
             >
               Submit Report
             </button>

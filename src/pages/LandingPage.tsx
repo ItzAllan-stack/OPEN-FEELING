@@ -1,8 +1,11 @@
 import { EyeOff, HeartHandshake, Lock, MessageSquareHeart, ShieldCheck, Sparkles } from 'lucide-react';
+import React from 'react';
+import { HeartHandshake, MessageSquareHeart, ShieldCheck } from 'lucide-react';
 import { BrandLogo } from '../components/BrandLogo.tsx';
 import { PostCard } from '../components/PostCard.tsx';
 import { SakuraPetals } from '../components/SakuraPetals.tsx';
 import { useApp } from '../context/AppContext.tsx';
+import { updatePrivatePreferences } from '../services/firestoreService.ts';
 
 export function LandingPage() {
   const {
@@ -12,10 +15,26 @@ export function LandingPage() {
     sakuraEnabled,
     sakuraPace,
     setSakuraLocal,
+    refreshUserProfile,
+    showToast,
     navigate,
   } = useApp();
 
   const featuredPosts = posts.filter((p) => p.visibility !== 'private').slice(0, 2);
+
+  const toggleSakura = async () => {
+    const enabled = !sakuraEnabled;
+    if (firebaseUser && publicUser) {
+      try {
+        await updatePrivatePreferences(publicUser.uid, { sakuraEnabled: enabled });
+        await refreshUserProfile();
+      } catch {
+        showToast('Could not update the petal setting.', 'error');
+      }
+      return;
+    }
+    setSakuraLocal(enabled);
+  };
 
   return (
     <div className="bg-[#FCFBFA] text-[#29272B]">
@@ -47,7 +66,7 @@ export function LandingPage() {
                   onClick={() =>
                     navigate(firebaseUser && publicUser ? '/create' : '/signup')
                   }
-                  className="px-6 py-3 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   Share Your Feelings
                 </button>
@@ -67,7 +86,7 @@ export function LandingPage() {
                 <span aria-hidden="true">·</span>
                 <button
                   type="button"
-                  onClick={() => setSakuraLocal(!sakuraEnabled)}
+                  onClick={toggleSakura}
                   className="underline underline-offset-4 hover:text-[#29272B] cursor-pointer"
                 >
                   {sakuraEnabled ? 'Pause drifting petals' : 'Show gentle petals'}
@@ -235,7 +254,7 @@ export function LandingPage() {
               <button
                 type="button"
                 onClick={() => navigate(firebaseUser && publicUser ? '/home' : '/signup')}
-                className="px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium hover:bg-[#3E3B41] transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors cursor-pointer"
               >
                 {firebaseUser && publicUser ? 'Open My Dashboard' : 'Join the Community'}
               </button>
@@ -295,7 +314,3 @@ export function LandingPage() {
   );
 }
 
-// Keep unused icon imports cleanly omitted — notice EyeOff, Lock, Sparkles aren't needed here; let's keep imports minimal!
-void EyeOff;
-void Lock;
-void Sparkles;

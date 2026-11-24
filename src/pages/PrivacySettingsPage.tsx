@@ -36,7 +36,7 @@ export function PrivacySettingsPage() {
             <button
               type="button"
               onClick={() => navigate('/login')}
-              className="mt-2 px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+              className="mt-2 px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
             >
               Sign In to Manage Your Privacy
             </button>
@@ -94,7 +94,7 @@ export function PrivacySettingsPage() {
                 onClick={() => handleDefaultVisibility(vis)}
                 className={`px-3.5 py-2.5 rounded-xl border text-xs font-medium capitalize cursor-pointer ${
                   privateUser.defaultVisibility === vis
-                    ? 'bg-[#F4DCE3]/50 border-[#29272B] text-[#29272B]'
+                    ? 'bg-[#F4DCE3]/50 border-[#9F4E65] text-[#29272B]'
                     : 'bg-[#F8F6F3] border-[#EAE4DD] text-[#6B6770]'
                 }`}
               >

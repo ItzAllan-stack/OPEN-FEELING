@@ -65,7 +65,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
           className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
             isMember
               ? 'bg-[#F8F6F3] border border-[#EAE4DD] text-[#29272B]'
-              : 'bg-[#29272B] text-[#FCFBFA] hover:bg-[#3E3B41]'
+              : 'bg-[#9F4E65] text-[#FCFBFA] hover:bg-[#8A4358]'
           }`}
         >
           {isMember ? 'Joined' : 'Join'}

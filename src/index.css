@@ -7,6 +7,10 @@
   --of-accent-blush: #E9A9B8;
   --of-accent-rose: #F4DCE3;
   --of-accent-rose-deep: #9F4E65;
+  /* Primary actions: use rose-deep on #FCFBFA text (never the ink/text
+     colour #29272B as a fill — it reads as harsh black on this palette).
+     Hover/active state is the darker rose below. */
+  --of-accent-rose-deep-hover: #8A4358;
   --of-secondary-lavender: #E9E5F2;
   --of-secondary-sage: #DCE8DD;
   --of-text-primary: #29272B;

@@ -253,7 +253,7 @@ export function CommentSection({ post }: CommentSectionProps) {
               <button
                 type="button"
                 onClick={() => handleSaveEdit(comment.id)}
-                className="px-3.5 py-1.5 rounded-lg bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium cursor-pointer"
               >
                 Save
               </button>
@@ -286,7 +286,7 @@ export function CommentSection({ post }: CommentSectionProps) {
               <button
                 type="submit"
                 disabled={submitting || !replyText.trim()}
-                className="px-3.5 py-1.5 rounded-lg bg-[#29272B] text-[#FCFBFA] text-xs font-medium disabled:opacity-50 cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium disabled:opacity-50 cursor-pointer"
               >
                 Post Reply
               </button>
@@ -332,7 +332,7 @@ export function CommentSection({ post }: CommentSectionProps) {
           <button
             type="submit"
             disabled={submitting || !newComment.trim()}
-            className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium hover:bg-[#3E3B41] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-xs font-medium hover:bg-[#8A4358] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
             {submitting ? 'Sharing...' : 'Share Support'}
           </button>
@@ -391,7 +391,7 @@ export function CommentSection({ post }: CommentSectionProps) {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium cursor-pointer"
             >
               Submit Report
             </button>
