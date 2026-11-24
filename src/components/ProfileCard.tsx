@@ -32,8 +32,8 @@ export function ProfileCard({ user, actionSlot }: ProfileCardProps) {
             <h1 className="text-2xl font-display font-medium text-[#29272B]">
               {user.displayName}
             </h1>
-            <p className="text-sm text-[#77727A]">@{user.username}</p>
-            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">@{user.username}</p>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-[#6B6770]">
               <span className="tabular-nums">
                 <strong className="font-semibold text-[#29272B]">
                   {user.followersCount}

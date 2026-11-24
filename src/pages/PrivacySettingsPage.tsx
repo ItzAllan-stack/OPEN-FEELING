@@ -25,7 +25,7 @@ export function PrivacySettingsPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Privacy &amp; Safety Architecture
           </h1>
-          <div className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-3 text-sm text-[#77727A] leading-relaxed">
+          <div className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-3 text-sm text-[#6B6770] leading-relaxed">
             <p>
               At <strong className="text-[#29272B]">OPEN FEELING</strong>, privacy is enforced at the database layer:
             </p>
@@ -80,7 +80,7 @@ export function PrivacySettingsPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Privacy Settings
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Control how your identity appears and manage blocked or muted accounts.
           </p>
         </div>
@@ -104,7 +104,7 @@ export function PrivacySettingsPage() {
             ))}
           </div>
 
-          <label className="flex items-start gap-2.5 pt-2 text-xs text-[#77727A] cursor-pointer">
+          <label className="flex items-start gap-2.5 pt-2 text-xs text-[#6B6770] cursor-pointer">
             <input
               type="checkbox"
               checked={publicUser.isPrivateProfile}
@@ -119,7 +119,7 @@ export function PrivacySettingsPage() {
 
         <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-3">
           <h2 className="text-base font-medium text-[#29272B]">About Anonymous Expression</h2>
-          <p className="text-xs text-[#77727A] leading-relaxed">
+          <p className="text-xs text-[#6B6770] leading-relaxed">
             When you publish anonymously, OPEN FEELING removes your display name, username, and profile link from public post documents. Ownership is stored separately so you can still delete your own posts and authorized moderators can investigate reported safety issues under controlled permissions. Platform anonymity does not guarantee absolute anonymity.
           </p>
         </section>
@@ -129,7 +129,7 @@ export function PrivacySettingsPage() {
             Blocked &amp; Muted Accounts ({blockedEntries.length})
           </h2>
           {blockedEntries.length === 0 ? (
-            <p className="text-xs text-[#77727A]">You have not blocked or muted anyone.</p>
+            <p className="text-xs text-[#6B6770]">You have not blocked or muted anyone.</p>
           ) : (
             <div className="space-y-2">
               {blockedEntries.map((entry) => (

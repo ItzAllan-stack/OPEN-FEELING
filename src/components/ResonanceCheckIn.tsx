@@ -104,14 +104,14 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
         {selectedEmotion && (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-xl p-4">
             <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="text-xs font-medium text-[#77727A]">
+              <span className="text-xs font-medium text-[#6B6770]">
                 Feeling this right now
               </span>
               <span className="text-sm font-medium text-[#29272B]">
                 {resonancesLoading ? '—' : countForSelected}
               </span>
             </div>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               {resonancesLoading
                 ? 'Checking who else feels this...'
                 : countForSelected === 0
@@ -120,7 +120,7 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
                     ? 'One other person feels this right now.'
                     : `${countForSelected} other people feel this right now.`}
             </p>
-            <p className="text-[11px] text-[#77727A] mt-3">
+            <p className="text-[11px] text-[#6B6770] mt-3">
               Everything here is anonymous and expires after 24 hours.
             </p>
           </div>
@@ -137,10 +137,10 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
             rows={3}
             placeholder="A short line to go with this feeling..."
             aria-label="Care note"
-            className="w-full p-3 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8]"
+            className="w-full p-3 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8]"
           />
           <div className="flex justify-end mt-1">
-            <span className="text-[11px] text-[#77727A]">
+            <span className="text-[11px] text-[#6B6770]">
               {careMessage.length}/{RESONANCE_CARE_MAX_LENGTH}
             </span>
           </div>
@@ -148,18 +148,18 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
 
         {!careLoading && (
           <div className="pt-3 border-t border-[#EAE4DD]">
-            <p className="text-xs font-medium text-[#77727A] mb-2 uppercase tracking-wider">
+            <p className="text-xs font-medium text-[#6B6770] mb-2 uppercase tracking-wider">
               kind words right now
             </p>
             <div className="space-y-2">
               {careNotes.length > 0 ? (
                 careNotes.map((note) => (
-                  <div key={note.id} className="text-sm text-[#77727A] italic">
+                  <div key={note.id} className="text-sm text-[#6B6770] italic">
                     '{note.message}'
                   </div>
                 ))
               ) : (
-                <div className="text-sm text-[#77727A] italic py-2">
+                <div className="text-sm text-[#6B6770] italic py-2">
                   No kind words yet — be the first to share one below.
                 </div>
               )}
@@ -171,7 +171,7 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-sm text-[#77727A] hover:text-[#29272B] transition-colors"
+            className="px-4 py-2 rounded-xl text-sm text-[#6B6770] hover:text-[#29272B] transition-colors"
           >
             Not now
           </button>
@@ -180,7 +180,7 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
             disabled={!selectedEmotion || submitting}
             className={`px-5 py-2 rounded-xl text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
               submitting
-                ? 'bg-[#F4DCE3] text-[#9F4E65]'
+                ? 'bg-[#F4DCE3] text-[#8A4358]'
                 : 'bg-[#29272B] text-[#FCFBFA] hover:bg-[#1a191c]'
             }`}
           >

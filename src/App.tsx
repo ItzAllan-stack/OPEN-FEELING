@@ -30,7 +30,7 @@ function NotFoundPage() {
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 p-6 text-center">
       <p className="font-display text-5xl text-[#E9A9B8]">404</p>
-      <p className="text-sm text-[#77727A]">We couldn't find that page. Let's get you back to a quieter place.</p>
+      <p className="text-sm text-[#6B6770]">We couldn't find that page. Let's get you back to a quieter place.</p>
       <button
         type="button"
         onClick={() => navigate('/')}
@@ -69,7 +69,7 @@ function AppRouter() {
     if (authLoading) {
       return (
         <div className="min-h-[60vh] flex items-center justify-center p-6">
-          <p className="text-sm text-[#77727A]">Preparing your space...</p>
+          <p className="text-sm text-[#6B6770]">Preparing your space...</p>
         </div>
       );
     }
@@ -123,7 +123,7 @@ function AppRouter() {
         <React.Suspense
           fallback={
             <div className="min-h-[60vh] flex items-center justify-center p-6">
-              <p className="text-sm text-[#77727A]">Opening your space...</p>
+              <p className="text-sm text-[#6B6770]">Opening your space...</p>
             </div>
           }
         >

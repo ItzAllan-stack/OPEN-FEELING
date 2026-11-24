@@ -268,7 +268,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
 
         {profile.isPrivateProfile && !isOwnProfile ? (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center">
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               {profile.displayName} keeps their profile reflections private.
             </p>
           </div>
@@ -288,7 +288,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
                     className={`px-3.5 py-1.5 rounded-lg text-xs font-medium cursor-pointer ${
                       tab === t.id
                         ? 'bg-[#FCFBFA] text-[#29272B] border border-[#EAE4DD]'
-                        : 'text-[#77727A]'
+                        : 'text-[#6B6770]'
                     }`}
                   >
                     {t.label}
@@ -359,7 +359,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
             <button
               type="button"
               onClick={() => setReportOpen(false)}
-              className="px-4 py-2 rounded-xl text-sm text-[#77727A] cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm text-[#6B6770] cursor-pointer"
             >
               Cancel
             </button>

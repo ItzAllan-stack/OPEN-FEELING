@@ -47,14 +47,14 @@ export function Modal({
               {title}
             </h2>
             {subtitle && (
-              <p className="mt-1 text-sm text-[#77727A]">{subtitle}</p>
+              <p className="mt-1 text-sm text-[#6B6770]">{subtitle}</p>
             )}
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="p-2 rounded-lg text-[#77727A] hover:text-[#29272B] hover:bg-[#F8F6F3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E9A9B8]"
+            className="p-2 rounded-lg text-[#6B6770] hover:text-[#29272B] hover:bg-[#F8F6F3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E9A9B8]"
           >
             <X className="w-4 h-4" />
           </button>

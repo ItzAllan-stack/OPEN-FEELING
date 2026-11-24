@@ -19,7 +19,7 @@ export function Header() {
         {/* Zone 2: Concise single-line nav links */}
         <nav
           aria-label="Primary navigation"
-          className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 text-sm font-medium text-[#77727A]"
+          className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 text-sm font-medium text-[#6B6770]"
         >
           <button
             type="button"
