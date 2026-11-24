@@ -3,7 +3,6 @@ import { Download, Lock, Pencil, Plus, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EmotionAnalyticsCard } from '../components/EmotionAnalyticsCard.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
-import { Modal } from '../components/Modal.tsx';
 import { SearchBar } from '../components/SearchBar.tsx';
 import { EMOTION_MAP } from '../constants/emotions.ts';
 import { randomJournalPrompt, todayJournalPrompt } from '../constants/journalPrompts.ts';
@@ -97,8 +96,8 @@ export function PersonalJournalPage() {
     try {
       if (editingEntry) {
         await updateJournalEntry(editingEntry.id, {
-          title,
-          content,
+          title: title.trim(),
+          content: content.trim(),
           emotion,
           entryDate,
         });
@@ -107,8 +106,8 @@ export function PersonalJournalPage() {
       } else {
         await createJournalEntry({
           uid: publicUser.uid,
-          title,
-          content,
+          title: title.trim(),
+          content: content.trim(),
           emotion,
           entryDate,
         });
@@ -158,7 +157,7 @@ export function PersonalJournalPage() {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     showToast('Journal exported as Markdown.', 'success');
   };
 
@@ -378,9 +377,6 @@ export function PersonalJournalPage() {
           )}
         </div>
       </div>
-
-      {/* Unused Modal import check */}
-      {false && <Modal open={false} onClose={() => {}} title="" children={null} />}
     </AppShell>
   );
 }
