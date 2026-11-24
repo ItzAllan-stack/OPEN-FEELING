@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { PublicUser } from '../types/index.ts';
 import { formatFullDate, isSafeAvatarUrl } from '../utils/date.ts';
 
