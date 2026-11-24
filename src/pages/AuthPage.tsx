@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrandLogo } from '../components/BrandLogo.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
 import { useApp } from '../context/AppContext.tsx';
@@ -10,6 +10,43 @@ interface AuthPageProps {
   initialMode: 'login' | 'signup' | 'forgot' | 'onboarding';
 }
 
+function formatAuthError(err: unknown, fallback: string): string {
+  const raw = err instanceof Error ? err.message : fallback;
+  if (raw.includes('auth/operation-not-allowed') || raw.includes('PASSWORD_LOGIN_DISABLED')) {
+    return 'Email/Password sign-in is not yet enabled in the Firebase Console for this project. Please use "Continue with Google" above, or enable Email/Password under Firebase Console -> Authentication -> Sign-in method.';
+  }
+  if (raw.includes('auth/popup-blocked')) {
+    return 'Your browser blocked the Google sign-in popup. Please allow popups for this site and click "Continue with Google" again.';
+  }
+  if (raw.includes('auth/popup-closed-by-user') || raw.includes('auth/cancelled-popup-request')) {
+    return 'The Google sign-in window was closed before completing. Please try again.';
+  }
+  if (raw.includes('auth/unauthorized-domain')) {
+    const host = typeof window !== 'undefined' ? window.location.hostname : 'this domain';
+    return `This domain (${host}) is not yet authorized for Google sign-in in Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+  }
+  if (
+    raw.includes('auth/invalid-credential') ||
+    raw.includes('auth/wrong-password') ||
+    raw.includes('auth/user-not-found')
+  ) {
+    return 'Incorrect email or password. Please check your details or use "Continue with Google".';
+  }
+  if (raw.includes('auth/email-already-in-use')) {
+    return 'An account with this email already exists. Try signing in instead.';
+  }
+  if (raw.includes('auth/weak-password')) {
+    return 'Password must be at least 6 characters long.';
+  }
+  if (raw.includes('auth/too-many-requests')) {
+    return 'Too many attempts. Please wait a moment before trying again.';
+  }
+  if (raw.includes('auth/network-request-failed')) {
+    return 'Network error while connecting to sign-in service. Please check your connection and try again.';
+  }
+  return raw;
+}
+
 export function AuthPage({ initialMode }: AuthPageProps) {
   const {
     signInWithGoogle,
@@ -17,6 +54,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
     signInWithEmail,
     completeOnboarding,
     requestPasswordReset,
+    logout,
     firebaseUser,
     navigate,
     showToast,
@@ -36,6 +74,42 @@ export function AuthPage({ initialMode }: AuthPageProps) {
   const [firstThought, setFirstThought] = useState('');
   const [firstEmotion, setFirstEmotion] = useState<EmotionId>('');
 
+  const prefilledUidRef = useRef<string | null>(null);
+
+  // Keep local form mode aligned whenever the route or onboarding state changes
+  useEffect(() => {
+    setMode(initialMode);
+    setErrorMsg('');
+    setInfoMsg('');
+    setSubmitting(false);
+  }, [initialMode]);
+
+  // Pre-fill sensible defaults once per user during post-Google onboarding
+  useEffect(() => {
+    if (mode !== 'onboarding' || !firebaseUser) {
+      prefilledUidRef.current = null;
+      return;
+    }
+    if (prefilledUidRef.current === firebaseUser.uid) return;
+    prefilledUidRef.current = firebaseUser.uid;
+    if (firebaseUser.displayName) {
+      setDisplayName((prev) => prev || firebaseUser.displayName!.slice(0, 80));
+    }
+    const seed = (
+      firebaseUser.displayName ||
+      firebaseUser.email?.split('@')[0] ||
+      ''
+    )
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/g, '')
+      .slice(0, 24);
+    if (seed.length >= 3) {
+      setUsername((prev) => prev || seed);
+    }
+  }, [mode, firebaseUser]);
+
   const handleUsernameBlur = async () => {
     const clean = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
     setUsername(clean);
@@ -54,12 +128,12 @@ export function AuthPage({ initialMode }: AuthPageProps) {
 
   const handleGoogle = async () => {
     setErrorMsg('');
+    setInfoMsg('');
     setSubmitting(true);
     try {
       await signInWithGoogle();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Google sign-in could not complete.';
-      setErrorMsg(msg);
+      setErrorMsg(formatAuthError(err, 'Google sign-in could not complete.'));
     } finally {
       setSubmitting(false);
     }
@@ -112,14 +186,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
         }
       }
     } catch (err: unknown) {
-      const raw = err instanceof Error ? err.message : 'Authentication could not be completed.';
-      if (raw.includes('auth/operation-not-allowed')) {
-        setErrorMsg(
-          'Email/Password sign-in is not yet enabled in the Firebase Console for this project. Please enable Email/Password under Authentication → Sign-in method, or use Continue with Google below.'
-        );
-      } else {
-        setErrorMsg(raw);
-      }
+      setErrorMsg(formatAuthError(err, 'Authentication could not be completed.'));
     } finally {
       setSubmitting(false);
     }
@@ -180,6 +247,9 @@ export function AuthPage({ initialMode }: AuthPageProps) {
               </svg>
               <span>Continue with Google</span>
             </button>
+            <p className="text-[11px] text-center text-[#6B6770] -mt-3">
+              Recommended for instant, passwordless sign-in
+            </p>
 
             <div className="relative flex items-center py-1">
               <div className="flex-grow border-t border-[#EAE4DD]" />
@@ -261,6 +331,8 @@ export function AuthPage({ initialMode }: AuthPageProps) {
                     onClick={() => {
                       setMode('forgot');
                       setErrorMsg('');
+                      setInfoMsg('');
+                      navigate('/forgot-password');
                     }}
                     className="text-xs text-[#9F4E65] hover:underline cursor-pointer"
                   >
@@ -397,6 +469,18 @@ export function AuthPage({ initialMode }: AuthPageProps) {
                 className="text-[#9F4E65] font-medium hover:underline cursor-pointer"
               >
                 Sign in
+              </button>
+            </p>
+          )}
+          {mode === 'onboarding' && (
+            <p>
+              Signed in as {firebaseUser?.email || 'your Google account'}?{' '}
+              <button
+                type="button"
+                onClick={logout}
+                className="text-[#9F4E65] font-medium hover:underline cursor-pointer"
+              >
+                Sign out and switch account
               </button>
             </p>
           )}

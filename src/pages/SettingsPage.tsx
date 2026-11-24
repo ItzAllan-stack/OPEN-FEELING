@@ -13,6 +13,7 @@ export function SettingsPage() {
     setSakuraLocal,
     refreshUserProfile,
     resendVerificationEmail,
+    logout,
     deleteAccount,
     navigate,
     showToast,
@@ -84,13 +85,20 @@ export function SettingsPage() {
               )}
             </p>
           </div>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => navigate('/privacy')}
               className="text-xs font-medium text-[#9F4E65] hover:underline cursor-pointer"
             >
               Open Privacy &amp; Safety Settings &rarr;
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="px-4 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs font-medium text-[#29272B] hover:bg-[#EEE8E1] transition-colors cursor-pointer"
+            >
+              Sign Out
             </button>
           </div>
         </section>

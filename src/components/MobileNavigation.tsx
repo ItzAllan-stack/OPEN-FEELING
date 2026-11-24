@@ -2,9 +2,9 @@ import { Home, Compass, PenLine, Bell, User } from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
 
 export function MobileNavigation() {
-  const { currentPath, navigate, unreadNotificationsCount, firebaseUser } = useApp();
+  const { currentPath, navigate, unreadNotificationsCount, firebaseUser, needsOnboarding } = useApp();
 
-  if (!firebaseUser) return null;
+  if (!firebaseUser || needsOnboarding) return null;
 
   const tabs = [
     { path: '/home', label: 'Home', icon: Home },

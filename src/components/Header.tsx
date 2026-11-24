@@ -5,10 +5,8 @@ import { BrandLogo } from './BrandLogo.tsx';
 import { Search } from './Search.tsx';
 
 export function Header() {
-  const { firebaseUser, publicUser, currentPath, navigate } = useApp();
+  const { firebaseUser, publicUser, needsOnboarding, logout, currentPath, navigate } = useApp();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-
-  const isLanding = currentPath === '/';
 
   return (
     <header className="sticky top-0 z-40 bg-[#FCFBFA]/92 backdrop-blur-sm border-b border-[#EAE4DD]">
@@ -63,19 +61,10 @@ export function Header() {
           >
             Guidelines
           </button>
-          {!firebaseUser && !isLanding && (
-            <button
-              type="button"
-              onClick={() => navigate('/login')}
-              className="hover:text-[#29272B] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              Sign In
-            </button>
-          )}
         </nav>
 
-        {/* Zone 3: Global Search + Single Primary Action */}
-        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        {/* Zone 3: Global Search + Auth / Primary Action */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Search
             variant="header"
             className="hidden lg:block w-44 xl:w-64"
@@ -103,14 +92,44 @@ export function Header() {
             >
               Share Feelings
             </button>
+          ) : firebaseUser && needsOnboarding ? (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={logout}
+                className="px-3.5 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm font-medium text-[#29272B] hover:bg-[#EEE8E1] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                Sign Out
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                Finish Profile
+              </button>
+            </div>
           ) : (
-            <button
-              type="button"
-              onClick={() => navigate('/signup')}
-              className="px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              Share Your Feelings
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                className={`px-3.5 py-2 rounded-xl border text-sm font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                  currentPath === '/login'
+                    ? 'bg-[#F4DCE3]/60 border-[#E9A9B8] text-[#29272B]'
+                    : 'bg-[#F8F6F3] border-[#EAE4DD] text-[#29272B] hover:bg-[#EEE8E1]'
+                }`}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/signup')}
+                className="hidden sm:inline-flex px-4 py-2 rounded-xl bg-[#9F4E65] text-[#FCFBFA] text-sm font-medium hover:bg-[#8A4358] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                Share Your Feelings
+              </button>
+            </div>
           )}
         </div>
       </div>

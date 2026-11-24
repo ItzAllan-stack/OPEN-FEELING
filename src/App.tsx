@@ -43,7 +43,16 @@ function NotFoundPage() {
 }
 
 function AppRouter() {
-  const { currentPath, authLoading, firebaseUser, needsOnboarding, ambientColor } = useApp();
+  const { currentPath, authLoading, firebaseUser, publicUser, needsOnboarding, ambientColor, navigate } = useApp();
+
+  const isAuthRoute =
+    currentPath === '/login' || currentPath === '/signup' || currentPath === '/forgot-password';
+
+  useEffect(() => {
+    if (!authLoading && firebaseUser && publicUser && !needsOnboarding && isAuthRoute) {
+      navigate('/home');
+    }
+  }, [authLoading, firebaseUser, publicUser, needsOnboarding, isAuthRoute, navigate]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -75,13 +84,17 @@ function AppRouter() {
     }
 
     if (firebaseUser && needsOnboarding && currentPath !== '/guidelines' && currentPath !== '/privacy') {
-      return <AuthPage initialMode="onboarding" />;
+      return <AuthPage key="onboarding" initialMode="onboarding" />;
+    }
+
+    if (firebaseUser && publicUser && !needsOnboarding && isAuthRoute) {
+      return <HomeFeedPage />;
     }
 
     if (currentPath === '/' || currentPath === '') return <LandingPage />;
-    if (currentPath === '/signup') return <AuthPage initialMode="signup" />;
-    if (currentPath === '/login') return <AuthPage initialMode="login" />;
-    if (currentPath === '/forgot-password') return <AuthPage initialMode="forgot" />;
+    if (currentPath === '/signup') return <AuthPage key="signup" initialMode="signup" />;
+    if (currentPath === '/login') return <AuthPage key="login" initialMode="login" />;
+    if (currentPath === '/forgot-password') return <AuthPage key="forgot" initialMode="forgot" />;
     if (currentPath === '/home') return <HomeFeedPage />;
     if (currentPath === '/explore') return <ExplorePage />;
     if (currentPath === '/create') return <CreatePostPage />;

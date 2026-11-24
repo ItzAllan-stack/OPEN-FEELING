@@ -75,6 +75,15 @@ export function LandingPage() {
                 >
                   Explore Community
                 </button>
+                {!firebaseUser && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/login')}
+                    className="px-4 py-3 text-sm font-medium text-[#9F4E65] hover:underline whitespace-nowrap shrink-0 cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                )}
               </div>
 
               <div className="pt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#6B6770]">

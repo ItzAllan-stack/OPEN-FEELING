@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   deleteUser,
@@ -17,6 +17,7 @@ import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
 import { getAmbientColor, getAmbientPace, getTimeOfDay } from '../utils/ambientColor.ts';
 import {
   checkIsAdmin,
+  checkUsernameAvailable,
   createUserProfile,
   deleteUserAccountData,
   getPrivateUser,
@@ -113,6 +114,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [blockedEntries, setBlockedEntries] = useState<BlockedUserEntry[]>([]);
   const [sakuraLocalOverride, setSakuraLocalOverride] = useState<boolean>(true);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const authSeqRef = useRef(0);
 
   const showToast = useCallback((message: string, tone: ToastTone = 'info') => {
     const id = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
@@ -140,12 +142,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
+  const resetUserSessionState = useCallback(() => {
+    setPublicUser(null);
+    setPrivateUser(null);
+    setIsAdminRegistry(false);
+    setNeedsOnboarding(false);
+    setUserPrivatePosts([]);
+    setOwnedAnonymousIds([]);
+    setJoinedCommunityIds([]);
+    setSavedPostIds([]);
+    setFollowingUids([]);
+    setNotifications([]);
+    setBlockedEntries([]);
+  }, []);
+
   const loadProfiles = useCallback(async (user: User) => {
+    const seq = ++authSeqRef.current;
     const [pub, priv, registryAdmin] = await Promise.all([
       getPublicUser(user.uid),
       getPrivateUser(user.uid),
       checkIsAdmin(user.uid),
     ]);
+    if (seq !== authSeqRef.current || auth.currentUser?.uid !== user.uid) {
+      return { publicUser: null, privateUser: null, stale: true };
+    }
     setPublicUser(pub);
     setPrivateUser(priv);
     setIsAdminRegistry(registryAdmin);
@@ -153,6 +173,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (pub) {
       seedStarterCommunitiesIfNeeded(user.uid);
     }
+    return { publicUser: pub, privateUser: priv, stale: false };
   }, []);
 
   const refreshUserProfile = useCallback(async () => {
@@ -170,22 +191,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           console.error('Error loading user profile:', err);
         }
       } else {
-        setPublicUser(null);
-        setPrivateUser(null);
-        setIsAdminRegistry(false);
-        setNeedsOnboarding(false);
-        setUserPrivatePosts([]);
-        setOwnedAnonymousIds([]);
-        setJoinedCommunityIds([]);
-        setSavedPostIds([]);
-        setFollowingUids([]);
-        setNotifications([]);
-        setBlockedEntries([]);
+        authSeqRef.current += 1;
+        resetUserSessionState();
       }
       setAuthLoading(false);
     });
     return () => unsub();
-  }, [loadProfiles]);
+  }, [loadProfiles, resetUserSessionState]);
 
   // Public feed & communities subscriptions (available to visitors too)
   useEffect(() => {
@@ -282,7 +294,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = useCallback(async () => {
     const cred = await signInWithPopup(auth, googleAuthProvider);
-    const pub = await getPublicUser(cred.user.uid);
+    setFirebaseUser(cred.user);
+    const { publicUser: pub } = await loadProfiles(cred.user);
     if (!pub) {
       setNeedsOnboarding(true);
       showToast('Welcome to OPEN FEELING. Please finish choosing your username.', 'info');
@@ -290,7 +303,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       showToast(`Welcome back, ${pub.displayName}.`, 'success');
       navigate('/home');
     }
-  }, [navigate, showToast]);
+  }, [loadProfiles, navigate, showToast]);
 
   const signUpWithEmail = useCallback(
     async (params: {
@@ -299,6 +312,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       displayName: string;
       username: string;
     }) => {
+      const available = await checkUsernameAvailable(params.username);
+      if (!available) {
+        throw new Error('That username is already taken. Please choose another.');
+      }
       const cred = await createUserWithEmailAndPassword(auth, params.email, params.password);
       try {
         await sendEmailVerification(cred.user);
@@ -312,6 +329,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         username: params.username,
         avatarUrl: CURATED_AVATARS[0],
       });
+      authSeqRef.current += 1;
+      setFirebaseUser(cred.user);
       setPublicUser(pub);
       setPrivateUser(priv);
       setNeedsOnboarding(false);
@@ -324,8 +343,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const signInWithEmail = useCallback(
     async (email: string, password: string) => {
       const cred = await signInWithEmailAndPassword(auth, email, password);
-      await loadProfiles(cred.user);
-      showToast('Welcome back to OPEN FEELING.', 'success');
+      setFirebaseUser(cred.user);
+      const { publicUser: pub } = await loadProfiles(cred.user);
+      if (!pub) {
+        setNeedsOnboarding(true);
+        showToast('Please finish setting up your profile.', 'info');
+        return;
+      }
+      showToast(`Welcome back, ${pub.displayName}.`, 'success');
       navigate('/home');
     },
     [loadProfiles, navigate, showToast]
@@ -333,15 +358,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const completeOnboarding = useCallback(
     async (displayName: string, username: string) => {
-      if (!firebaseUser) throw new Error('Not signed in.');
+      const activeUser = auth.currentUser ?? firebaseUser;
+      if (!activeUser) throw new Error('Not signed in.');
       const avatar = CURATED_AVATARS[0];
       const { publicUser: pub, privateUser: priv } = await createUserProfile({
-        uid: firebaseUser.uid,
-        email: firebaseUser.email || '',
+        uid: activeUser.uid,
+        email: activeUser.email || '',
         displayName,
         username,
         avatarUrl: avatar,
       });
+      authSeqRef.current += 1;
+      setFirebaseUser(activeUser);
       setPublicUser(pub);
       setPrivateUser(priv);
       setNeedsOnboarding(false);
@@ -362,22 +390,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [firebaseUser, showToast]);
 
   const logout = useCallback(async () => {
+    authSeqRef.current += 1;
     await signOut(auth);
+    setFirebaseUser(null);
+    resetUserSessionState();
     showToast('You have signed out safely.', 'info');
     navigate('/');
-  }, [navigate, showToast]);
+  }, [navigate, resetUserSessionState, showToast]);
 
   const deleteAccount = useCallback(async () => {
     if (!firebaseUser || !publicUser) return;
+    authSeqRef.current += 1;
     await deleteUserAccountData(firebaseUser.uid, publicUser.username);
     try {
       await deleteUser(firebaseUser);
     } catch {
       await signOut(auth);
     }
+    setFirebaseUser(null);
+    resetUserSessionState();
     showToast('Your account and profile have been deleted.', 'info');
     navigate('/');
-  }, [firebaseUser, publicUser, navigate, showToast]);
+  }, [firebaseUser, publicUser, navigate, resetUserSessionState, showToast]);
 
   const value: AppContextValue = {
     firebaseUser,

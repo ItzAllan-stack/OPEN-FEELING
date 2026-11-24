@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Ban, Flag, Pencil, VolumeX } from 'lucide-react';
+import { Ban, Flag, LogOut, Pencil, VolumeX } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { Modal } from '../components/Modal.tsx';
 import { PostCard } from '../components/PostCard.tsx';
@@ -24,6 +24,7 @@ export function ProfilePage({ uid }: ProfilePageProps) {
     ownedAnonymousIds,
     followingUids,
     blockedEntries,
+    logout,
     navigate,
     showToast,
   } = useApp();
@@ -216,14 +217,24 @@ export function ProfilePage({ uid }: ProfilePageProps) {
           user={profile}
           actionSlot={
             isOwnProfile ? (
-              <button
-                type="button"
-                onClick={() => navigate('/profile/edit')}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs font-medium text-[#29272B] hover:bg-[#EEE8E1] cursor-pointer"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-                <span>Edit Profile</span>
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigate('/profile/edit')}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs font-medium text-[#29272B] hover:bg-[#EEE8E1] cursor-pointer"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                  <span>Edit Profile</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs font-medium text-[#6B6770] hover:text-[#29272B] hover:bg-[#EEE8E1] cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             ) : (
               <>
                 <button
