@@ -175,6 +175,38 @@ npm run backfill:counters -- --apply # write corrections
 
 The script is idempotent, bypasses security rules by design, and never deletes documents. Review the dry-run output before applying changes.
 
+## Offline Developer Utilities
+
+The deployed app remains React + Firebase. Python and Java are used for local maintenance checks only; neither adds a backend service or runs in the user-facing app.
+
+### Python: validate a journal export
+
+Run this locally against a Markdown export from My Personal Space:
+
+```bash
+python tools/python/check_journal_export.py path/to/open-feeling-journal.md
+```
+
+The validator checks the export header, entry date headings, and basic structure. It does not print or upload journal text. Run its tests with:
+
+```bash
+python -m unittest discover -s tools/python -p 'test_*.py'
+```
+
+### Java: check repository essentials
+
+With Java 21 or newer:
+
+```bash
+mkdir -p /tmp/open-feeling-check
+javac -d /tmp/open-feeling-check tools/java/ProjectHealthCheck.java
+java -cp /tmp/open-feeling-check ProjectHealthCheck .
+```
+
+This checks that core project files exist, Firestore retains its default-deny rule, and pull requests trigger CI. It does not access Firebase or require credentials.
+
+Both utilities run in GitHub Actions as part of the pull request checks.
+
 ## Sample Content & Seeding
 
 Starter posts/communities are intended to make a fresh local environment feel alive. In production builds, sample fallback is disabled so an empty database renders real empty states, not fake posts.
