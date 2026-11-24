@@ -135,8 +135,8 @@ export function PersonalJournalPage() {
     try {
       if (editingEntry) {
         await updateJournalEntry(editingEntry.id, {
-          title,
-          content,
+          title: title.trim(),
+          content: content.trim(),
           emotion,
           entryDate,
         });
@@ -145,8 +145,8 @@ export function PersonalJournalPage() {
       } else {
         await createJournalEntry({
           uid: publicUser.uid,
-          title,
-          content,
+          title: title.trim(),
+          content: content.trim(),
           emotion,
           entryDate,
         });
@@ -242,7 +242,7 @@ export function PersonalJournalPage() {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     showToast('Journal exported as Markdown.', 'success');
   };
 
