@@ -44,7 +44,7 @@ export function YearReviewPage({ year }: YearReviewPageProps) {
           </p>
         </div>
 
-        {summary ? (
+        {summary && summary.postCount + summary.journalCount > 0 ? (
           <>
             <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 text-center space-y-3">
               <Heart className="w-5 h-5 text-[#E9A9B8] mx-auto" />
@@ -130,10 +130,14 @@ export function YearReviewPage({ year }: YearReviewPageProps) {
               </section>
             )}
           </>
+        ) : !summary ? (
+          <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center">
+            <p className="text-sm text-[#77727A]">Preparing your year in feelings...</p>
+          </div>
         ) : (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center">
             <p className="text-sm text-[#77727A]">
-              Preparing your year in feelings...
+              Nothing landed in {year} yet — your year in feelings is quiet, and quiet years still deserve a recap.
             </p>
           </div>
         )}
