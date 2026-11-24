@@ -564,6 +564,17 @@ export function PersonalJournalPage() {
             </div>
           )}
         </div>
+
+        {/* Year in review entry point */}
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => navigate(`/review/${new Date().getFullYear()}`)}
+            className="text-xs text-[#77727A] underline underline-offset-4 hover:text-[#29272B] cursor-pointer"
+          >
+            See your year in feelings
+          </button>
+        </div>
       </div>
 
       {/* Unused Modal import check */}
