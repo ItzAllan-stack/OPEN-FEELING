@@ -1,113 +1,171 @@
 # OPEN-FEELING
 
-Express Freely. Feel Lighter. A welcoming digital space to share emotions, keep a
-private journal, and connect with people who understand.
+**Express freely. Feel lighter.**
 
-## Stack
+OPEN FEELING is a welcoming digital space for sharing emotions, writing privately, and connecting with people who understand. It is built as a client-side React app with Firebase for authentication and data storage, with Firestore security rules as the source of truth for access control.
 
-React 19 + Vite 8, TypeScript, Tailwind CSS v4, Firebase (Auth + Firestore), Framer Motion.
+## Features
 
-## Setup
+- **Expressive posts** — Share feelings with emotion tags, visibility controls (public/anonymous/private), communities, and optional media.
+- **Explore & feed** — Browse stories, filter by emotion, and discover what others are sharing.
+- **Communities** — Join supportive spaces around shared experiences.
+- **Reactions & comments** — Respond with meaningful reactions and thoughtful comments.
+- **Private journal** — Keep personal entries, drafts, and reflections in your own space.
+- **Letters to your future self** — Write scheduled letters for later.
+- **Resonance check-ins** — Lightweight emotional check-ins and supportive care notes.
+- **Year in review** — A gentle recap of your writing and emotional patterns over the year.
+- **Notifications** — Stay updated on reactions, comments, follows, and community activity.
+- **Profiles & privacy** — Edit your profile, manage saved posts, privacy settings, and account preferences.
+- **Moderation & safety** — Community guidelines, reporting/moderation flows, and admin-gated moderation tools.
+- **Accessible, calm UI** — Responsive layout, keyboard shortcuts, reduced-motion support, and contrast-conscious styling.
 
-- Node.js 24 (the Firestore rules test package requires at least 24.12) and npm
-- `npm ci`
-- `npm run dev` — starts the app at http://localhost:3000
+## Tech Stack
 
-Firebase configuration lives in `firebase-applet-config.json` (the web API key
-is a client identifier, not a secret; access control lives in `firestore.rules`).
-Copy `.env.example` to `.env.local` only if you need local overrides such as
-`VITE_RECAPTCHA_SITE_KEY` for App Check. No secret is required to run the app.
+| Layer | Technology |
+| --- | --- |
+| Framework | [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
+| Build | [Vite 8](https://vite.dev/) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| Backend services | [Firebase Auth](https://firebase.google.com/docs/auth) + [Cloud Firestore](https://firebase.google.com/docs/firestore) |
+| Icons | [Lucide React](https://lucide.dev/) |
+| Testing | Firestore Emulator + `@firebase/rules-unit-testing` + Node test runner |
 
-## Scripts
+## Project Structure
+
+```text
+.
+├── .github/workflows/       # CI and audit workflows
+├── public/                  # Static assets
+├── scripts/                 # Maintenance/admin scripts
+├── src/
+│   ├── components/          # Reusable UI components
+│   ├── constants/           # Emotion/reaction/prompt constants
+│   ├── context/             # App context and shared state
+│   ├── data/                # Starter/sample data
+│   ├── lib/                 # Firebase/features setup
+│   ├── pages/               # Route-level pages
+│   ├── services/            # Firestore/service layer
+│   ├── types/               # Shared TypeScript types
+│   ├── utils/               # Utility helpers
+│   ├── App.tsx              # App shell and routing
+│   ├── index.css            # Global styles/tokens
+│   └── main.tsx             # Entry point
+├── tests/                   # Firestore rules tests
+├── firebase-applet-config.json
+├── firestore.rules          # Firestore security rules
+├── security_spec.md         # Security invariants and cases
+└── package.json
+```
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js** >= 24.12.0 (required by the Firestore rules test tooling)
+- **npm** >= 10
+- **Java 11+** and **Firebase CLI** on `PATH` only if you want to run Firestore rules tests locally
+
+### Installation
+
+```bash
+npm ci
+```
+
+### Local development
+
+```bash
+npm run dev
+```
+
+The app starts at [http://localhost:3000](http://localhost:3000).
+
+### Environment variables
+
+Firebase web configuration lives in `firebase-applet-config.json`. The Firebase `apiKey` is a client identifier, not a secret; access control is enforced by `firestore.rules`.
+
+Copy `.env.example` to `.env.local` only if you need local overrides:
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `VITE_RECAPTCHA_SITE_KEY` | Optional Firebase App Check (reCAPTCHA v3) site key. | unset |
+| `VITE_ENABLE_SAMPLE_CONTENT` | Show starter/sample content when the database is empty. Intended for local development only. | `false` in example / production-safe behavior |
+| `VITE_ENABLE_STARTER_SEED` | Allow starter-community seeding from a client session. Use deliberately in development only. | `false` |
+
+## Available Scripts
 
 | Command | Purpose |
 | --- | --- |
-| `npm run dev` | Development server on port 3000 |
-| `npm run build` | Production build into `dist/` |
+| `npm run dev` | Start the development server on port 3000 |
+| `npm run build` | Create a production build in `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | TypeScript typecheck (`tsc --noEmit`) |
+| `npm run lint:eslint` | Run ESLint |
 | `npm run clean` | Remove `dist/` and `server.js` |
-| `npm run test:rules` | Firestore rules tests against the emulator |
+| `npm run test:rules` | Run Firestore rules tests against the emulator |
 | `npm run backfill:counters` | Dry-run recount of aggregate counters (`--apply` to write) |
+| `npm run grant-admin` | Grant admin access to a user by email |
 
-## Sample content and starter data
+## Firebase, Security, and Data
 
-Starter posts/communities exist only to make a fresh local environment feel
-alive. In production builds (`import.meta.env.PROD`) the sample fallback is
-disabled: an empty database renders the real empty states, never fake posts.
-For local development it stays on by default; set
-`VITE_ENABLE_SAMPLE_CONTENT=false` in `.env.local` to disable it there as
-well. Starter communities are seeded from the client only when
-`VITE_ENABLE_STARTER_SEED=true`; otherwise seeding never runs, so production
-data is not at the mercy of the first login.
+### Firestore rules
 
-## App Check
+`firestore.rules` is the source of truth for data access. `security_spec.md` documents the invariants and adversarial cases.
 
-The Firebase web SDK can attach App Check attestation tokens (reCAPTCHA v3) to
-every request. To enable:
+Deploy rules with:
 
-1. Firebase console -> App Check -> APIs -> get a reCAPTCHA v3 secret, and
-   register your web app.
-2. Add the site key to `.env.local` (and to your hosting provider's
-   environment) as `VITE_RECAPTCHA_SITE_KEY=...`. The app initializes App
-   Check automatically when the variable is set; unset it and App Check stays
-   off.
-3. Enable App Check **enforcement** for Cloud Firestore in the console.
-   Initialization alone does not block abuse; enforcement does.
-4. Watch the App Check metrics panel for a few days before tightening further.
+```bash
+firebase deploy --only firestore:rules
+```
 
-Note: per-user write quotas and rate limits are not enforceable in Firestore
-security rules alone (rules cannot persist a rate-limit counter transaction
-across requests). App Check plus the existing rules is the baseline defence;
-hard per-user rate limits require a Cloud Functions backend or Firebase App
-Check enforcement and are intentionally out of scope for this client-only
-codebase.
+### Firestore rules tests
 
-## Firestore rules and tests
+Rules tests live in `tests/` and run against the Firestore emulator:
 
-`firestore.rules` is the source of truth for data access; `security_spec.md`
-documents the invariants and adversarial cases. Deploy rules with
-`firebase deploy --only firestore:rules` using the Firebase CLI.
+```bash
+npm run test:rules
+```
 
-`npm run test:rules` starts the Firestore emulator and runs the suite in
-`tests/`. It requires Java 11+ and the Firebase CLI on `PATH`; see
-`tests/README.md` for details.
+Requirements:
+- Java 11+
+- Firebase CLI available on `PATH`
 
-## CI
+See [`tests/README.md`](./tests/README.md) for details.
 
-`.github/workflows/ci.yml` runs the typecheck, build, and Firestore rules tests
-on pushes to `main` and on pull requests, with superseded runs cancelled
-automatically. Dependency audits live in `.github/workflows/audit.yml`, which
-runs weekly (and on demand) so a fresh high-severity advisory does not block
-unrelated changes; run `npm audit --audit-level=high` locally before releases.
+### App Check
 
-## Admin access
+The Firebase web SDK can attach App Check attestation tokens (reCAPTCHA v3) to requests.
 
-Admin rights derive exclusively from the `admins/{uid}` registry in Firestore
-(mirroring `firestore.rules`); email claims carry no privileges. To grant
-admin to an account (use a verified-email account, or `isAdmin()` will still
-fail the rules' `email_verified` check):
+1. Create/register a reCAPTCHA v3 key in Firebase Console > App Check.
+2. Set `VITE_RECAPTCHA_SITE_KEY` in `.env.local` and your hosting environment.
+3. Enable App Check **enforcement** for Cloud Firestore in Firebase Console.
+4. Monitor App Check metrics before tightening further.
+
+> App Check initialization alone does not block abuse; enforcement does. Per-user write quotas/rate limits are not fully enforceable in Firestore security rules alone; hard rate limiting requires a backend/service-side control.
+
+### Admin access
+
+Admin rights derive from the `admins/{uid}` registry in Firestore (mirroring `firestore.rules`). Email claims do not grant privileges.
+
+Grant admin access:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccount.json
 npm run grant-admin -- user@example.com
 ```
 
-To revoke, delete the `admins/{uid}` document in the Firebase console.
+To revoke access, delete the corresponding `admins/{uid}` document in Firebase Console.
 
-> Before deploying a `firestore.rules` build that removes any legacy
-> bootstrap admin path, make sure at least one `admins/{uid}` document exists
-> and you can sign in with that account - otherwise you will lock every admin
-> out of the moderation UI.
+> Before deploying rules changes that remove any legacy bootstrap admin path, ensure at least one `admins/{uid}` document exists and that you can sign in with that account.
 
-## Data maintenance
+### Counter maintenance
 
-Aggregate counters (`reactionCounts`, `commentsCount`, `followersCount`,
-`followingCount`, `memberCount`) are maintained with `FieldValue.increment()`
-on the client and bounded to +/-1 by the security rules. Databases written by
-older clients may contain drifted counts; the rules also reject decrements
-below zero, so a count stuck at 0 would otherwise block unfollow/leave/delete
-operations. Repair existing drift once with:
+Aggregate counters (`reactionCounts`, `commentsCount`, `followersCount`, `followingCount`, `memberCount`) are maintained with `FieldValue.increment()` and bounded by security rules. Older data may contain drift.
+
+Repair drift with the Admin SDK script:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccount.json
@@ -115,6 +173,39 @@ npm run backfill:counters            # dry run: prints drift, writes nothing
 npm run backfill:counters -- --apply # write corrections
 ```
 
-The script (`scripts/recount-counters.mjs`) uses the Admin SDK, bypasses the
-security rules by design, is idempotent, and never deletes documents. Review
-the dry-run output before passing `--apply`.
+The script is idempotent, bypasses security rules by design, and never deletes documents. Review the dry-run output before applying changes.
+
+## Sample Content & Seeding
+
+Starter posts/communities are intended to make a fresh local environment feel alive. In production builds, sample fallback is disabled so an empty database renders real empty states, not fake posts.
+
+- Local development can opt into sample content via `VITE_ENABLE_SAMPLE_CONTENT`.
+- Starter community seeding runs only when `VITE_ENABLE_STARTER_SEED=true`.
+- Keep both disabled in production unless you intentionally need a controlled bootstrap flow.
+
+## CI
+
+GitHub Actions workflows live in `.github/workflows/`:
+
+- **`ci.yml`** — Runs typecheck, build, and Firestore rules tests on pushes to `main` and pull requests.
+- **`audit.yml`** — Runs dependency audits weekly and on demand (`npm audit --audit-level=high`).
+
+## Contributing
+
+1. Create a branch for your change.
+2. Keep changes focused and consistent with existing patterns.
+3. Run checks before opening a PR:
+
+```bash
+npm run lint
+npm run build
+npm run test:rules   # requires Java + Firebase CLI
+```
+
+4. For security-sensitive changes, update `firestore.rules`, tests, and `security_spec.md` together.
+
+## Notes
+
+- This repository contains client-side Firebase configuration intended for public web apps; secrets should not be committed.
+- Deployment is configured for Vite static output (`dist/`) and includes `vercel.json` for hosting rewrites.
+- For project-specific operational details, also see [`security_spec.md`](./security_spec.md) and [`tests/README.md`](./tests/README.md).
