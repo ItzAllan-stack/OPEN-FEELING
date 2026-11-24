@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from './Modal.tsx';
 import { EmotionSelector } from './EmotionSelector.tsx';
 import { useApp } from '../context/AppContext.tsx';
@@ -8,7 +8,7 @@ import {
   subscribeActiveResonances,
   subscribeActiveResonanceCare,
 } from '../services/firestoreService.ts';
-import type { ResonanceCareNote, ResonanceCheckIn, ResonanceEmotion } from '../types/index.ts';
+import type { ResonanceCareNote, ResonanceCheckIn } from '../types/index.ts';
 import { EmotionId } from '../types/index.ts';
 import { RESONANCE_CARE_MAX_LENGTH } from '../constants/resonance.ts';
 

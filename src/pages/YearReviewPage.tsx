@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Hash, Heart, Lock, Sparkles } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EMOTION_MAP } from '../constants/emotions.ts';

@@ -1587,8 +1587,7 @@ function hashYear(year: number): number {
 export function subscribeYearReview(
   uid: string,
   year: number,
-  onData: (summary: YearInReview) => void,
-  onErr?: (err: Error) => void
+  onData: (summary: YearInReview) => void
 ): () => void {
   const yearStart = startOfYear(year).getTime();
   const yearEnd = endOfYear(year).getTime();

@@ -1,4 +1,3 @@
-import React from 'react';
 import { EyeOff, HeartHandshake, Lock, MessageSquareHeart, ShieldCheck, Sparkles } from 'lucide-react';
 import { BrandLogo } from '../components/BrandLogo.tsx';
 import { PostCard } from '../components/PostCard.tsx';

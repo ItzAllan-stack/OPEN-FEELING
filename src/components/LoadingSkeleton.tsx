@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function LoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-4" aria-busy="true" aria-label="Loading stories">

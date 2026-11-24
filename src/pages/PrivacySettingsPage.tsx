@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppShell } from '../components/AppShell.tsx';
 import { useApp } from '../context/AppContext.tsx';
 import {

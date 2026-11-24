@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckCircle2, Info, AlertCircle, X } from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
 

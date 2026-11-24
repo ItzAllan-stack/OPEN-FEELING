@@ -1,4 +1,3 @@
-import React from 'react';
 import { EMOTIONS } from '../constants/emotions.ts';
 import { EmotionId } from '../types/index.ts';
 
