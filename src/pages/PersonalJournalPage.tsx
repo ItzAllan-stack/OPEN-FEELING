@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Download, Lock, Pencil, Plus, Trash2 } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Download, Lock, Mail, Pencil, Plus, Send, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EmotionAnalyticsCard } from '../components/EmotionAnalyticsCard.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
@@ -9,13 +9,16 @@ import { EMOTION_MAP } from '../constants/emotions.ts';
 import { randomJournalPrompt, todayJournalPrompt } from '../constants/journalPrompts.ts';
 import { useApp } from '../context/AppContext.tsx';
 import {
+  createFutureLetter,
   createJournalEntry,
+  deleteFutureLetter,
   deleteJournalEntry,
+  subscribeFutureLetters,
   subscribePrivateJournal,
   updateJournalEntry,
 } from '../services/firestoreService.ts';
-import { EmotionId, PrivateJournalEntry } from '../types/index.ts';
-import { getTodayIsoDate } from '../utils/date.ts';
+import { EmotionId, FutureLetter, PrivateJournalEntry } from '../types/index.ts';
+import { formatFullDate, getTodayIsoDate } from '../utils/date.ts';
 import { computeJournalStreak } from '../utils/journal.ts';
 
 export function PersonalJournalPage() {
@@ -30,10 +33,30 @@ export function PersonalJournalPage() {
   const [entryDate, setEntryDate] = useState(getTodayIsoDate());
   const [editingEntry, setEditingEntry] = useState<PrivateJournalEntry | null>(null);
   const [saving, setSaving] = useState(false);
+  const [letters, setLetters] = useState<FutureLetter[]>([]);
+  const [letterTitle, setLetterTitle] = useState('');
+  const [letterContent, setLetterContent] = useState('');
+  const [letterTargetDate, setLetterTargetDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  });
+  const [letterSaving, setLetterSaving] = useState(false);
+  const [deletingLetterId, setDeletingLetterId] = useState<string | null>(null);
+  const notifiedLetterIdsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (!publicUser) return;
     const unsub = subscribePrivateJournal(publicUser.uid, setEntries);
+    return () => unsub();
+  }, [publicUser]);
+
+  useEffect(() => {
+    if (!publicUser) return;
+    const unsub = subscribeFutureLetters(publicUser.uid, setLetters);
     return () => unsub();
   }, [publicUser]);
 
@@ -51,6 +74,22 @@ export function PersonalJournalPage() {
 
   const streak = useMemo(() => computeJournalStreak(entries), [entries]);
   const journalPrompt = promptOverride ?? todayJournalPrompt();
+
+  const dueLetters = useMemo(() => {
+    const nowMs = Date.now();
+    return letters
+      .filter((letter) => new Date(letter.targetDate).getTime() <= nowMs)
+      .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime());
+  }, [letters]);
+
+  useEffect(() => {
+    if (!publicUser) return;
+    dueLetters.forEach((letter) => {
+      if (notifiedLetterIdsRef.current.has(letter.id)) return;
+      notifiedLetterIdsRef.current.add(letter.id);
+      showToast(`A letter from your future self arrived: ${letter.title}`, 'info');
+    });
+  }, [dueLetters, publicUser, showToast]);
 
   useEffect(() => {
     if (!publicUser || entries.length === 0) return;
@@ -122,6 +161,52 @@ export function PersonalJournalPage() {
       showToast('Could not save journal entry.', 'error');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSaveLetter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!publicUser) return;
+    if (!letterTitle.trim() || !letterContent.trim() || !letterTargetDate) return;
+    const targetDate = new Date(`${letterTargetDate}T12:00:00`);
+    setLetterSaving(true);
+    try {
+      await createFutureLetter({
+        uid: publicUser.uid,
+        title: letterTitle,
+        content: letterContent,
+        targetDate,
+      });
+      showToast(
+        `Your future self will open this on ${formatFullDate(targetDate)}.`,
+        'success'
+      );
+      setLetterTitle('');
+      setLetterContent('');
+      setLetterTargetDate(() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 30);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      });
+    } catch {
+      showToast('Could not save your letter.', 'error');
+    } finally {
+      setLetterSaving(false);
+    }
+  };
+
+  const handleDeleteLetter = async (id: string) => {
+    setDeletingLetterId(id);
+    try {
+      await deleteFutureLetter(id);
+      showToast('Letter deleted before delivery.', 'info');
+    } catch {
+      showToast('Could not delete letter.', 'error');
+    } finally {
+      setDeletingLetterId(null);
     }
   };
 
@@ -286,6 +371,108 @@ export function PersonalJournalPage() {
             </button>
           </div>
         </form>
+
+        {/* Future Letters */}
+        <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-4">
+          <div className="flex items-start gap-2">
+            <Mail className="w-4 h-4 text-[#9F4E65] mt-0.5 shrink-0" />
+            <div>
+              <h2 className="text-base font-medium text-[#29272B]">Letters to your future self</h2>
+              <p className="text-sm text-[#77727A]">
+                Write a private note that only you will open on a future day. It never lands in your journal
+                before its time.
+              </p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSaveLetter} className="space-y-3">
+            <input
+              type="text"
+              value={letterTitle}
+              onChange={(e) => setLetterTitle(e.target.value)}
+              maxLength={200}
+              required
+              placeholder="Title — e.g. Dear me, two winters from now..."
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-sm text-[#29272B] focus:outline-none focus:border-[#E9A9B8]"
+            />
+
+            <textarea
+              required
+              rows={4}
+              maxLength={8000}
+              value={letterContent}
+              onChange={(e) => setLetterContent(e.target.value)}
+              placeholder="Dear future me, ..."
+              className="w-full p-4 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-[15px] leading-relaxed text-[#29272B] focus:outline-none focus:border-[#E9A9B8]"
+            />
+
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div className="space-y-1">
+                <label htmlFor="future-letter-date" className="block text-xs text-[#77727A]">
+                  Deliver on
+                </label>
+                <input
+                  id="future-letter-date"
+                  type="date"
+                  value={letterTargetDate}
+                  min={getTodayIsoDate()}
+                  onChange={(e) => setLetterTargetDate(e.target.value)}
+                  className="px-3 py-1.5 rounded-xl bg-[#F8F6F3] border border-[#EAE4DD] text-xs text-[#29272B] tabular-nums"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={letterSaving || !letterTitle.trim() || !letterContent.trim() || !letterTargetDate}
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-sm font-medium disabled:opacity-50 cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                <span>{letterSaving ? 'Sealing...' : 'Seal Letter'}</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Letters that have arrived */}
+          <div className="pt-4 border-t border-[#EAE4DD] space-y-3">
+            <h3 className="text-sm font-medium text-[#29272B]">Your letters arrive</h3>
+            {dueLetters.length === 0 ? (
+              <p className="text-sm text-[#77727A]">
+                No letters have arrived yet. Your future self is still writing.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {dueLetters.map((letter) => (
+                  <article
+                    key={letter.id}
+                    className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-5 space-y-2.5"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs text-[#77727A] tabular-nums">
+                          Delivered {formatFullDate(new Date(letter.targetDate))}
+                        </p>
+                        <h4 className="mt-0.5 text-base font-display font-medium text-[#29272B]">
+                          {letter.title}
+                        </h4>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteLetter(letter.id)}
+                        disabled={deletingLetterId === letter.id}
+                        aria-label="Delete future letter"
+                        className="p-1.5 rounded-lg text-[#77727A] hover:text-[#A84848] hover:bg-[#FDF5F5] disabled:opacity-50 cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <p className="text-sm text-[#29272B]/90 leading-relaxed whitespace-pre-wrap">
+                      {letter.content}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Previous Reflections */}
         <div className="space-y-4">
