@@ -483,3 +483,135 @@ describe('post drafts', () => {
     }));
   });
 });
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const resonanceExpiry = () => Timestamp.fromDate(new Date(Date.now() + DAY_MS));
+// Stay just inside the rule's live window so the range query is narrower than
+// the rule, which is what Firestore requires for list rules on resource.data.
+const resonanceCutoff = () => Timestamp.fromDate(new Date(Date.now() + 5 * 60 * 1000));
+
+function resonanceCheckIn(id: string, extra: Record<string, unknown> = {}) {
+  return {
+    id,
+    emotion: 'anxious',
+    createdAt: serverTimestamp(),
+    expiresAt: resonanceExpiry(),
+    ...extra,
+  };
+}
+
+function resonanceCare(id: string, extra: Record<string, unknown> = {}) {
+  return {
+    id,
+    emotion: 'anxious',
+    message: 'You are not alone in this tonight.',
+    createdAt: serverTimestamp(),
+    expiresAt: resonanceExpiry(),
+    ...extra,
+  };
+}
+
+describe('resonance', () => {
+  it('lets a signed-in person check in and read their check-in back', async () => {
+    const db = as('alice');
+    await assertSucceeds(setDoc(doc(db, 'resonances', 'r1'), resonanceCheckIn('r1')));
+    await assertSucceeds(getDoc(doc(db, 'resonances', 'r1')));
+    const snapshot = await getDocs(
+      query(collection(db, 'resonances'), where('expiresAt', '>', resonanceCutoff()))
+    );
+    if (snapshot.size !== 1) throw new Error(`expected 1 live check-in, got ${snapshot.size}`);
+  });
+
+  it('denies signed-out check-ins and care notes', async () => {
+    const db = modular(testEnv.unauthenticatedContext().firestore());
+    await assertFails(setDoc(doc(db, 'resonances', 'r2'), resonanceCheckIn('r2')));
+    await assertFails(setDoc(doc(db, 'resonance_care', 'c2'), resonanceCare('c2')));
+  });
+
+  it('denies identity fields and unknown emotions on a check-in', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'resonances', 'r3'), resonanceCheckIn('r3', { uid: 'alice' })));
+    await assertFails(setDoc(doc(db, 'resonances', 'r4'), resonanceCheckIn('r4', { emotion: 'furious' })));
+    await assertFails(setDoc(doc(db, 'resonances', 'r5'), resonanceCheckIn('r5', { emotion: '' })));
+  });
+
+  it('denies a client-supplied timestamp or an overlong lifetime', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'resonances', 'r6'), resonanceCheckIn('r6', { createdAt: now() })));
+    await assertFails(setDoc(doc(db, 'resonances', 'r6b'), resonanceCheckIn('r6b', {
+      expiresAt: Timestamp.fromDate(new Date(Date.now() + 48 * 60 * 60 * 1000)),
+    })));
+    await assertFails(setDoc(doc(db, 'resonances', 'r6c'), resonanceCheckIn('r6c', {
+      expiresAt: Timestamp.fromDate(new Date(Date.now() - 60 * 60 * 1000)),
+    })));
+  });
+
+  it('hides check-ins from reads and lists once they are 24h old', async () => {
+    await seed(async (db) => {
+      await setDoc(doc(db, 'resonances', 'stale'), {
+        id: 'stale',
+        emotion: 'sad',
+        createdAt: Timestamp.fromDate(new Date(Date.now() - 25 * 60 * 60 * 1000)),
+        expiresAt: Timestamp.fromDate(new Date(Date.now() - 60 * 60 * 1000)),
+      });
+      await setDoc(doc(db, 'resonances', 'fresh'), {
+        id: 'fresh',
+        emotion: 'sad',
+        createdAt: Timestamp.fromDate(new Date(Date.now() - 60 * 60 * 1000)),
+        expiresAt: Timestamp.fromDate(new Date(Date.now() + 23 * 60 * 60 * 1000)),
+      });
+    });
+    const db = as('bob');
+    await assertFails(getDoc(doc(db, 'resonances', 'stale')));
+    await assertSucceeds(getDoc(doc(db, 'resonances', 'fresh')));
+    const snapshot = await getDocs(
+      query(collection(db, 'resonances'), where('expiresAt', '>', resonanceCutoff()))
+    );
+    if (snapshot.size !== 1 || snapshot.docs[0].id !== 'fresh') {
+      throw new Error('expected only the fresh check-in in the live query');
+    }
+  });
+
+  it('lets someone share one supportive line and validates its length', async () => {
+    const db = as('bob');
+    await assertSucceeds(setDoc(doc(db, 'resonance_care', 'c1'), resonanceCare('c1')));
+    await assertFails(setDoc(doc(db, 'resonance_care', 'c2'), resonanceCare('c2', { message: '' })));
+    await assertFails(setDoc(doc(db, 'resonance_care', 'c3'), resonanceCare('c3', { message: 'x'.repeat(281) })));
+    await assertFails(setDoc(doc(db, 'resonance_care', 'c4'), resonanceCare('c4', { message: 'care', uid: 'bob' })));
+  });
+
+  it('hides care notes once they are 24h old', async () => {
+    await seed(async (db) => {
+      await setDoc(doc(db, 'resonance_care', 'stale'), {
+        id: 'stale',
+        emotion: 'sad',
+        message: 'A note from yesterday.',
+        createdAt: Timestamp.fromDate(new Date(Date.now() - 25 * 60 * 60 * 1000)),
+        expiresAt: Timestamp.fromDate(new Date(Date.now() - 60 * 60 * 1000)),
+      });
+    });
+    await assertFails(getDoc(doc(as('bob'), 'resonance_care', 'stale')));
+  });
+
+  it('denies updating or deleting resonance content as a regular member', async () => {
+    await seed(async (db) => {
+      await setDoc(doc(db, 'resonances', 'r7'), {
+        id: 'r7', emotion: 'sad', createdAt: now(), expiresAt: resonanceExpiry(),
+      });
+    });
+    const db = as('alice');
+    await assertFails(updateDoc(doc(db, 'resonances', 'r7'), { emotion: 'happy' }));
+    await assertFails(deleteDoc(doc(db, 'resonances', 'r7')));
+  });
+
+  it('lets an admin clear resonance content', async () => {
+    await seed(async (db) => {
+      await setDoc(doc(db, 'resonances', 'r8'), {
+        id: 'r8', emotion: 'sad', createdAt: now(), expiresAt: resonanceExpiry(),
+      });
+      await setDoc(doc(db, 'admins', 'root'), { grantedAt: now(), grantedBy: 'test' });
+    });
+    const db = as('root', { email: 'root@example.com', email_verified: true });
+    await assertSucceeds(deleteDoc(doc(db, 'resonances', 'r8')));
+  });
+});
