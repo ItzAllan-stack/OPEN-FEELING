@@ -23,6 +23,7 @@ const PrivacySettingsPage = React.lazy(() => import('./pages/PrivacySettingsPage
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage.tsx').then((m) => ({ default: m.ProfilePage })));
 const SavedPostsPage = React.lazy(() => import('./pages/SavedPostsPage.tsx').then((m) => ({ default: m.SavedPostsPage })));
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage.tsx').then((m) => ({ default: m.SettingsPage })));
+const YearReviewPage = React.lazy(() => import('./pages/YearReviewPage.tsx').then((m) => ({ default: m.YearReviewPage })));
 
 function NotFoundPage() {
   const { navigate } = useApp();
@@ -42,7 +43,7 @@ function NotFoundPage() {
 }
 
 function AppRouter() {
-  const { currentPath, authLoading, firebaseUser, needsOnboarding } = useApp();
+  const { currentPath, authLoading, firebaseUser, needsOnboarding, ambientColor } = useApp();
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -100,6 +101,11 @@ function AppRouter() {
     if (currentPath === '/saved') return <SavedPostsPage />;
     if (currentPath === '/journal') return <PersonalJournalPage />;
     if (currentPath === '/settings') return <SettingsPage />;
+    if (currentPath.startsWith('/review/')) {
+      const yearParam = Number(currentPath.slice('/review/'.length));
+      const year = Number.isFinite(yearParam) && yearParam > 2000 && yearParam < 2100 ? Math.floor(yearParam) : new Date().getFullYear();
+      return <YearReviewPage year={year} />;
+    }
     if (currentPath === '/privacy') return <PrivacySettingsPage />;
     if (currentPath === '/guidelines') return <GuidelinesPage />;
     if (currentPath === '/moderation') return <ModerationPage />;
@@ -108,7 +114,10 @@ function AppRouter() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]">
+    <div
+      className="min-h-screen flex flex-col bg-[#FCFBFA] text-[#29272B]"
+      style={ambientColor ? ({ backgroundColor: ambientColor } as React.CSSProperties) : undefined}
+    >
       <Header />
       <div className="flex-1">
         <React.Suspense

@@ -10,10 +10,11 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import { CURATED_AVATARS } from '../constants/emotions.ts';
+import { CURATED_AVATARS, EMOTION_MAP, type EmotionMeta } from '../constants/emotions.ts';
 import { STARTER_COMMUNITIES, STARTER_POSTS } from '../data/starterData.ts';
 import { auth, googleAuthProvider } from '../lib/firebase.ts';
 import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
+import { getAmbientColor, getAmbientPace, getTimeOfDay } from '../utils/ambientColor.ts';
 import {
   checkIsAdmin,
   createUserProfile,
@@ -49,6 +50,8 @@ interface AppContextValue {
   publicUser: PublicUser | null;
   privateUser: PrivateUser | null;
   isAdmin: boolean;
+  ambientColor: string | null;
+  sakuraPace: number;
   sakuraEnabled: boolean;
   setSakuraLocal: (enabled: boolean) => void;
   currentPath: string;
@@ -243,6 +246,25 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     );
   }, [firestorePublicPosts, userPrivatePosts, blockedSet]);
 
+  // Ambient mood: blend a soft tint from the emotions in the signed-in user's
+  // own recent reflections, so the whole app background shifts gently with mood.
+  const recentAuthoredEmotions = useMemo(() => {
+    const uid = privateUser?.uid;
+    if (!uid) return [];
+    return posts
+      .filter((p) => p.authorUid === uid)
+      .slice(0, 12)
+      .map((p) => EMOTION_MAP[p.emotion])
+      .filter((m): m is EmotionMeta => Boolean(m));
+  }, [posts, privateUser]);
+
+  const ambientColor = useMemo(
+    () => getAmbientColor(recentAuthoredEmotions, getTimeOfDay()),
+    [recentAuthoredEmotions]
+  );
+
+  const sakuraPace = useMemo(() => getAmbientPace(recentAuthoredEmotions), [recentAuthoredEmotions]);
+
   const isAdmin = useMemo(() => {
     if (!firebaseUser) return false;
     // The admins registry (admins/{uid}) is the single source of admin
@@ -364,6 +386,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     publicUser,
     privateUser,
     isAdmin,
+    ambientColor,
+    sakuraPace,
     sakuraEnabled,
     setSakuraLocal: setSakuraLocalOverride,
     currentPath,
