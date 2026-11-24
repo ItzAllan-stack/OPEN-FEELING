@@ -25,6 +25,7 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
   const [allResonances, setAllResonances] = useState<ResonanceCheckIn[]>([]);
   const [careNotes, setCareNotes] = useState<ResonanceCareNote[]>([]);
   const [careLoading, setCareLoading] = useState(true);
+  const [resonancesLoading, setResonancesLoading] = useState(true);
 
   // Reset to a clean slate whenever the modal closes.
   useEffect(() => {
@@ -34,6 +35,7 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
       setAllResonances([]);
       setCareNotes([]);
       setCareLoading(true);
+      setResonancesLoading(true);
       setSubmitting(false);
     }
   }, [open]);
@@ -41,7 +43,10 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
   // Live feed of active check-ins (still inside their 24h window).
   useEffect(() => {
     if (!open) return;
-    const unsub = subscribeActiveResonances(setAllResonances);
+    const unsub = subscribeActiveResonances((resonances) => {
+      setAllResonances(resonances);
+      setResonancesLoading(false);
+    });
     const unsubCare = subscribeActiveResonanceCare((notes) => {
       setCareNotes(notes.slice(0, 6));
       setCareLoading(false);
@@ -103,15 +108,20 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
                 Feeling this right now
               </span>
               <span className="text-sm font-medium text-[#29272B]">
-                {countForSelected}
+                {resonancesLoading ? '—' : countForSelected}
               </span>
             </div>
             <p className="text-sm text-[#77727A]">
-              {countForSelected === 0
-                ? "You're naming this feeling first — someone else will see it soon."
-                : countForSelected === 1
-                  ? 'One other person feels this right now.'
-                  : `${countForSelected} other people feel this right now.`}
+              {resonancesLoading
+                ? 'Checking who else feels this...'
+                : countForSelected === 0
+                  ? "You're naming this feeling first — someone else will see it soon."
+                  : countForSelected === 1
+                    ? 'One other person feels this right now.'
+                    : `${countForSelected} other people feel this right now.`}
+            </p>
+            <p className="text-[11px] text-[#77727A] mt-3">
+              Everything here is anonymous and expires after 24 hours.
             </p>
           </div>
         )}
@@ -136,17 +146,23 @@ export function ResonanceCheckIn({ open, onClose }: ResonanceCheckInProps) {
           </div>
         </div>
 
-        {!careLoading && careNotes.length > 0 && (
+        {!careLoading && (
           <div className="pt-3 border-t border-[#EAE4DD]">
             <p className="text-xs font-medium text-[#77727A] mb-2 uppercase tracking-wider">
               kind words right now
             </p>
             <div className="space-y-2">
-              {careNotes.map((note) => (
-                <div key={note.id} className="text-sm text-[#77727A] italic">
-                  '{note.message}'
+              {careNotes.length > 0 ? (
+                careNotes.map((note) => (
+                  <div key={note.id} className="text-sm text-[#77727A] italic">
+                    '{note.message}'
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-[#77727A] italic py-2">
+                  No kind words yet — be the first to share one below.
                 </div>
-              ))}
+              )}
             </div>
           </div>
         )}
