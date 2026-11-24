@@ -14,7 +14,7 @@ import { CURATED_AVATARS, EMOTION_MAP, type EmotionMeta } from '../constants/emo
 import { STARTER_COMMUNITIES, STARTER_POSTS } from '../data/starterData.ts';
 import { auth, googleAuthProvider } from '../lib/firebase.ts';
 import { SAMPLE_CONTENT_ENABLED } from '../lib/features.ts';
-import { getAmbientColor } from '../utils/ambientColor.ts';
+import { getAmbientColor, getAmbientPace, getTimeOfDay } from '../utils/ambientColor.ts';
 import {
   checkIsAdmin,
   createUserProfile,
@@ -51,6 +51,7 @@ interface AppContextValue {
   privateUser: PrivateUser | null;
   isAdmin: boolean;
   ambientColor: string | null;
+  sakuraPace: number;
   sakuraEnabled: boolean;
   setSakuraLocal: (enabled: boolean) => void;
   currentPath: string;
@@ -257,7 +258,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       .filter((m): m is EmotionMeta => Boolean(m));
   }, [posts, privateUser]);
 
-  const ambientColor = useMemo(() => getAmbientColor(recentAuthoredEmotions), [recentAuthoredEmotions]);
+  const ambientColor = useMemo(
+    () => getAmbientColor(recentAuthoredEmotions, getTimeOfDay()),
+    [recentAuthoredEmotions]
+  );
+
+  const sakuraPace = useMemo(() => getAmbientPace(recentAuthoredEmotions), [recentAuthoredEmotions]);
 
   const isAdmin = useMemo(() => {
     if (!firebaseUser) return false;
@@ -381,6 +387,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     privateUser,
     isAdmin,
     ambientColor,
+    sakuraPace,
     sakuraEnabled,
     setSakuraLocal: setSakuraLocalOverride,
     currentPath,
