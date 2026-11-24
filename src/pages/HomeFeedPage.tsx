@@ -3,6 +3,7 @@ import { AppShell } from '../components/AppShell.tsx';
 import { LoadingSkeleton } from '../components/LoadingSkeleton.tsx';
 import { PostCard } from '../components/PostCard.tsx';
 import { PostComposer } from '../components/PostComposer.tsx';
+import { ResonanceCheckIn } from '../components/ResonanceCheckIn.tsx';
 import { SearchBar } from '../components/SearchBar.tsx';
 import { DAILY_REFLECTIONS, EMOTIONS } from '../constants/emotions.ts';
 import { useApp } from '../context/AppContext.tsx';
@@ -27,6 +28,7 @@ export function HomeFeedPage() {
   const [selectedEmotion, setSelectedEmotion] = useState<EmotionId>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [publicUsers, setPublicUsers] = useState<PublicUser[]>([]);
+  const [resonanceOpen, setResonanceOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -136,6 +138,25 @@ export function HomeFeedPage() {
         >
           Write in My Personal Space
         </button>
+      </div>
+
+      {/* Resonance — anonymous feeling check-in */}
+      <div className="bg-[#F4DCE3]/35 border border-[#EAE4DD] rounded-2xl p-5 space-y-2.5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-medium text-[#7D3B4B]">Resonance</p>
+            <p className="text-sm text-[#29272B] leading-relaxed">
+              Check in how you feel right now — anonymous and gone in 24 hours.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setResonanceOpen(true)}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium text-[#FCFBFA] bg-[#7D3B4B] hover:bg-[#6E303B] transition-colors cursor-pointer shrink-0"
+          >
+            Check in
+          </button>
+        </div>
       </div>
 
       {/* Trending Emotions */}
@@ -389,6 +410,12 @@ export function HomeFeedPage() {
           )
         )}
       </div>
+
+      <ResonanceCheckIn
+        open={resonanceOpen}
+        onClose={() => setResonanceOpen(false)}
+      />
+
     </AppShell>
   );
 }
