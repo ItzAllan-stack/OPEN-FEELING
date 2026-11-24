@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Hash, Heart, Sparkles } from 'lucide-react';
+import { ArrowLeft, Hash, Heart, Lock, Sparkles } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EMOTION_MAP } from '../constants/emotions.ts';
 import { useApp } from '../context/AppContext.tsx';
@@ -24,6 +24,27 @@ export function YearReviewPage({ year }: YearReviewPageProps) {
     const unsub = subscribeYearReview(publicUser.uid, year, setSummary);
     return () => unsub();
   }, [publicUser, year]);
+
+  if (!publicUser) {
+    return (
+      <AppShell>
+        <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center space-y-3">
+          <Lock className="w-6 h-6 text-[#9F4E65] mx-auto" />
+          <h1 className="text-2xl font-display text-[#29272B]">Year in Feelings</h1>
+          <p className="text-sm text-[#77727A] max-w-md mx-auto">
+            Your year in feelings is private to your account. Sign in to read your personal recap.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+            className="px-5 py-2.5 rounded-xl bg-[#29272B] text-[#FCFBFA] text-xs font-medium cursor-pointer"
+          >
+            Sign In to Open Year in Feelings
+          </button>
+        </div>
+      </AppShell>
+    );
+  }
 
   const topEmotions = summary?.topEmotions ?? [];
   const topTags = summary?.topTags ?? [];
