@@ -161,13 +161,13 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
               )}
 
               {!isAnon && (
-                <span className="text-xs text-[#77727A]">
+                <span className="text-xs text-[#6B6770]">
                   @{post.authorUsername}
                 </span>
               )}
 
               {isPrivate && (
-                <span className="inline-flex items-center gap-1 text-xs text-[#77727A]">
+                <span className="inline-flex items-center gap-1 text-xs text-[#6B6770]">
                   <span aria-hidden="true">·</span>
                   <Lock className="w-3 h-3" />
                   <span>Only you</span>
@@ -176,7 +176,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
             </div>
 
             {/* Clean unboxed metadata row */}
-            <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-[#77727A]">
+            <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-[#6B6770]">
               <span className="tabular-nums">{formatRelativeTime(post.createdAt)}</span>
               {emotionMeta && (
                 <>
@@ -215,7 +215,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
             type="button"
             onClick={() => setConfirmDeleteOpen(true)}
             aria-label="Delete post"
-            className="p-2 rounded-lg text-[#77727A] hover:text-[#A84848] hover:bg-[#FDF5F5] transition-colors cursor-pointer shrink-0"
+            className="p-2 rounded-lg text-[#6B6770] hover:text-[#A84848] hover:bg-[#FDF5F5] transition-colors cursor-pointer shrink-0"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -267,7 +267,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
         )}
 
         {post.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#77727A]">
+          <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#6B6770]">
             {post.tags.map((tag, i) => (
               <React.Fragment key={tag}>
                 {i > 0 && <span aria-hidden="true">·</span>}
@@ -284,7 +284,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
       </div>
 
       {/* Footer Actions */}
-      <div className="pt-3 border-t border-[#EAE4DD]/80 flex flex-wrap items-center justify-between gap-3 text-xs text-[#77727A]">
+      <div className="pt-3 border-t border-[#EAE4DD]/80 flex flex-wrap items-center justify-between gap-3 text-xs text-[#6B6770]">
         <div className="flex items-center gap-4">
           <button
             type="button"
@@ -374,7 +374,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
             <button
               type="button"
               onClick={() => setReportOpen(false)}
-              className="px-4 py-2 rounded-xl text-sm text-[#77727A] hover:text-[#29272B] cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm text-[#6B6770] hover:text-[#29272B] cursor-pointer"
             >
               Cancel
             </button>
@@ -399,7 +399,7 @@ export function PostCard({ post, showFullContent = false }: PostCardProps) {
           <button
             type="button"
             onClick={() => setConfirmDeleteOpen(false)}
-            className="px-4 py-2 rounded-xl text-sm text-[#77727A] hover:text-[#29272B] cursor-pointer"
+            className="px-4 py-2 rounded-xl text-sm text-[#6B6770] hover:text-[#29272B] cursor-pointer"
           >
             Keep Post
           </button>

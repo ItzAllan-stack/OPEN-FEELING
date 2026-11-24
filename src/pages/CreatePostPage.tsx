@@ -66,7 +66,7 @@ export function CreatePostPage() {
         <button
           type="button"
           onClick={() => navigate('/home')}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to feed</span>
@@ -76,7 +76,7 @@ export function CreatePostPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Express Your Feelings
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Whether you want to be heard publicly, stay anonymous, or keep a reflection strictly private—this space is yours.
           </p>
         </div>
@@ -91,12 +91,12 @@ export function CreatePostPage() {
                   className="rounded-xl border border-[#EAE4DD] bg-[#F8F6F3] p-3.5 space-y-2"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-xs text-[#77727A]">
+                    <p className="text-xs text-[#6B6770]">
                       {draft.scheduledFor
                         ? `Scheduled for ${draft.scheduledFor.toLocaleString()}`
                         : 'No publish date'}
                     </p>
-                    <span className="text-[11px] text-[#77727A]">{draft.visibility}</span>
+                    <span className="text-[11px] text-[#6B6770]">{draft.visibility}</span>
                   </div>
                   <p className="text-sm text-[#29272B]/90 whitespace-pre-wrap line-clamp-3">
                     {draft.title && <span className="font-medium">{draft.title} — </span>}
@@ -113,7 +113,7 @@ export function CreatePostPage() {
                     <button
                       type="button"
                       onClick={() => handleDelete(draft.id)}
-                      className="px-3 py-1.5 rounded-lg border border-[#EAE4DD] text-xs text-[#77727A] hover:text-[#A84848] cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg border border-[#EAE4DD] text-xs text-[#6B6770] hover:text-[#A84848] cursor-pointer"
                     >
                       Delete
                     </button>

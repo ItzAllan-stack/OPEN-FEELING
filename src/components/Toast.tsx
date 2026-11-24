@@ -31,13 +31,13 @@ export function ToastContainer() {
             key={toast.id}
             className={`pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-sm text-sm text-[#29272B] ${borderClass}`}
           >
-            <Icon className="w-4 h-4 mt-0.5 shrink-0 text-[#77727A]" />
+            <Icon className="w-4 h-4 mt-0.5 shrink-0 text-[#6B6770]" />
             <span className="flex-1 leading-snug">{toast.message}</span>
             <button
               type="button"
               onClick={() => dismissToast(toast.id)}
               aria-label="Dismiss notification"
-              className="text-[#77727A] hover:text-[#29272B] shrink-0"
+              className="text-[#6B6770] hover:text-[#29272B] shrink-0"
             >
               <X className="w-3.5 h-3.5" />
             </button>

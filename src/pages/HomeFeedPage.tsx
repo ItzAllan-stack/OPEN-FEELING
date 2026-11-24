@@ -210,7 +210,7 @@ export function HomeFeedPage() {
               className="w-full text-left p-2.5 rounded-xl hover:bg-[#F8F6F3] transition-colors cursor-pointer"
             >
               <p className="text-xs font-medium text-[#29272B]">{c.name}</p>
-              <p className="text-[11px] text-[#77727A] tabular-nums mt-0.5">
+              <p className="text-[11px] text-[#6B6770] tabular-nums mt-0.5">
                 {c.memberCount} members
               </p>
             </button>
@@ -221,7 +221,7 @@ export function HomeFeedPage() {
       {/* Community Highlights */}
       <div className="bg-[#DCE8DD]/35 border border-[#EAE4DD] rounded-2xl p-5 space-y-2">
         <h3 className="text-sm font-medium text-[#29272B]">Community Highlights</h3>
-        <p className="text-xs text-[#77727A] leading-relaxed">
+        <p className="text-xs text-[#6B6770] leading-relaxed">
           Thank you for listening kindly. Every empathetic reaction helps someone feel a little lighter today.
         </p>
       </div>
@@ -236,7 +236,7 @@ export function HomeFeedPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             {publicUser ? `Welcome back, ${publicUser.displayName}` : 'Community Feed'}
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Take your time. Share what feels honest, or read softly alongside others.
           </p>
         </div>
@@ -275,7 +275,7 @@ export function HomeFeedPage() {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   feedFilter === tab.id
                     ? 'bg-[#FCFBFA] text-[#29272B] shadow-xs border border-[#EAE4DD]'
-                    : 'text-[#77727A] hover:text-[#29272B]'
+                    : 'text-[#6B6770] hover:text-[#29272B]'
                 }`}
               >
                 {tab.label}
@@ -300,7 +300,7 @@ export function HomeFeedPage() {
 
         {trimmedQuery && matchingUsers.length > 0 && (
           <section aria-label="Matching people" className="space-y-2.5">
-            <h2 className="text-xs font-medium text-[#77727A]">
+            <h2 className="text-xs font-medium text-[#6B6770]">
               People ({matchingUsers.length})
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -327,9 +327,9 @@ export function HomeFeedPage() {
                     <p className="text-sm font-semibold text-[#29272B] truncate">
                       {u.displayName}
                     </p>
-                    <p className="text-xs text-[#77727A] truncate">@{u.username}</p>
+                    <p className="text-xs text-[#6B6770] truncate">@{u.username}</p>
                     {u.bio && (
-                      <p className="text-xs text-[#77727A] line-clamp-1 mt-0.5">
+                      <p className="text-xs text-[#6B6770] line-clamp-1 mt-0.5">
                         {u.bio}
                       </p>
                     )}
@@ -342,7 +342,7 @@ export function HomeFeedPage() {
 
         {trimmedQuery && matchingCommunities.length > 0 && (
           <section aria-label="Matching communities" className="space-y-2.5">
-            <h2 className="text-xs font-medium text-[#77727A]">
+            <h2 className="text-xs font-medium text-[#6B6770]">
               Communities ({matchingCommunities.length})
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -356,10 +356,10 @@ export function HomeFeedPage() {
                   <p className="text-sm font-semibold text-[#29272B] truncate">
                     {c.name}
                   </p>
-                  <p className="text-xs text-[#77727A] line-clamp-1 mt-0.5">
+                  <p className="text-xs text-[#6B6770] line-clamp-1 mt-0.5">
                     {c.description}
                   </p>
-                  <p className="text-[11px] text-[#77727A] tabular-nums mt-1">
+                  <p className="text-[11px] text-[#6B6770] tabular-nums mt-1">
                     {c.memberCount} members
                   </p>
                 </button>
@@ -376,7 +376,7 @@ export function HomeFeedPage() {
             <p className="text-base font-display text-[#29272B]">
               No reflections match this filter yet
             </p>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               {trimmedQuery
                 ? 'Try a different search term or clear your search to see all stories.'
                 : feedFilter === 'following'
@@ -399,7 +399,7 @@ export function HomeFeedPage() {
           filteredPosts.length > 0 && (
             <div className="space-y-4">
               {trimmedQuery && (matchingUsers.length > 0 || matchingCommunities.length > 0) && (
-                <h2 className="text-xs font-medium text-[#77727A]">
+                <h2 className="text-xs font-medium text-[#6B6770]">
                   Stories ({filteredPosts.length})
                 </h2>
               )}

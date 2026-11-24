@@ -141,7 +141,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
                   ? 'Finish Your Profile'
                   : 'Welcome Back'}
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             {mode === 'signup'
               ? 'Create a safe space to share what is on your mind.'
               : mode === 'forgot'
@@ -183,7 +183,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
 
             <div className="relative flex items-center py-1">
               <div className="flex-grow border-t border-[#EAE4DD]" />
-              <span className="shrink mx-3 text-xs text-[#77727A]">or with email</span>
+              <span className="shrink mx-3 text-xs text-[#6B6770]">or with email</span>
               <div className="flex-grow border-t border-[#EAE4DD]" />
             </div>
           </>
@@ -281,7 +281,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
           )}
 
           {(mode === 'signup' || mode === 'onboarding') && (
-            <div className="space-y-2.5 pt-1 text-xs text-[#77727A]">
+            <div className="space-y-2.5 pt-1 text-xs text-[#6B6770]">
               <label className="flex items-start gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
@@ -324,7 +324,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
           {mode === 'onboarding' && (
             <div className="space-y-2.5 rounded-xl border border-[#EAE4DD] bg-[#F8F6F3] p-3.5">
               <p className="text-xs font-medium text-[#29272B]">A gentle first reflection (optional)</p>
-              <p className="text-[11px] text-[#77727A]">
+              <p className="text-[11px] text-[#6B6770]">
                 If you'd like, write a thought now — it will be saved only in your private journal.
               </p>
               <textarea
@@ -334,7 +334,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
                 rows={3}
                 placeholder="What's been on your mind lately?"
                 aria-label="First private reflection"
-                className="w-full p-3 rounded-xl bg-[#FCFBFA] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8]"
+                className="w-full p-3 rounded-xl bg-[#FCFBFA] border border-[#EAE4DD] text-sm text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8]"
               />
               <EmotionSelector value={firstEmotion} onChange={setFirstEmotion} />
             </div>
@@ -369,7 +369,7 @@ export function AuthPage({ initialMode }: AuthPageProps) {
           </button>
         </form>
 
-        <div className="text-center text-xs text-[#77727A] pt-2 border-t border-[#EAE4DD]">
+        <div className="text-center text-xs text-[#6B6770] pt-2 border-t border-[#EAE4DD]">
           {mode === 'login' && (
             <p>
               New to OPEN FEELING?{' '}

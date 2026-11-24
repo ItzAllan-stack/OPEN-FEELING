@@ -13,7 +13,7 @@ export function EmotionAnalyticsCard({ entries }: EmotionAnalyticsCardProps) {
     return (
       <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-5 sm:p-6 space-y-2">
         <h2 className="text-lg font-medium text-[#29272B]">Insights</h2>
-        <p className="text-sm text-[#77727A]">
+        <p className="text-sm text-[#6B6770]">
           Write a few reflections to see your emotion timeline and favorite words here.
         </p>
       </section>
@@ -28,10 +28,10 @@ export function EmotionAnalyticsCard({ entries }: EmotionAnalyticsCardProps) {
       <h2 className="text-lg font-medium text-[#29272B]">Insights</h2>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#77727A]">Emotion mix</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-[#6B6770]">Emotion mix</p>
         <div className="flex flex-wrap items-center gap-1.5">
           {stats.topEmotions.length === 0 ? (
-            <p className="text-xs text-[#77727A]">No emotion tags on your entries yet.</p>
+            <p className="text-xs text-[#6B6770]">No emotion tags on your entries yet.</p>
           ) : (
             stats.topEmotions.map((item) => (
               <span
@@ -52,7 +52,7 @@ export function EmotionAnalyticsCard({ entries }: EmotionAnalyticsCardProps) {
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#77727A]">
+        <p className="text-xs font-medium uppercase tracking-wide text-[#6B6770]">
           Mood timeline · last {daysLabel} days
         </p>
         <div className="flex h-7 items-end gap-px overflow-hidden rounded-lg border border-[#EAE4DD] bg-[#F8F6F3] px-1">
@@ -76,9 +76,9 @@ export function EmotionAnalyticsCard({ entries }: EmotionAnalyticsCardProps) {
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#77727A]">Most written words</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-[#6B6770]">Most written words</p>
         {stats.wordCloud.length === 0 ? (
-          <p className="text-xs text-[#77727A]">No countable words in your entries yet.</p>
+          <p className="text-xs text-[#6B6770]">No countable words in your entries yet.</p>
         ) : (
           <div className="flex flex-wrap items-center gap-2">
             {stats.wordCloud.map((word) => {
@@ -97,7 +97,7 @@ export function EmotionAnalyticsCard({ entries }: EmotionAnalyticsCardProps) {
         )}
       </div>
 
-      <p className="text-xs text-[#77727A]">
+      <p className="text-xs text-[#6B6770]">
         {stats.totalWords} words written in {stats.totalEntries} entr{stats.totalEntries === 1 ? 'y' : 'ies'}
       </p>
     </section>

@@ -28,7 +28,7 @@ export function EmotionSelector({
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               selected
                 ? 'border-[#29272B] text-[#29272B]'
-                : 'border-[#EAE4DD] bg-[#FCFBFA] text-[#77727A] hover:text-[#29272B] hover:border-[#D5CCC3]'
+                : 'border-[#EAE4DD] bg-[#FCFBFA] text-[#6B6770] hover:text-[#29272B] hover:border-[#D5CCC3]'
             }`}
             style={selected ? { backgroundColor: emotion.tintBg } : undefined}
           >

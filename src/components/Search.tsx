@@ -147,7 +147,7 @@ export function Search({
   return (
     <div ref={containerRef} className={`relative ${className}`}>
       <div className="relative flex items-center">
-        <SearchIcon className="w-4 h-4 text-[#77727A] absolute left-3 pointer-events-none" />
+        <SearchIcon className="w-4 h-4 text-[#6B6770] absolute left-3 pointer-events-none" />
         <input
           ref={inputRef}
           type="search"
@@ -162,7 +162,7 @@ export function Search({
             setIsOpen(true);
           }}
           placeholder={placeholder}
-          className={`w-full pl-9 pr-8 bg-[#F8F6F3] border border-[#EAE4DD] text-[#29272B] placeholder:text-[#77727A] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors ${
+          className={`w-full pl-9 pr-8 bg-[#F8F6F3] border border-[#EAE4DD] text-[#29272B] placeholder:text-[#6B6770] focus:outline-none focus:border-[#E9A9B8] focus:bg-[#FCFBFA] transition-colors ${
             isHeader
               ? 'py-1.5 rounded-xl text-xs sm:text-sm'
               : 'py-2.5 rounded-xl text-sm'
@@ -176,7 +176,7 @@ export function Search({
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="absolute right-2.5 p-1 text-[#77727A] hover:text-[#29272B] cursor-pointer"
+            className="absolute right-2.5 p-1 text-[#6B6770] hover:text-[#29272B] cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -197,7 +197,7 @@ export function Search({
                 <p className="text-sm font-medium text-[#29272B]">
                   No matching posts or people found
                 </p>
-                <p className="text-xs text-[#77727A]">
+                <p className="text-xs text-[#6B6770]">
                   Try another keyword, emotion, tag, or username.
                 </p>
               </div>
@@ -205,7 +205,7 @@ export function Search({
               <>
                 {visibleUsers.length > 0 && (
                   <div className="p-2.5 space-y-1">
-                    <div className="px-2 py-1 flex items-center justify-between text-[11px] font-medium text-[#77727A]">
+                    <div className="px-2 py-1 flex items-center justify-between text-[11px] font-medium text-[#6B6770]">
                       <span className="inline-flex items-center gap-1.5">
                         <Users className="w-3.5 h-3.5" />
                         <span>People</span>
@@ -236,7 +236,7 @@ export function Search({
                           <p className="text-sm font-medium text-[#29272B] truncate">
                             {user.displayName}
                           </p>
-                          <p className="text-xs text-[#77727A] truncate">
+                          <p className="text-xs text-[#6B6770] truncate">
                             @{user.username}
                             {user.bio ? ` · ${user.bio}` : ''}
                           </p>
@@ -248,7 +248,7 @@ export function Search({
 
                 {visiblePosts.length > 0 && (
                   <div className="p-2.5 space-y-1">
-                    <div className="px-2 py-1 flex items-center justify-between text-[11px] font-medium text-[#77727A]">
+                    <div className="px-2 py-1 flex items-center justify-between text-[11px] font-medium text-[#6B6770]">
                       <span className="inline-flex items-center gap-1.5">
                         <FileText className="w-3.5 h-3.5" />
                         <span>Posts</span>
@@ -287,11 +287,11 @@ export function Search({
                               {post.title || post.content}
                             </p>
                             {post.title && (
-                              <p className="text-xs text-[#77727A] line-clamp-1">
+                              <p className="text-xs text-[#6B6770] line-clamp-1">
                                 {post.content}
                               </p>
                             )}
-                            <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-[#77727A]">
+                            <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-[#6B6770]">
                               <span>{isAnon ? 'Anonymous' : post.authorName}</span>
                               {emotionMeta && (
                                 <>
@@ -316,7 +316,7 @@ export function Search({
             )}
 
             <div className="px-3 py-2 bg-[#F8F6F3]/60 flex items-center justify-between text-xs">
-              <span className="text-[#77727A]">
+              <span className="text-[#6B6770]">
                 Real-time results across posts &amp; people
               </span>
               <button

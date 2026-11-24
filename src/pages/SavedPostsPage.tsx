@@ -33,16 +33,16 @@ export function SavedPostsPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Saved Posts
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Reflections you wanted to keep close and return to later.
           </p>
         </div>
 
         {savedPosts.length === 0 ? (
           <div className="bg-[#F8F6F3] border border-[#EAE4DD] rounded-2xl p-8 text-center space-y-3">
-            <Bookmark className="w-6 h-6 text-[#77727A] mx-auto" />
+            <Bookmark className="w-6 h-6 text-[#6B6770] mx-auto" />
             <p className="text-base font-display text-[#29272B]">No saved posts yet</p>
-            <p className="text-sm text-[#77727A]">
+            <p className="text-sm text-[#6B6770]">
               Tap Save on any story in your feed or Explore to bookmark it here.
             </p>
             <button

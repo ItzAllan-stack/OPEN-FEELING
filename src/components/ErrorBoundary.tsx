@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component<
             <h1 className="text-2xl font-display text-[#29272B]">
               Something gentle paused
             </h1>
-            <p className="text-sm text-[#77727A] leading-relaxed">
+            <p className="text-sm text-[#6B6770] leading-relaxed">
               We encountered an unexpected error while loading this space. Your thoughts and saved entries remain safe.
             </p>
             <button

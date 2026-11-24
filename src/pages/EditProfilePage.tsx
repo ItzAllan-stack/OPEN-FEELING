@@ -131,7 +131,7 @@ export function EditProfilePage() {
         <button
           type="button"
           onClick={() => navigate('/profile')}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#77727A] hover:text-[#29272B] cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B6770] hover:text-[#29272B] cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to profile</span>
@@ -191,13 +191,13 @@ export function EditProfilePage() {
                     <button
                       type="button"
                       onClick={() => setAvatarUrl(CURATED_AVATARS[0])}
-                      className="px-2.5 py-1.5 rounded-lg text-xs text-[#77727A] hover:text-[#29272B] cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-lg text-xs text-[#6B6770] hover:text-[#29272B] cursor-pointer"
                     >
                       Remove photo
                     </button>
                   )}
                 </div>
-                <p className="text-[11px] text-[#77727A]">
+                <p className="text-[11px] text-[#6B6770]">
                   {isUploadedPhoto
                     ? 'Photo selected from your device gallery.'
                     : 'Choose a photo from your device gallery, or pick an option below.'}
@@ -286,7 +286,7 @@ export function EditProfilePage() {
             />
           </div>
 
-          <label className="flex items-start gap-2.5 text-xs text-[#77727A] cursor-pointer">
+          <label className="flex items-start gap-2.5 text-xs text-[#6B6770] cursor-pointer">
             <input
               type="checkbox"
               checked={isPrivateProfile}
@@ -302,7 +302,7 @@ export function EditProfilePage() {
             <button
               type="button"
               onClick={() => navigate('/profile')}
-              className="px-4 py-2 rounded-xl text-sm text-[#77727A] cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm text-[#6B6770] cursor-pointer"
             >
               Cancel
             </button>
@@ -325,14 +325,14 @@ export function EditProfilePage() {
         maxWidthClass="max-w-sm"
       >
         <div className="space-y-4">
-          <p className="text-sm text-[#77727A] leading-relaxed">
+          <p className="text-sm text-[#6B6770] leading-relaxed">
             You can choose a single photo from your gallery to set as your profile picture. Your selection stays private until you save your profile.
           </p>
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setPermissionModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-sm text-[#77727A] hover:text-[#29272B] cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm text-[#6B6770] hover:text-[#29272B] cursor-pointer"
             >
               Not Now
             </button>

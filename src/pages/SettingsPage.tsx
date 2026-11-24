@@ -56,7 +56,7 @@ export function SettingsPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-medium text-[#29272B]">
             Settings
           </h1>
-          <p className="text-sm text-[#77727A]">
+          <p className="text-sm text-[#6B6770]">
             Manage your comfort preferences, notifications, and account details.
           </p>
         </div>
@@ -64,7 +64,7 @@ export function SettingsPage() {
         {/* Account Summary */}
         <section className="bg-[#FCFBFA] border border-[#EAE4DD] rounded-2xl p-6 space-y-3">
           <h2 className="text-base font-medium text-[#29272B]">Account</h2>
-          <div className="text-sm text-[#77727A] space-y-1">
+          <div className="text-sm text-[#6B6770] space-y-1">
             <p>
               Email: <span className="text-[#29272B]">{privateUser.email || firebaseUser?.email}</span>
             </p>
@@ -101,7 +101,7 @@ export function SettingsPage() {
           <label className="flex items-center justify-between gap-4 cursor-pointer">
             <div>
               <p className="text-sm text-[#29272B]">Cherry blossom hero petals</p>
-              <p className="text-xs text-[#77727A]">
+              <p className="text-xs text-[#6B6770]">
                 Subtle slow-drifting petals on the landing hero. Respects system reduced motion automatically.
               </p>
             </div>
@@ -138,7 +138,7 @@ export function SettingsPage() {
         {/* Account Deletion */}
         <section className="bg-[#FDF7F7] border border-[#E5B8B8] rounded-2xl p-6 space-y-3">
           <h2 className="text-base font-medium text-[#8C3737]">Delete Account</h2>
-          <p className="text-xs text-[#77727A] leading-relaxed">
+          <p className="text-xs text-[#6B6770] leading-relaxed">
             Permanently remove your profile, username reservation, and private settings from OPEN FEELING.
           </p>
           <button
@@ -162,7 +162,7 @@ export function SettingsPage() {
           <button
             type="button"
             onClick={() => setDeleteConfirmOpen(false)}
-            className="px-4 py-2 rounded-xl text-sm text-[#77727A] cursor-pointer"
+            className="px-4 py-2 rounded-xl text-sm text-[#6B6770] cursor-pointer"
           >
             Cancel
           </button>
