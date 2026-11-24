@@ -1395,10 +1395,10 @@ export function subscribeActiveResonances(
   onData: (resonances: ResonanceCheckIn[]) => void,
   onErr?: (err: Error) => void
 ): () => void {
-  const marginAgo = new Date(Date.now() - RESONANCE_READ_MARGIN_MS);
+  const liveCutoff = new Date(Date.now() + RESONANCE_READ_MARGIN_MS);
   const q = query(
     collection(db, 'resonances'),
-    where('expiresAt', '>', marginAgo),
+    where('expiresAt', '>', liveCutoff),
     limit(200)
   );
   return onSnapshot(
@@ -1420,11 +1420,11 @@ export function subscribeActiveResonances(
 export async function countActiveResonances(
   emotion: ResonanceEmotion
 ): Promise<number> {
-  const marginAgo = new Date(Date.now() - RESONANCE_READ_MARGIN_MS);
+  const liveCutoff = new Date(Date.now() + RESONANCE_READ_MARGIN_MS);
   const q = query(
     collection(db, 'resonances'),
     where('emotion', '==', emotion),
-    where('expiresAt', '>', marginAgo),
+    where('expiresAt', '>', liveCutoff),
     limit(RESONANCE_MAX_VISIBLE_COUNT + 1)
   );
   const snap = await getDocs(q);
@@ -1456,10 +1456,10 @@ export function subscribeActiveResonanceCare(
   onData: (notes: ResonanceCareNote[]) => void,
   onErr?: (err: Error) => void
 ): () => void {
-  const marginAgo = new Date(Date.now() - RESONANCE_READ_MARGIN_MS);
+  const liveCutoff = new Date(Date.now() + RESONANCE_READ_MARGIN_MS);
   const q = query(
     collection(db, 'resonance_care'),
-    where('expiresAt', '>', marginAgo),
+    where('expiresAt', '>', liveCutoff),
     limit(200)
   );
   return onSnapshot(
