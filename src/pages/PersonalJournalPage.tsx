@@ -3,7 +3,6 @@ import { Download, Lock, Mail, Pencil, Plus, Send, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell.tsx';
 import { EmotionAnalyticsCard } from '../components/EmotionAnalyticsCard.tsx';
 import { EmotionSelector } from '../components/EmotionSelector.tsx';
-import { Modal } from '../components/Modal.tsx';
 import { SearchBar } from '../components/SearchBar.tsx';
 import { EMOTION_MAP } from '../constants/emotions.ts';
 import { randomJournalPrompt, todayJournalPrompt } from '../constants/journalPrompts.ts';
@@ -577,8 +576,6 @@ export function PersonalJournalPage() {
         </div>
       </div>
 
-      {/* Unused Modal import check */}
-      {false && <Modal open={false} onClose={() => {}} title="" children={null} />}
     </AppShell>
   );
 }
