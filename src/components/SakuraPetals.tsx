@@ -2,6 +2,7 @@ import React from 'react';
 
 interface SakuraPetalsProps {
   enabled?: boolean;
+  pace?: number;
 }
 
 const PETALS = [
@@ -15,7 +16,7 @@ const PETALS = [
   { left: '93%', size: 10, duration: '16.5s', delay: '6s', drift: '-18px', opacity: 0.48 },
 ];
 
-export function SakuraPetals({ enabled = true }: SakuraPetalsProps) {
+export function SakuraPetals({ enabled = true, pace = 1 }: SakuraPetalsProps) {
   if (!enabled) return null;
 
   return (
@@ -33,7 +34,7 @@ export function SakuraPetals({ enabled = true }: SakuraPetalsProps) {
               left: petal.left,
               width: `${petal.size}px`,
               height: `${petal.size}px`,
-              animationDuration: petal.duration,
+              animationDuration: `${(parseFloat(petal.duration) * pace).toFixed(1)}s`,
               animationDelay: petal.delay,
               opacity: petal.opacity,
               '--drift-x': petal.drift,

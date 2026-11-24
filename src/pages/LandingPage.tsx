@@ -11,6 +11,7 @@ export function LandingPage() {
     publicUser,
     posts,
     sakuraEnabled,
+    sakuraPace,
     setSakuraLocal,
     navigate,
   } = useApp();
@@ -21,7 +22,7 @@ export function LandingPage() {
     <div className="bg-[#FCFBFA] text-[#29272B]">
       {/* Hero Section with subtle optional cherry blossom petals */}
       <section className="relative overflow-hidden border-b border-[#EAE4DD]">
-        <SakuraPetals enabled={sakuraEnabled} />
+        <SakuraPetals enabled={sakuraEnabled} pace={sakuraPace} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
