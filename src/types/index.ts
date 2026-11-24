@@ -191,3 +191,15 @@ export interface ToastMessage {
   message: string;
   tone: ToastTone;
 }
+
+// A letter written now to be delivered to its author on a future date.
+// Only the owning user can read, update, or delete their own letters.
+export interface FutureLetter {
+  id: string;
+  uid: string;
+  title: string;
+  content: string;
+  targetDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
